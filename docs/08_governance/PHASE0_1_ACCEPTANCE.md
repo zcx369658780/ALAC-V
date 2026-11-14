@@ -50,7 +50,7 @@ However, several source-level and evidence-chain issues affect the validity or i
 
 ### R1 — Run-level evidence is not in the public repository (blocking)
 
-The repository's own `docs/README.md` §6 requires every formal metric to link to run-level `metrics.json`, config snapshot/hash, dataset manifest, and code commit/dirty state.
+The repository's own `docs/README.md` §7 requires every formal metric to link to run-level `metrics.json`, config snapshot/hash, dataset manifest, and code commit/dirty state.
 
 However, `.gitignore` excludes `artifacts/runs/*`. The public repository contains aggregate files under `artifacts/experiments/`, but not the nine run-level evidence directories. The submission record also confirms that raw run directories were not committed.
 
