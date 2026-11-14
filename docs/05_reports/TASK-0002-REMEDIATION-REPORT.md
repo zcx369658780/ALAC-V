@@ -119,14 +119,18 @@ pr: https://github.com/zcx369658780/ALAC-V/pull/2
 | `test_reconstruction_uses_518_scale_not_original` | A 必须来自 518 输入 |
 | `test_gradient_operator_matches_central_difference` | 逐像素核对中心差分，并证明 ≠ Sobel |
 | `test_gradient_energy_zero_on_flat` | 平坦图边界 |
+| `test_per_axis_scales_differ_and_cause_1px_shift` | 逐轴比例导致 1 px 偏移的回归 |
+| `test_reconstruction_matches_per_axis_mapping` | 重建与逐轴映射逐像素一致 |
+| `test_c_gt_region_composes_roi_crop_over_mosaic` | C 的 GT 区域合成规则 |
+| `tests/test_manifest_hash.py`（3 项） | 公开 manifest 的 LF 哈希规范、无 CRLF、git blob 一致 |
 
-完整测试输出：`artifacts/evidence/test-runs/2026-11-14-task-0002-pytest.txt`
+完整测试输出（锚定到干净提交 `a257b09`，`git_dirty=false`）：`artifacts/evidence/test-runs/2026-11-14-task-0002-pytest.txt`
 
 ```
-============================= 74 passed in 19.44s =============================
+============================= 80 passed in 20.57s =============================
 ```
 
-（原有 56 项 + 新增 18 项；0 failure / 0 error / 0 skip。）
+（原有 56 项 + 新增 24 项；0 failure / 0 error / 0 skip。）
 
 ## 5. ADR-0008（WP3）
 
@@ -186,8 +190,9 @@ pr: https://github.com/zcx369658780/ALAC-V/pull/2
 | 项 | 值 |
 |---|---|
 | 基线 | `2bc71dfba3d6ccebcda44124a324f697ba2f0b1d` |
-| 分支 | `task/1-phase0-1-remediation` |
-| 交付提交 | `d6db736`（代码/测试）→ `af9bfe6`（证据/重算）→ `05feedf`（文档/ADR/报告） |
+| 分支 | `task/1-phase0-1-remediation`（HEAD 见 PR #2） |
+| 第一轮提交 | `d6db736` → `af9bfe6` → `05feedf` → `d01c7d4` |
+| 第二轮提交 | `9a8e1d1`（GT/逐轴/哈希/provenance）→ `a257b09`（GT 重算）→ `d8604aa`（锚定测试日志）→ `9a693ce`（校验工具 ref） |
 | PR | https://github.com/zcx369658780/ALAC-V/pull/2 （`Refs #1`，不自动关闭） |
 | 合并 / 关闭 Issue | **未执行**，等待 Owner |
 
