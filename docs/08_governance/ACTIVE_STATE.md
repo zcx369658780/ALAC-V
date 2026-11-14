@@ -15,6 +15,8 @@ owner: Owner
 - Default branch: `main`
 - Baseline HEAD at governance bootstrap: `10cb05d379c39043a17dc840643535fd150bce20`
 - Baseline tree: `308e3403dbc52784a751a47766508e26a0690f81`
+- Latest governance HEAD: `43ce7155e682fb7f5783503f4dae7f8885b8652e`
+- Latest governance tree: `dabdfa23462561ac4a7e1d4f1d75c054b789331e`
 - Initial delivery tag: `phase0-1` (reported by DSH; points to the initial delivery commit)
 - Local DSH workspace reported: `D:\ALAC_V`
 
