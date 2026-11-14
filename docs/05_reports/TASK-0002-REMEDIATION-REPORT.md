@@ -125,10 +125,10 @@ pr: https://github.com/zcx369658780/ALAC-V/pull/2
 | `test_c_gt_region_composes_roi_crop_over_mosaic` | C 的 GT 区域合成规则 |
 | `tests/test_manifest_hash.py`（3 项） | 公开 manifest 的 LF 哈希规范、无 CRLF、git blob 一致 |
 
-完整测试输出（锚定到干净提交 `a257b09`，`git_dirty=false`）：`artifacts/evidence/test-runs/2026-11-14-task-0002-pytest.txt`
+完整测试输出（锚定到干净提交 `04d66d1`，`git_dirty=false`）：`artifacts/evidence/test-runs/2026-11-14-task-0002-pytest.txt`
 
 ```
-============================= 83 passed =============================
+============================= 83 passed in 9.43s ==============================
 ```
 
 （原有 56 项 + 新增 27 项；0 failure / 0 error / 0 skip。）
