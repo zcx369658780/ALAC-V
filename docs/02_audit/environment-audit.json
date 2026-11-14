@@ -1,0 +1,126 @@
+{
+  "environment": {
+    "timestamp_utc": "2026-11-14T10:36:15.837240+00:00",
+    "os": {
+      "platform": "Windows-10-10.0.26300-SP0",
+      "system": "Windows",
+      "release": "10",
+      "version": "10.0.26300",
+      "machine": "AMD64",
+      "processor": "Intel64 Family 6 Model 198 Stepping 2, GenuineIntel",
+      "product_name": "Windows 10 Pro",
+      "display_version": "26H2",
+      "build": "26300",
+      "ubr": 9711,
+      "edition": "Professional"
+    },
+    "hardware": {
+      "cpu_name": "Intel(R) Core(TM) Ultra 7 265K",
+      "cpu_physical_cores": 20,
+      "cpu_logical_cores": 20,
+      "cpu_freq_mhz": 3900.0,
+      "ram_total_gb": 31.48,
+      "ram_available_gb": 10.92,
+      "disks": [
+        {
+          "mount": "C:\\",
+          "total_gb": 930.34,
+          "free_gb": 247.03
+        },
+        {
+          "mount": "D:\\",
+          "total_gb": 1907.73,
+          "free_gb": 986.64
+        }
+      ]
+    },
+    "gpu": {
+      "nvidia_smi_query": {
+        "cmd": "nvidia-smi --query-gpu=name,driver_version,memory.total,memory.used,compute_cap,pcie.link.gen.max,pcie.link.width.max,power.limit --format=csv,noheader",
+        "code": 0,
+        "stdout": "NVIDIA GeForce RTX 5070, 616.92, 12227 MiB, 2783 MiB, 12.0, 4, 16, 250.00 W",
+        "stderr": ""
+      },
+      "parsed": {
+        "name": "NVIDIA GeForce RTX 5070",
+        "driver": "616.92",
+        "memory_total": "12227 MiB",
+        "memory_used": "2783 MiB",
+        "compute_cap": "12.0",
+        "pcie_gen": "4",
+        "pcie_width": "16",
+        "power_limit": "250.00 W"
+      },
+      "full": {
+        "cmd": "nvidia-smi",
+        "code": 0,
+        "stdout": "Sat Nov 14 18:36:15 2026       \n+-----------------------------------------------------------------------------------------+\n| NVIDIA-SMI 616.92                 KMD Version: 616.92        CUDA UMD Version: 13.4     |\n+-----------------------------------------+------------------------+----------------------+\n| GPU  Name                  Driver-Model | Bus-Id          Disp.A | Volatile Uncorr. ECC |\n| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |\n|                                         |                        |               MIG M. |\n|=========================================+========================+======================|\n|   0  NVIDIA GeForce RTX 5070      WDDM  |   00000000:81:00.0  On |                  N/A |\n|  0%   33C    P0             19W /  250W |    2783MiB /  12227MiB |      2%      Default |\n|                                         |                        |                  N/A |\n+-----------------------------------------+------------------------+----------------------+\n\n+-----------------------------------------------------------------------------------------+\n| Processes:                                                                              |\n|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |\n|        ID   ID                                                               Usage      |\n|=========================================================================================|\n|    0   N/A  N/A            1524    C+G   ...s\\@clawsgodesktop\\ClawsGO.exe      N/A      |\n|    0   N/A  N/A           13868    C+G   ....0.4341.46\\msedgewebview2.exe      N/A      |\n|    0   N/A  N/A           14412    C+G   ....0.4341.46\\msedgewebview2.exe      N/A      |\n|    0   N/A  N/A           16812    C+G   ...ot\\Application\\copilotapp.exe      N/A      |\n|    0   N/A  N/A           25168    C+G   ...t\\Edge\\Application\\msedge.exe      N/A      |\n|    0   N/A  N/A           27184    C+G   ... Harness\\DeepSeek Harness.exe      N/A      |\n|    0   N/A  N/A           29316    C+G   ...ns\\RadiumWMPF\\WeChatAppEx.exe      N/A      |\n|    0   N/A  N/A           30664    C+G   ....0.4341.46\\msedgewebview2.exe      N/A      |\n|    0   N/A  N/A           54056    C+G   ...r\\frontend\\Docker Desktop.exe      N/A      |\n|    0   N/A  N/A           56560    C+G   ...2p2nqsd0c76g0\\app\\ChatGPT.exe      N/A      |\n+-----------------------------------------------------------------------------------------+",
+        "stderr": ""
+      }
+    },
+    "python": {
+      "executable": "D:\\ALAC_V\\.venv\\Scripts\\python.exe",
+      "version": "3.11.9 (tags/v3.11.9:de54cf5, Apr  2 2024, 10:12:12) [MSC v.1938 64 bit (AMD64)]",
+      "venv_active": true,
+      "sys_prefix": "D:\\ALAC_V\\.venv",
+      "base_prefix": "C:\\Users\\zcxve\\AppData\\Local\\Programs\\Python\\Python311",
+      "packages": {},
+      "nvcc": "nvcc: NVIDIA (R) Cuda compiler driver\nCopyright (c) 2005-2025 NVIDIA Corporation\nBuilt on Fri_Feb_21_20:42:46_Pacific_Standard_Time_2025\nCuda compilation tools, release 12.8, V12.8.93\nBuild cuda_12.8.r12.8/compiler.35583870_0"
+    },
+    "cwd": "D:\\ALAC_V",
+    "project_root": "D:\\ALAC_V",
+    "git": {
+      "cmd": "git rev-parse HEAD",
+      "code": 128,
+      "stdout": "",
+      "stderr": "fatal: not a git repository (or any of the parent directories): .git"
+    },
+    "git_status": {
+      "cmd": "git status --porcelain",
+      "code": 128,
+      "stdout": "",
+      "stderr": "fatal: not a git repository (or any of the parent directories): .git"
+    }
+  },
+  "gpu_selfcheck": {
+    "timestamp_utc": "2026-11-14T10:36:16.434103+00:00",
+    "torch": "2.14.1+cu130",
+    "torch_cuda": "13.0",
+    "cudnn": 92400,
+    "cuda_available": true,
+    "device": {
+      "name": "NVIDIA GeForce RTX 5070",
+      "total_memory_mb": 12199.4,
+      "capability": [
+        12,
+        0
+      ],
+      "multi_processor_count": 48,
+      "arch_list": [
+        "sm_75",
+        "sm_80",
+        "sm_86",
+        "sm_90",
+        "sm_100",
+        "sm_120"
+      ]
+    },
+    "fp16_matmul": {
+      "max_abs_err": 0.0700531005859375,
+      "mean_abs_err": 0.009051095694303513,
+      "relative_to_fp32": 0.0021441057324409485,
+      "nan": false,
+      "inf": false
+    },
+    "fp16_bench": {
+      "ms_per_matmul_2048": 0.36,
+      "tflops": 47.7
+    },
+    "fp32_bench": {
+      "ms_per_matmul_2048": 0.856,
+      "tflops": 20.08
+    },
+    "peak_mem_during_bench_mb": 56.0,
+    "verdict": "通过"
+  }
+}

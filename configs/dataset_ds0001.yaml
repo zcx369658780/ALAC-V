@@ -1,0 +1,18 @@
+# DS-0001 合成数据集配置（程序化生成，无外部下载）
+dataset:
+  id: ds-0001-alacv-synthetic-v1
+  seed: 20261114
+  n_base: 24
+  width: 1024
+  height: 768
+  queries_per_base: 3
+  target_size: 256
+  out_dir: data/datasets/ds-0001
+
+# 真实照片补充集（若本机存在 Windows 壁纸，仅用于时序/存储与定性观察）
+real:
+  enabled: true
+  globs:
+    - "C:/Windows/Web/Wallpaper/Windows/*.jpg"
+    - "C:/Windows/Web/Wallpaper/Windows/*.png"
+  max_images: 8

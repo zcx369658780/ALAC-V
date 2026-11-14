@@ -1,0 +1,32 @@
+# EXP-0001：A/B/C 三组对照实验配置（覆盖 default.yaml）
+experiment:
+  id: EXP-0001
+  repeat: 3
+  warmup_images: 3
+  variants: [A, B, C]
+  dataset: ds-0001-alacv-synthetic-v1
+
+# 三组唯一差异：送入编码器的表示集合 + 派生存储
+encoding:
+  variants:
+    A: [original]
+    B: [pyramid:L0, pyramid:L1, pyramid:L2, pyramid:L3]
+    C: [pyramid:L0, pyramid:L1, pyramid:L2, pyramid:L3, foveated, roi:roi_00]
+
+# 消融描述子：复用已存特征，不额外前向
+ablations:
+  A0: [pyramid:L0]
+  B2: [pyramid:L0, pyramid:L2]
+  C2: [foveated, roi:roi_00]
+  C3: [pyramid:L2, pyramid:L3, foveated, roi:roi_00]
+
+foveation:
+  roi_frac: 0.25
+  max_rois: 2
+
+model:
+  precision: fp16
+  batch_size: 1
+
+logging:
+  level: INFO

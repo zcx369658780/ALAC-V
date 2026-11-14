@@ -1,0 +1,36 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+*.egg-info/
+
+# 环境
+.venv/
+.uv-cache/
+
+# 数据：原始图与派生资产不入库（可由脚本重放生成）
+data/raw/*
+!data/raw/.gitkeep
+data/processed/*
+!data/processed/.gitkeep
+data/features/*
+!data/features/.gitkeep
+data/index/*
+!data/index/.gitkeep
+data/datasets/*
+!data/datasets/.gitkeep
+
+# 运行产物
+artifacts/runs/*
+!artifacts/runs/.gitkeep
+artifacts/experiments/*
+!artifacts/experiments/.gitkeep
+artifacts/figures/*
+!artifacts/figures/.gitkeep
+artifacts/models/*
+!artifacts/models/.gitkeep
+
+# OS
+Thumbs.db
+desktop.ini
+.DS_Store

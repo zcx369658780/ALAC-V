@@ -1,0 +1,16 @@
+# ALAC-V Phase 1 顶层依赖（精确版本）
+# 安装顺序见 docs/06_ops/runbook.md：torch/torchvision 需从 CUDA 13.0 轮子源安装。
+torch==2.14.1
+torchvision==0.29.1
+transformers==4.57.1
+safetensors==0.8.0
+numpy==2.4.6
+pillow==13.0.0
+opencv-python-headless==5.0.0.93
+pyyaml==6.0.3
+pydantic==2.14.3
+pytest==9.2.0
+psutil==7.2.2
+tqdm==4.70.1
+matplotlib==3.11.2
+pyarrow==26.0.1

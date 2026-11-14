@@ -1,0 +1,26 @@
+{
+  "model_id": "facebook/dinov2-small",
+  "display_name": "DINOv2 ViT-S/14 (dinov2-small)",
+  "source": "huggingface:facebook/dinov2-small",
+  "revision": "ed25f3a31f01632728cabb09d1542f84ab7b0056",
+  "license": "Apache-2.0",
+  "license_url": "https://github.com/facebookresearch/dinov2/blob/main/LICENSE",
+  "license_file": "artifacts/models/dinov2_vits14/LICENSE",
+  "weights_file": "model.safetensors",
+  "weights_bytes": 88249960,
+  "weights_sha256": "ae1e99fcefd534ed978cdeb8326f08030c96e28b7a81ffcbc98a857c84d14be1",
+  "config_sha256": "1809f83e3bdb1609a501a610ad4a742f4fd8ae44d72ca4aa0df52d1f2ac8628d",
+  "files": [
+    "README.md",
+    "config.json",
+    "model.safetensors",
+    "preprocessor_config.json",
+    "pytorch_model.bin"
+  ],
+  "arch": "dinov2_vits14",
+  "input_size": 518,
+  "patch_size": 14,
+  "downloaded_at": "2026-11-14T10:42:58.813059+00:00",
+  "local_dir": "artifacts/models/dinov2_vits14",
+  "note": "权重冻结，未做任何训练/微调；SHA-256 用于自证来源"
+}

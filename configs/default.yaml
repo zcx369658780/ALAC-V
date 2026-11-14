@@ -1,0 +1,75 @@
+# ALAC-V Phase 1 — 默认配置（所有实验的基线，可被实验配置覆盖）
+project:
+  name: ALAC-V
+  phase: 1
+  seed: 1234
+
+paths:
+  data_root: data
+  artifacts_root: artifacts
+  features_dir: data/features
+  processed_dir: data/processed
+  raw_dir: data/raw
+  index_db: data/index/alacv.sqlite
+  manifests_dir: data/manifests
+
+image:
+  color_mode: RGB          # 统一转 RGB；含 alpha 的图像alpha合成到白底
+  max_side: 8192           # 超过此边长的图像拒绝（防止误喂巨图）
+  exif_transpose: true     # 按 EXIF Orientation 摆正（不修改原始字节）
+
+pyramid:
+  scales: [1, 2, 4, 8]     # 1/1, 1/2, 1/4, 1/8
+  format: webp
+  quality: 95
+  method: bicubic
+
+foveation:
+  enabled: true
+  roi_frac: 0.25           # ROI 窗口边长 = 0.25 * min(H, W)
+  max_rois: 2
+  canvas_scale: 0.5        # 马赛克画布 = 原图 1/2
+  fovea_scale: 0.5         # 中央凹在画布上的相对原图尺度（= 画布原生尺度）
+  parafovea_scale: 0.5
+  periphery_scale: 0.25
+  ring_ratio: [1.0, 1.75]  # 旁中央环半径 = ROI 等效半径 * [1.0, 1.75]
+  feather_px: 8
+  format: webp
+  quality: 92          # 马赛克质量
+  roi_quality: 96      # 全分辨率 ROI 裁片质量（回溯保真度优先）
+
+model:
+  provider: huggingface
+  id: facebook/dinov2-small
+  arch: dinov2_vits14
+  local_dir: artifacts/models/dinov2_vits14
+  input_size: 518          # 37 * 14
+  patch_size: 14
+  precision: fp16
+  device: auto             # auto | cuda | cpu
+  batch_size: 1
+
+encoding:
+  # 每个变体送入编码器的"源"列表。源语法：
+  #   original | pyramid:L0..L3 | foveated | roi:roi_00
+  variants:
+    A: [original]
+    B: [pyramid:L0, pyramid:L1, pyramid:L2, pyramid:L3]
+    C: [pyramid:L0, pyramid:L1, pyramid:L2, pyramid:L3, foveated, roi:roi_00]
+  descriptor: concat_l2norm
+  store_patch_tokens: true
+
+retrieval:
+  metric: cosine
+  topk: 5
+
+experiment:
+  repeat: 3
+  warmup_images: 3
+  variants: [A, B, C]
+  dataset: ds-0001-alacv-synthetic-v1
+  primary_metric: recall@1
+
+logging:
+  level: INFO
+  jsonl: true

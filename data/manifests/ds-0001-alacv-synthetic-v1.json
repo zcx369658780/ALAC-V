@@ -1,0 +1,822 @@
+{
+  "dataset_id": "ds-0001-alacv-synthetic-v1",
+  "seed": 20261114,
+  "width": 1024,
+  "height": 768,
+  "target_size": 256,
+  "n_base": 24,
+  "files": [
+    {
+      "path": "data\\datasets\\ds-0001\\base\\scene_000_base.jpg",
+      "sha256": "37de54287e665c70efd94c678643f6010cf556e6eb1952c155066f90cc569ef0",
+      "role": "base",
+      "base_id": "scene_000",
+      "gt_bbox": [
+        267,
+        280,
+        256,
+        256
+      ]
+    },
+    {
+      "path": "data\\datasets\\ds-0001\\query\\scene_000_q0.jpg",
+      "sha256": "a540d221fb1652a26b8ed54a59907ec198aec5ef85fe5ea8cb7e5e59f658d561",
+      "role": "query",
+      "base_id": "scene_000",
+      "gt_bbox": null
+    },
+    {
+      "path": "data\\datasets\\ds-0001\\query\\scene_000_q1.jpg",
+      "sha256": "84898046ddb10dda13ceff378652a430b579a7a540a5f1ea3223df21cd9ad621",
+      "role": "query",
+      "base_id": "scene_000",
+      "gt_bbox": null
+    },
+    {
+      "path": "data\\datasets\\ds-0001\\query\\scene_000_q2.jpg",
+      "sha256": "8276c07d09c116bbeb9c0154669d37c9bd5368c5ff931b8300b99a107ee5d04f",
+      "role": "query",
+      "base_id": "scene_000",
+      "gt_bbox": null
+    },
+    {
+      "path": "data\\datasets\\ds-0001\\base\\scene_001_base.jpg",
+      "sha256": "0d2713b180b8166fd7662bf29531b6c06eaa1c8d95f3c8dbdc706014d8bcd60c",
+      "role": "base",
+      "base_id": "scene_001",
+      "gt_bbox": [
+        348,
+        429,
+        256,
+        256
+      ]
+    },
+    {
+      "path": "data\\datasets\\ds-0001\\query\\scene_001_q0.jpg",
+      "sha256": "6f1a70f3ea9778ca86e08b9afdec602fef08227d9f37c367406cb73f5a2ad3b2",
+      "role": "query",
+      "base_id": "scene_001",
+      "gt_bbox": null
+    },
+    {
+      "path": "data\\datasets\\ds-0001\\query\\scene_001_q1.jpg",
+      "sha256": "570d4a914cdc53ae4a6b2ab5dae8468e59bffbb04cac7bff0b8faaf2819a420a",
+      "role": "query",
+      "base_id": "scene_001",
+      "gt_bbox": null
+    },
+    {
+      "path": "data\\datasets\\ds-0001\\query\\scene_001_q2.jpg",
+      "sha256": "dbbf05aaeaeb86bf82a425f591a2d124bc8215a9c2646cbce3d2754f2cc8d676",
+      "role": "query",
+      "base_id": "scene_001",
+      "gt_bbox": null
+    },
+    {
+      "path": "data\\datasets\\ds-0001\\base\\scene_002_base.jpg",
+      "sha256": "9a4e29298fd0dd5c7e7f1f82d91038a242dc74d3ea66642e2e9b67e136df5124",
+      "role": "base",
+      "base_id": "scene_002",
+      "gt_bbox": [
+        666,
+        276,
+        256,
+        256
+      ]
+    },
+    {
+      "path": "data\\datasets\\ds-0001\\query\\scene_002_q0.jpg",
+      "sha256": "c476130dc2a323f96d0b36e06e8b62f301576e3acb051257d22426994d50e6da",
+      "role": "query",
+      "base_id": "scene_002",
+      "gt_bbox": null
+    },
+    {
+      "path": "data\\datasets\\ds-0001\\query\\scene_002_q1.jpg",
+      "sha256": "6a6bcd3113b200a03f53ee39a4b37bded6bbeab4e518a2543a51cbf0bddee2f6",
+      "role": "query",
+      "base_id": "scene_002",
+      "gt_bbox": null
+    },
+    {
+      "path": "data\\datasets\\ds-0001\\query\\scene_002_q2.jpg",
+      "sha256": "6c633327d18105b7a60473b987e67c4567647bbef03ccbb4992a7c0f7af0f570",
+      "role": "query",
+      "base_id": "scene_002",
+      "gt_bbox": null
+    },
+    {
+      "path": "data\\datasets\\ds-0001\\base\\scene_003_base.jpg",
+      "sha256": "ccc2596da6ed92619187b83efc67eb8d1cd19670d6bf920cb780daee0d5c0950",
+      "role": "base",
+      "base_id": "scene_003",
+      "gt_bbox": [
+        312,
+        344,
+        256,
+        256
+      ]
+    },
+    {
+      "path": "data\\datasets\\ds-0001\\query\\scene_003_q0.jpg",
+      "sha256": "fce4f5ac90eb9d2afc80ae3a11804bb6e9ed71cb0234745fb822745f3f8aea15",
+      "role": "query",
+      "base_id": "scene_003",
+      "gt_bbox": null
+    },
+    {
+      "path": "data\\datasets\\ds-0001\\query\\scene_003_q1.jpg",
+      "sha256": "7a119e4fdf670eab269001635fe04ae6ae132a4edff5bbeb9f8d9a1720a6fe3f",
+      "role": "query",
+      "base_id": "scene_003",
+      "gt_bbox": null
+    },
+    {
+      "path": "data\\datasets\\ds-0001\\query\\scene_003_q2.jpg",
+      "sha256": "0424b4a0d6c2a252ad79df589154683f9c6a8fc07ca313d77d7c8729ed611016",
+      "role": "query",
+      "base_id": "scene_003",
+      "gt_bbox": null
+    },
+    {
+      "path": "data\\datasets\\ds-0001\\base\\scene_004_base.jpg",
+      "sha256": "3d945796466dfbdd0e737215b4013d7ed8ee7400e886bbdab2b6aff203afd9ee",
+      "role": "base",
+      "base_id": "scene_004",
+      "gt_bbox": [
+        402,
+        418,
+        256,
+        256
+      ]
+    },
+    {
+      "path": "data\\datasets\\ds-0001\\query\\scene_004_q0.jpg",
+      "sha256": "dd36725115ccf6cb3a5c39cf3b4bdcf48c4d418e9ffdedfa7a6124158af5db65",
+      "role": "query",
+      "base_id": "scene_004",
+      "gt_bbox": null
+    },
+    {
+      "path": "data\\datasets\\ds-0001\\query\\scene_004_q1.jpg",
+      "sha256": "a25d0b23d872d0d292b4d7a81065dca3519db43240718d19beafb533f7253fea",
+      "role": "query",
+      "base_id": "scene_004",
+      "gt_bbox": null
+    },
+    {
+      "path": "data\\datasets\\ds-0001\\query\\scene_004_q2.jpg",
+      "sha256": "8a7592a34c94b8e0dd2f3c23fdba4216e571da8f05268a7c4c7c22d068cb7f5e",
+      "role": "query",
+      "base_id": "scene_004",
+      "gt_bbox": null
+    },
+    {
+      "path": "data\\datasets\\ds-0001\\base\\scene_005_base.jpg",
+      "sha256": "5a74e153d97d85eed32f8e2bda75a89a7bb70137ed0c8de325abdd725a6558ba",
+      "role": "base",
+      "base_id": "scene_005",
+      "gt_bbox": [
+        105,
+        83,
+        256,
+        256
+      ]
+    },
+    {
+      "path": "data\\datasets\\ds-0001\\query\\scene_005_q0.jpg",
+      "sha256": "5001eaa76b1ce8da8006fef655b3348618d808095fccc678068387958b1429db",
+      "role": "query",
+      "base_id": "scene_005",
+      "gt_bbox": null
+    },
+    {
+      "path": "data\\datasets\\ds-0001\\query\\scene_005_q1.jpg",
+      "sha256": "2b3108d3f00e7f3e05b6a7e5cdd7eb8557caacb38fc7da26d55d13832644e840",
+      "role": "query",
+      "base_id": "scene_005",
+      "gt_bbox": null
+    },
+    {
+      "path": "data\\datasets\\ds-0001\\query\\scene_005_q2.jpg",
+      "sha256": "c86194d061d5b7f03f22207a7611e96c9bead34b9ec9f111fb2ae69a8ac1b546",
+      "role": "query",
+      "base_id": "scene_005",
+      "gt_bbox": null
+    },
+    {
+      "path": "data\\datasets\\ds-0001\\base\\scene_006_base.jpg",
+      "sha256": "45e5df0b259066d344f819238523eb945ccd352a63b0f5a161a13b36ddf0b2e1",
+      "role": "base",
+      "base_id": "scene_006",
+      "gt_bbox": [
+        500,
+        363,
+        256,
+        256
+      ]
+    },
+    {
+      "path": "data\\datasets\\ds-0001\\query\\scene_006_q0.jpg",
+      "sha256": "dabaeb1e542adf06ed049c9db9ac9da3629cb3b386ffcdc8060710167c7ba52f",
+      "role": "query",
+      "base_id": "scene_006",
+      "gt_bbox": null
+    },
+    {
+      "path": "data\\datasets\\ds-0001\\query\\scene_006_q1.jpg",
+      "sha256": "c1d9eb17f7b2aeca8b4bfc6927f0429553531c53138464dc7d7a1a75f518927e",
+      "role": "query",
+      "base_id": "scene_006",
+      "gt_bbox": null
+    },
+    {
+      "path": "data\\datasets\\ds-0001\\query\\scene_006_q2.jpg",
+      "sha256": "2adfc28c6c90ed70cbe5eb35589b8d520694a69086106077f2d08c1d32b25d57",
+      "role": "query",
+      "base_id": "scene_006",
+      "gt_bbox": null
+    },
+    {
+      "path": "data\\datasets\\ds-0001\\base\\scene_007_base.jpg",
+      "sha256": "0155ebe4f043e02a68e8c794b0db2cb88700c496d1c2e600d011209685920f0e",
+      "role": "base",
+      "base_id": "scene_007",
+      "gt_bbox": [
+        58,
+        341,
+        256,
+        256
+      ]
+    },
+    {
+      "path": "data\\datasets\\ds-0001\\query\\scene_007_q0.jpg",
+      "sha256": "e9f40be4b48a4c0beeafc33b0f9b20b584fc6b5f34663e6a2ed52702915539cb",
+      "role": "query",
+      "base_id": "scene_007",
+      "gt_bbox": null
+    },
+    {
+      "path": "data\\datasets\\ds-0001\\query\\scene_007_q1.jpg",
+      "sha256": "30cc1d7ef079cf175e62a5359872742deb99792c71d18fcb35a974e577bd1560",
+      "role": "query",
+      "base_id": "scene_007",
+      "gt_bbox": null
+    },
+    {
+      "path": "data\\datasets\\ds-0001\\query\\scene_007_q2.jpg",
+      "sha256": "0a3c919ab30c40de3bce2f1c8fa8784bc48cb25ab55056378241054706574129",
+      "role": "query",
+      "base_id": "scene_007",
+      "gt_bbox": null
+    },
+    {
+      "path": "data\\datasets\\ds-0001\\base\\scene_008_base.jpg",
+      "sha256": "86d5c032cf4ac1e71c24c19448b957c52a40756acfa6d03708510a925fffd86a",
+      "role": "base",
+      "base_id": "scene_008",
+      "gt_bbox": [
+        159,
+        63,
+        256,
+        256
+      ]
+    },
+    {
+      "path": "data\\datasets\\ds-0001\\query\\scene_008_q0.jpg",
+      "sha256": "9ea4c60bfb18a1ae05e4b4d9e6a5cc2f22b65e9065da4f85e3a5133b5a4b76b8",
+      "role": "query",
+      "base_id": "scene_008",
+      "gt_bbox": null
+    },
+    {
+      "path": "data\\datasets\\ds-0001\\query\\scene_008_q1.jpg",
+      "sha256": "871bdac4c66c5a457880bc107dde1ccaccc82a32b1f9c21fc75ccb7257d10f26",
+      "role": "query",
+      "base_id": "scene_008",
+      "gt_bbox": null
+    },
+    {
+      "path": "data\\datasets\\ds-0001\\query\\scene_008_q2.jpg",
+      "sha256": "0f795d1fd0a749794a7258caa754602c5491eb0217eaf3ad4733e45d2c280c19",
+      "role": "query",
+      "base_id": "scene_008",
+      "gt_bbox": null
+    },
+    {
+      "path": "data\\datasets\\ds-0001\\base\\scene_009_base.jpg",
+      "sha256": "822f726a47be0ca490679baebdfa92594d6d0ab6e0306df3dd207447199913b8",
+      "role": "base",
+      "base_id": "scene_009",
+      "gt_bbox": [
+        664,
+        199,
+        256,
+        256
+      ]
+    },
+    {
+      "path": "data\\datasets\\ds-0001\\query\\scene_009_q0.jpg",
+      "sha256": "c965fe78dd24a2a415608fb556ef6fe3b4bf02a0c5886292d129d9a49fc7ffc8",
+      "role": "query",
+      "base_id": "scene_009",
+      "gt_bbox": null
+    },
+    {
+      "path": "data\\datasets\\ds-0001\\query\\scene_009_q1.jpg",
+      "sha256": "2646d248e437c07b95d526425d80edb5e8bcbd486b09bc19500ceef200443eba",
+      "role": "query",
+      "base_id": "scene_009",
+      "gt_bbox": null
+    },
+    {
+      "path": "data\\datasets\\ds-0001\\query\\scene_009_q2.jpg",
+      "sha256": "47d72526249602f1e1f2d53e5bec2a57f0341b708254602a6e25dc31f72be93c",
+      "role": "query",
+      "base_id": "scene_009",
+      "gt_bbox": null
+    },
+    {
+      "path": "data\\datasets\\ds-0001\\base\\scene_010_base.jpg",
+      "sha256": "58139b20ed74aadacb475d2417d01596b3beb3be52799d36eb06c21c0d222086",
+      "role": "base",
+      "base_id": "scene_010",
+      "gt_bbox": [
+        346,
+        116,
+        256,
+        256
+      ]
+    },
+    {
+      "path": "data\\datasets\\ds-0001\\query\\scene_010_q0.jpg",
+      "sha256": "6a02a39c0ea40f4cd3a3005a6c24d88852cb4db793564854993fabf51de4a53d",
+      "role": "query",
+      "base_id": "scene_010",
+      "gt_bbox": null
+    },
+    {
+      "path": "data\\datasets\\ds-0001\\query\\scene_010_q1.jpg",
+      "sha256": "498684f6136ec731d4711bd1bb355d2957ecd94d9118e8bc6618c794eb2f7dec",
+      "role": "query",
+      "base_id": "scene_010",
+      "gt_bbox": null
+    },
+    {
+      "path": "data\\datasets\\ds-0001\\query\\scene_010_q2.jpg",
+      "sha256": "67318c8453a5458cd5a0f72b232a3f8fdc3119f1417c77963674cf0d5ecde965",
+      "role": "query",
+      "base_id": "scene_010",
+      "gt_bbox": null
+    },
+    {
+      "path": "data\\datasets\\ds-0001\\base\\scene_011_base.jpg",
+      "sha256": "c3dc70e31566651fc66456a0c4c7a3b321b00340ae282f0905c53e533369efe5",
+      "role": "base",
+      "base_id": "scene_011",
+      "gt_bbox": [
+        451,
+        417,
+        256,
+        256
+      ]
+    },
+    {
+      "path": "data\\datasets\\ds-0001\\query\\scene_011_q0.jpg",
+      "sha256": "8474cb3a946882119af8f672a3a35de2e773f00a443b7edcc2393c5dad53166d",
+      "role": "query",
+      "base_id": "scene_011",
+      "gt_bbox": null
+    },
+    {
+      "path": "data\\datasets\\ds-0001\\query\\scene_011_q1.jpg",
+      "sha256": "62beea7b02c2f3791eb77243c11c5226165f7f1c446ea9bd29354212c587b32b",
+      "role": "query",
+      "base_id": "scene_011",
+      "gt_bbox": null
+    },
+    {
+      "path": "data\\datasets\\ds-0001\\query\\scene_011_q2.jpg",
+      "sha256": "0a6b02257ddce82df88270bfa02c3b3881612a9346c2cf27d0946a068a3539b5",
+      "role": "query",
+      "base_id": "scene_011",
+      "gt_bbox": null
+    },
+    {
+      "path": "data\\datasets\\ds-0001\\base\\scene_012_base.jpg",
+      "sha256": "b751d7c50cef65ab6e42c278bca228bd02007238742f5393f8a152f142fa808a",
+      "role": "base",
+      "base_id": "scene_012",
+      "gt_bbox": [
+        584,
+        27,
+        256,
+        256
+      ]
+    },
+    {
+      "path": "data\\datasets\\ds-0001\\query\\scene_012_q0.jpg",
+      "sha256": "f25b03611a184eac16b332b5bada828cc620856a25233b7f5ee1792baab2e708",
+      "role": "query",
+      "base_id": "scene_012",
+      "gt_bbox": null
+    },
+    {
+      "path": "data\\datasets\\ds-0001\\query\\scene_012_q1.jpg",
+      "sha256": "3cc6569f88cf65017a468690c6d597e0e89974faab3151bdbcf671c560ca6d55",
+      "role": "query",
+      "base_id": "scene_012",
+      "gt_bbox": null
+    },
+    {
+      "path": "data\\datasets\\ds-0001\\query\\scene_012_q2.jpg",
+      "sha256": "693ec3e288d11e2386e285bc30b4d27c9386bc3e2696b283ef0c11d61179b8e7",
+      "role": "query",
+      "base_id": "scene_012",
+      "gt_bbox": null
+    },
+    {
+      "path": "data\\datasets\\ds-0001\\base\\scene_013_base.jpg",
+      "sha256": "6e0c70bbbdc600184a09c359b7a4221f0f63458a0949cbd718741cbe838e3e06",
+      "role": "base",
+      "base_id": "scene_013",
+      "gt_bbox": [
+        150,
+        118,
+        256,
+        256
+      ]
+    },
+    {
+      "path": "data\\datasets\\ds-0001\\query\\scene_013_q0.jpg",
+      "sha256": "f624aab2f15b0bc666010ac3968cccaf7204b6ffe3cb06ed01507787f2aa38be",
+      "role": "query",
+      "base_id": "scene_013",
+      "gt_bbox": null
+    },
+    {
+      "path": "data\\datasets\\ds-0001\\query\\scene_013_q1.jpg",
+      "sha256": "f87b5b6624d8e025076ed655153fa63d2f3c2f61580248b8c85725d5b6ba6ab9",
+      "role": "query",
+      "base_id": "scene_013",
+      "gt_bbox": null
+    },
+    {
+      "path": "data\\datasets\\ds-0001\\query\\scene_013_q2.jpg",
+      "sha256": "e5540e16887ed179146b89911454d7ab7370fa0b74ac818f58ae3ed5f5ff3891",
+      "role": "query",
+      "base_id": "scene_013",
+      "gt_bbox": null
+    },
+    {
+      "path": "data\\datasets\\ds-0001\\base\\scene_014_base.jpg",
+      "sha256": "e02274201886d02d872e96431961b32e6d46376ff9e5f2698f8b0aef765998b4",
+      "role": "base",
+      "base_id": "scene_014",
+      "gt_bbox": [
+        195,
+        241,
+        256,
+        256
+      ]
+    },
+    {
+      "path": "data\\datasets\\ds-0001\\query\\scene_014_q0.jpg",
+      "sha256": "2857b8c1b8f1be2e1134b54dbb43d6f0de19dd9c1e63503e842ecb289ee2462d",
+      "role": "query",
+      "base_id": "scene_014",
+      "gt_bbox": null
+    },
+    {
+      "path": "data\\datasets\\ds-0001\\query\\scene_014_q1.jpg",
+      "sha256": "7f0b482219a77d276c99dfeb20f50656432a9669e435d314d1c95241483980a1",
+      "role": "query",
+      "base_id": "scene_014",
+      "gt_bbox": null
+    },
+    {
+      "path": "data\\datasets\\ds-0001\\query\\scene_014_q2.jpg",
+      "sha256": "3010adbb9b228c4775e376857c5930be147b7ab3c5c2bda90914997bccb10d68",
+      "role": "query",
+      "base_id": "scene_014",
+      "gt_bbox": null
+    },
+    {
+      "path": "data\\datasets\\ds-0001\\base\\scene_015_base.jpg",
+      "sha256": "e6754b4b937af723508e28cd70124aab01c765ad22b70aa757cc3fcd5d6f9c12",
+      "role": "base",
+      "base_id": "scene_015",
+      "gt_bbox": [
+        458,
+        137,
+        256,
+        256
+      ]
+    },
+    {
+      "path": "data\\datasets\\ds-0001\\query\\scene_015_q0.jpg",
+      "sha256": "14c9ec86c2225803433acb16f7f2531fc194cc258cf1c26aabb64b7cfe29bc67",
+      "role": "query",
+      "base_id": "scene_015",
+      "gt_bbox": null
+    },
+    {
+      "path": "data\\datasets\\ds-0001\\query\\scene_015_q1.jpg",
+      "sha256": "c028a7f0da3efb0aaa20087dc06ad5c2cbaf0d287b91651b9112dc458806ed5e",
+      "role": "query",
+      "base_id": "scene_015",
+      "gt_bbox": null
+    },
+    {
+      "path": "data\\datasets\\ds-0001\\query\\scene_015_q2.jpg",
+      "sha256": "ff608b618c87e28fbc4716e0c436ef37b6a55766f39e0eb9094576d2262d4396",
+      "role": "query",
+      "base_id": "scene_015",
+      "gt_bbox": null
+    },
+    {
+      "path": "data\\datasets\\ds-0001\\base\\scene_016_base.jpg",
+      "sha256": "a2aa3568eb00fbe00f7faab72c9d29994db8ca731e7ab44b88245fbbd74902b5",
+      "role": "base",
+      "base_id": "scene_016",
+      "gt_bbox": [
+        739,
+        80,
+        256,
+        256
+      ]
+    },
+    {
+      "path": "data\\datasets\\ds-0001\\query\\scene_016_q0.jpg",
+      "sha256": "34d493ae9a271bf917933e6a4ea6ffa191e19060bd749e467e2fc3ca2d67bb1e",
+      "role": "query",
+      "base_id": "scene_016",
+      "gt_bbox": null
+    },
+    {
+      "path": "data\\datasets\\ds-0001\\query\\scene_016_q1.jpg",
+      "sha256": "5d882667902aa8e628748521e3a67796a02c2f479980d9e2ca0b6dba14464b31",
+      "role": "query",
+      "base_id": "scene_016",
+      "gt_bbox": null
+    },
+    {
+      "path": "data\\datasets\\ds-0001\\query\\scene_016_q2.jpg",
+      "sha256": "d67954e49daa1dbc1a4ea6514d7fcafd47fef32d6a69ccd8eae80d93d25a9dc2",
+      "role": "query",
+      "base_id": "scene_016",
+      "gt_bbox": null
+    },
+    {
+      "path": "data\\datasets\\ds-0001\\base\\scene_017_base.jpg",
+      "sha256": "d0fe5ae9cb6f4919e7e114ac2f66de3578dec6d2d2282827921fe628fbb7fe53",
+      "role": "base",
+      "base_id": "scene_017",
+      "gt_bbox": [
+        508,
+        480,
+        256,
+        256
+      ]
+    },
+    {
+      "path": "data\\datasets\\ds-0001\\query\\scene_017_q0.jpg",
+      "sha256": "798412c73186ac04b2dfdd2e73d041e6bf7681b39a0b69bd709c4ac43d11ff47",
+      "role": "query",
+      "base_id": "scene_017",
+      "gt_bbox": null
+    },
+    {
+      "path": "data\\datasets\\ds-0001\\query\\scene_017_q1.jpg",
+      "sha256": "8750b999ac9f603a9f240967f9757883057afa568ead27236f7e162b500d5783",
+      "role": "query",
+      "base_id": "scene_017",
+      "gt_bbox": null
+    },
+    {
+      "path": "data\\datasets\\ds-0001\\query\\scene_017_q2.jpg",
+      "sha256": "60ac78eb82e285ec26543fe9d2422ef92ba13487f8781280b671f10588ee78ec",
+      "role": "query",
+      "base_id": "scene_017",
+      "gt_bbox": null
+    },
+    {
+      "path": "data\\datasets\\ds-0001\\base\\scene_018_base.jpg",
+      "sha256": "8c2e8894835c8d29eb1dc00d073463b1a3e9c0020a525076fb8e626bc18a6e65",
+      "role": "base",
+      "base_id": "scene_018",
+      "gt_bbox": [
+        96,
+        256,
+        256,
+        256
+      ]
+    },
+    {
+      "path": "data\\datasets\\ds-0001\\query\\scene_018_q0.jpg",
+      "sha256": "2a8e78e8fd65f3dc16e819d7e1d26aade6f7735fe19dfdccb3484ba6bfccc601",
+      "role": "query",
+      "base_id": "scene_018",
+      "gt_bbox": null
+    },
+    {
+      "path": "data\\datasets\\ds-0001\\query\\scene_018_q1.jpg",
+      "sha256": "81705eed115a020fb8a6361c8eb68a24e3d54abc7d5c9fff3d81eda281707316",
+      "role": "query",
+      "base_id": "scene_018",
+      "gt_bbox": null
+    },
+    {
+      "path": "data\\datasets\\ds-0001\\query\\scene_018_q2.jpg",
+      "sha256": "f6596e7a97173af4bc09e954091b1ac224eaaca7b9851f5d6e7d44e13d36f1f8",
+      "role": "query",
+      "base_id": "scene_018",
+      "gt_bbox": null
+    },
+    {
+      "path": "data\\datasets\\ds-0001\\base\\scene_019_base.jpg",
+      "sha256": "b00262fb6fba510a8f3475ce0f707f9467360ee9f5fd6e56b41430256b05ed01",
+      "role": "base",
+      "base_id": "scene_019",
+      "gt_bbox": [
+        64,
+        64,
+        256,
+        256
+      ]
+    },
+    {
+      "path": "data\\datasets\\ds-0001\\query\\scene_019_q0.jpg",
+      "sha256": "e8378a489e99dac4f9fae2223e482dda9c14f97974d0ece22a22457eff6a7d6a",
+      "role": "query",
+      "base_id": "scene_019",
+      "gt_bbox": null
+    },
+    {
+      "path": "data\\datasets\\ds-0001\\query\\scene_019_q1.jpg",
+      "sha256": "42a37ae1a59cdb4da8c63a984bc05947a5e6af42c6914bd022c53e4d28639f99",
+      "role": "query",
+      "base_id": "scene_019",
+      "gt_bbox": null
+    },
+    {
+      "path": "data\\datasets\\ds-0001\\query\\scene_019_q2.jpg",
+      "sha256": "2940d78a95137c4cd96e1de261b339da541cba639cc24df656a13bbb535aca09",
+      "role": "query",
+      "base_id": "scene_019",
+      "gt_bbox": null
+    },
+    {
+      "path": "data\\datasets\\ds-0001\\base\\scene_020_base.jpg",
+      "sha256": "d2e6f31ee041191d90204078f6c8e6f618d5df006bbeff14dc81cf181e70d4dd",
+      "role": "base",
+      "base_id": "scene_020",
+      "gt_bbox": [
+        173,
+        426,
+        256,
+        256
+      ]
+    },
+    {
+      "path": "data\\datasets\\ds-0001\\query\\scene_020_q0.jpg",
+      "sha256": "05fd09bdfe29053b465e6bb54ec9a82bac76d9b2c76f2e36ad71cabb69905a93",
+      "role": "query",
+      "base_id": "scene_020",
+      "gt_bbox": null
+    },
+    {
+      "path": "data\\datasets\\ds-0001\\query\\scene_020_q1.jpg",
+      "sha256": "711804e4861ba7f45ffa34b96d88257c0dcb2189d742e60e0e9071e4fd3b1c11",
+      "role": "query",
+      "base_id": "scene_020",
+      "gt_bbox": null
+    },
+    {
+      "path": "data\\datasets\\ds-0001\\query\\scene_020_q2.jpg",
+      "sha256": "7fbba2bb6a5fc316fde5b01ab964f018af7c88754a138576ce83ff08ce047f99",
+      "role": "query",
+      "base_id": "scene_020",
+      "gt_bbox": null
+    },
+    {
+      "path": "data\\datasets\\ds-0001\\base\\scene_021_base.jpg",
+      "sha256": "3f29eabd1337b2597fb7168ae7a510197cabfbec80ad32ad93019a6cab54d358",
+      "role": "base",
+      "base_id": "scene_021",
+      "gt_bbox": [
+        740,
+        93,
+        256,
+        256
+      ]
+    },
+    {
+      "path": "data\\datasets\\ds-0001\\query\\scene_021_q0.jpg",
+      "sha256": "9bf53e25e1768e1c4c22c8fb724aba0a4c8fed9284747ae70a7a60f7fb8dead6",
+      "role": "query",
+      "base_id": "scene_021",
+      "gt_bbox": null
+    },
+    {
+      "path": "data\\datasets\\ds-0001\\query\\scene_021_q1.jpg",
+      "sha256": "6d40c8f0a156ad6d314566845e7a45d218d231696edb99de60d3011e286e60b5",
+      "role": "query",
+      "base_id": "scene_021",
+      "gt_bbox": null
+    },
+    {
+      "path": "data\\datasets\\ds-0001\\query\\scene_021_q2.jpg",
+      "sha256": "1056863d8b4ba99296a9ef082fc849b4d28b4f7676dd37338eb8df25c7bb97c5",
+      "role": "query",
+      "base_id": "scene_021",
+      "gt_bbox": null
+    },
+    {
+      "path": "data\\datasets\\ds-0001\\base\\scene_022_base.jpg",
+      "sha256": "5dc811c9c05c563d4b9bfad9574028bdbc00abda501e6c44336628fc113f229b",
+      "role": "base",
+      "base_id": "scene_022",
+      "gt_bbox": [
+        485,
+        212,
+        256,
+        256
+      ]
+    },
+    {
+      "path": "data\\datasets\\ds-0001\\query\\scene_022_q0.jpg",
+      "sha256": "c0379f7b6c792a495726887ba70dff9938c57c895df2e9a68ae3bb9b0575755b",
+      "role": "query",
+      "base_id": "scene_022",
+      "gt_bbox": null
+    },
+    {
+      "path": "data\\datasets\\ds-0001\\query\\scene_022_q1.jpg",
+      "sha256": "a3868911083c163dbb8ec1c9a93f1130f25a5c42db7a265047eae19efe3e8c56",
+      "role": "query",
+      "base_id": "scene_022",
+      "gt_bbox": null
+    },
+    {
+      "path": "data\\datasets\\ds-0001\\query\\scene_022_q2.jpg",
+      "sha256": "194bc4caffb73406677531b23a245ab3f5c49d0d5bf5c9da885ffedf748a8235",
+      "role": "query",
+      "base_id": "scene_022",
+      "gt_bbox": null
+    },
+    {
+      "path": "data\\datasets\\ds-0001\\base\\scene_023_base.jpg",
+      "sha256": "1bb5c588416ab0f6f0b2e22f2aea1cfc9bb618f71bb061545aac28c6a20c572b",
+      "role": "base",
+      "base_id": "scene_023",
+      "gt_bbox": [
+        349,
+        336,
+        256,
+        256
+      ]
+    },
+    {
+      "path": "data\\datasets\\ds-0001\\query\\scene_023_q0.jpg",
+      "sha256": "d66ef7a1aee7cfb634e8f9b0a412ade189adf00d486ad0ec27684fe90b9c0613",
+      "role": "query",
+      "base_id": "scene_023",
+      "gt_bbox": null
+    },
+    {
+      "path": "data\\datasets\\ds-0001\\query\\scene_023_q1.jpg",
+      "sha256": "57b9f94a44eb44b3d2c9b46131bf539fb307077021e5b1e8ab7519fa4d650248",
+      "role": "query",
+      "base_id": "scene_023",
+      "gt_bbox": null
+    },
+    {
+      "path": "data\\datasets\\ds-0001\\query\\scene_023_q2.jpg",
+      "sha256": "d2ed9db5c475e92c95c4a9a6b6521379c3e23014afb6b09cc9a117ecf5f0fdc5",
+      "role": "query",
+      "base_id": "scene_023",
+      "gt_bbox": null
+    },
+    {
+      "path": "data\\datasets\\ds-0001\\real\\real_00.jpg",
+      "sha256": "a37491a5e479e191cfe547b484426037455ce8aacff7ab15f91925330c24864f",
+      "role": "real",
+      "base_id": null,
+      "gt_bbox": null,
+      "origin": "C:\\Windows\\Web\\Wallpaper\\Windows\\img0.jpg"
+    },
+    {
+      "path": "data\\datasets\\ds-0001\\real\\real_01.jpg",
+      "sha256": "d54262032574b15ccf541e40fa13475ffb39d8682c19383e917f3ed5e8bbca71",
+      "role": "real",
+      "base_id": null,
+      "gt_bbox": null,
+      "origin": "C:\\Windows\\Web\\Wallpaper\\Windows\\img19.jpg"
+    }
+  ],
+  "created_at": "2026-11-14T10:43:27.731094+00:00",
+  "generator": "scripts/make_dataset.py",
+  "license": "CC0-1.0（程序化生成，无第三方素材）",
+  "real_note": "本机 Windows 壁纸，本地只读复制，未上传/未下载"
+}
