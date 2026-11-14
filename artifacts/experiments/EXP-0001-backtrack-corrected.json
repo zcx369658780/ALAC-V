@@ -1,7 +1,7 @@
 {
   "analysis_id": "EXP-0001-AMD-0001",
   "experiment_id": "EXP-0001",
-  "generated_at_utc": "2026-11-14T13:36:30.589238+00:00",
+  "generated_at_utc": "2026-11-14T14:19:06.948764+00:00",
   "evaluation": {
     "primary_metric": "gt_bbox_derived_representation_visible_pixel_fidelity",
     "secondary_metric": "attended_roi_derived_representation_visible_pixel_fidelity",
@@ -93,7 +93,11 @@
             "excluded": 0,
             "psnr_mean": 28.52936105604753,
             "ssim_mean": 0.8459584812323252,
-            "coverage_mean": 0.9280598958333334
+            "coverage_mean": 0.9280598958333334,
+            "roi_00_hit_rate_iou03": 0.5833333333333334,
+            "any_roi_hit_rate_iou03": 0.6666666666666666,
+            "mean_union_coverage_of_gt": 0.47738393147786456,
+            "n_images": 24
           },
           {
             "rep": 1,
@@ -101,7 +105,11 @@
             "excluded": 0,
             "psnr_mean": 28.52936105604753,
             "ssim_mean": 0.8459584812323252,
-            "coverage_mean": 0.9280598958333334
+            "coverage_mean": 0.9280598958333334,
+            "roi_00_hit_rate_iou03": 0.5833333333333334,
+            "any_roi_hit_rate_iou03": 0.6666666666666666,
+            "mean_union_coverage_of_gt": 0.47738393147786456,
+            "n_images": 24
           },
           {
             "rep": 2,
@@ -109,9 +117,19 @@
             "excluded": 0,
             "psnr_mean": 28.52936105604753,
             "ssim_mean": 0.8459584812323252,
-            "coverage_mean": 0.9280598958333334
+            "coverage_mean": 0.9280598958333334,
+            "roi_00_hit_rate_iou03": 0.5833333333333334,
+            "any_roi_hit_rate_iou03": 0.6666666666666666,
+            "mean_union_coverage_of_gt": 0.47738393147786456,
+            "n_images": 24
           }
-        ]
+        ],
+        "roi_mechanism": {
+          "roi_00_hit_rate_iou03": 0.5833333333333334,
+          "any_roi_hit_rate_iou03": 0.6666666666666666,
+          "mean_union_coverage_of_gt": 0.47738393147786456,
+          "note": "C 的回溯表示使用全部已存 ROI 裁片（编码特征源仅含 roi_00）；命中率与并集覆盖率分别报告，58.3% 只是 roi_00 的命中率。"
+        }
       }
     }
   },
@@ -227,10 +245,116 @@
     "B": -0.6184564929192575,
     "C": -3.1351946852989983
   },
+  "c_roi_mechanism": {
+    "definition": "GT 区域回溯时，C 将**全部已存 ROI 裁片**贴回 foveated 马赛克（编码特征源仍只含 roi_00）。",
+    "roi_00_hit_rate_iou03": 0.5833333333333334,
+    "any_roi_hit_rate_iou03": 0.6666666666666666,
+    "mean_union_coverage_of_gt": 0.47738393147786456,
+    "interpretation": "C 的全分辨率覆盖有限，仍有过半目标区域依赖 1/2 画布马赛克上采样；这与 GT 区域保真度下降一致，但 58.3% 不能单独作为完整因果证明。"
+  },
   "previous_roi_based_run": {
-    "A": {},
-    "B": {},
-    "C": {}
+    "A": {
+      "n_reps": 3,
+      "n_images": 24,
+      "excluded": 0,
+      "coverage_mean": 0.9280598958333334,
+      "psnr_mean_median": 31.66455574134653,
+      "ssim_mean_median": 0.925000287592411,
+      "reps": [
+        {
+          "rep": 0,
+          "n": 24,
+          "excluded": 0,
+          "psnr_mean": 31.66455574134653,
+          "ssim_mean": 0.925000287592411,
+          "coverage_mean": 0.9280598958333334
+        },
+        {
+          "rep": 1,
+          "n": 24,
+          "excluded": 0,
+          "psnr_mean": 31.66455574134653,
+          "ssim_mean": 0.925000287592411,
+          "coverage_mean": 0.9280598958333334
+        },
+        {
+          "rep": 2,
+          "n": 24,
+          "excluded": 0,
+          "psnr_mean": 31.66455574134653,
+          "ssim_mean": 0.925000287592411,
+          "coverage_mean": 0.9280598958333334
+        }
+      ]
+    },
+    "B": {
+      "n_reps": 3,
+      "n_images": 24,
+      "excluded": 0,
+      "coverage_mean": 0.9280598958333334,
+      "psnr_mean_median": 31.04609924842727,
+      "ssim_mean_median": 0.8885927672187487,
+      "reps": [
+        {
+          "rep": 0,
+          "n": 24,
+          "excluded": 0,
+          "psnr_mean": 31.04609924842727,
+          "ssim_mean": 0.8885927672187487,
+          "coverage_mean": 0.9280598958333334
+        },
+        {
+          "rep": 1,
+          "n": 24,
+          "excluded": 0,
+          "psnr_mean": 31.04609924842727,
+          "ssim_mean": 0.8885927672187487,
+          "coverage_mean": 0.9280598958333334
+        },
+        {
+          "rep": 2,
+          "n": 24,
+          "excluded": 0,
+          "psnr_mean": 31.04609924842727,
+          "ssim_mean": 0.8885927672187487,
+          "coverage_mean": 0.9280598958333334
+        }
+      ]
+    },
+    "C": {
+      "n_reps": 3,
+      "n_images": 24,
+      "excluded": 0,
+      "coverage_mean": 0.9280598958333334,
+      "psnr_mean_median": 28.52936105604753,
+      "ssim_mean_median": 0.8459584812323252,
+      "reps": [
+        {
+          "rep": 0,
+          "n": 24,
+          "excluded": 0,
+          "psnr_mean": 28.52936105604753,
+          "ssim_mean": 0.8459584812323252,
+          "coverage_mean": 0.9280598958333334
+        },
+        {
+          "rep": 1,
+          "n": 24,
+          "excluded": 0,
+          "psnr_mean": 28.52936105604753,
+          "ssim_mean": 0.8459584812323252,
+          "coverage_mean": 0.9280598958333334
+        },
+        {
+          "rep": 2,
+          "n": 24,
+          "excluded": 0,
+          "psnr_mean": 28.52936105604753,
+          "ssim_mean": 0.8459584812323252,
+          "coverage_mean": 0.9280598958333334
+        }
+      ]
+    }
   },
   "per_image": [
     {
@@ -248,6 +372,25 @@
         192,
         192
       ],
+      "roi_boxes": [
+        [
+          240,
+          144,
+          192,
+          192
+        ],
+        [
+          216,
+          240,
+          192,
+          192
+        ]
+      ],
+      "roi_hit_iou03": {
+        "roi_00": false,
+        "any": false
+      },
+      "roi_union_coverage_of_gt": 0.3475341796875,
       "gt_coverage": 1.0,
       "gt": {
         "A": {
@@ -294,6 +437,25 @@
         192,
         192
       ],
+      "roi_boxes": [
+        [
+          432,
+          504,
+          192,
+          192
+        ],
+        [
+          336,
+          408,
+          192,
+          192
+        ]
+      ],
+      "roi_hit_iou03": {
+        "roi_00": true,
+        "any": true
+      },
+      "roi_union_coverage_of_gt": 0.8040771484375,
       "gt_coverage": 1.0,
       "gt": {
         "A": {
@@ -340,6 +502,25 @@
         192,
         192
       ],
+      "roi_boxes": [
+        [
+          744,
+          288,
+          192,
+          192
+        ],
+        [
+          648,
+          264,
+          192,
+          192
+        ]
+      ],
+      "roi_hit_iou03": {
+        "roi_00": true,
+        "any": true
+      },
+      "roi_union_coverage_of_gt": 0.7532958984375,
       "gt_coverage": 0.89453125,
       "gt": {
         "A": {
@@ -386,6 +567,25 @@
         192,
         192
       ],
+      "roi_boxes": [
+        [
+          360,
+          264,
+          192,
+          192
+        ],
+        [
+          432,
+          336,
+          192,
+          192
+        ]
+      ],
+      "roi_hit_iou03": {
+        "roi_00": false,
+        "any": true
+      },
+      "roi_union_coverage_of_gt": 0.5048828125,
       "gt_coverage": 1.0,
       "gt": {
         "A": {
@@ -432,6 +632,25 @@
         192,
         192
       ],
+      "roi_boxes": [
+        [
+          96,
+          120,
+          192,
+          192
+        ],
+        [
+          168,
+          48,
+          192,
+          192
+        ]
+      ],
+      "roi_hit_iou03": {
+        "roi_00": false,
+        "any": false
+      },
+      "roi_union_coverage_of_gt": 0.0,
       "gt_coverage": 1.0,
       "gt": {
         "A": {
@@ -478,6 +697,25 @@
         192,
         192
       ],
+      "roi_boxes": [
+        [
+          336,
+          120,
+          192,
+          192
+        ],
+        [
+          240,
+          144,
+          192,
+          192
+        ]
+      ],
+      "roi_hit_iou03": {
+        "roi_00": false,
+        "any": false
+      },
+      "roi_union_coverage_of_gt": 0.3636474609375,
       "gt_coverage": 0.91015625,
       "gt": {
         "A": {
@@ -524,6 +762,25 @@
         192,
         192
       ],
+      "roi_boxes": [
+        [
+          504,
+          360,
+          192,
+          192
+        ],
+        [
+          600,
+          336,
+          192,
+          192
+        ]
+      ],
+      "roi_hit_iou03": {
+        "roi_00": true,
+        "any": true
+      },
+      "roi_union_coverage_of_gt": 0.70477294921875,
       "gt_coverage": 1.0,
       "gt": {
         "A": {
@@ -570,6 +827,25 @@
         192,
         192
       ],
+      "roi_boxes": [
+        [
+          432,
+          168,
+          192,
+          192
+        ],
+        [
+          360,
+          96,
+          192,
+          192
+        ]
+      ],
+      "roi_hit_iou03": {
+        "roi_00": false,
+        "any": false
+      },
+      "roi_union_coverage_of_gt": 0.0,
       "gt_coverage": 0.7265625,
       "gt": {
         "A": {
@@ -616,6 +892,25 @@
         192,
         192
       ],
+      "roi_boxes": [
+        [
+          120,
+          288,
+          192,
+          192
+        ],
+        [
+          48,
+          360,
+          192,
+          192
+        ]
+      ],
+      "roi_hit_iou03": {
+        "roi_00": false,
+        "any": false
+      },
+      "roi_union_coverage_of_gt": 0.0723724365234375,
       "gt_coverage": 1.0,
       "gt": {
         "A": {
@@ -662,6 +957,25 @@
         192,
         192
       ],
+      "roi_boxes": [
+        [
+          288,
+          144,
+          192,
+          192
+        ],
+        [
+          360,
+          72,
+          192,
+          192
+        ]
+      ],
+      "roi_hit_iou03": {
+        "roi_00": false,
+        "any": false
+      },
+      "roi_union_coverage_of_gt": 0.0,
       "gt_coverage": 0.90234375,
       "gt": {
         "A": {
@@ -708,6 +1022,25 @@
         192,
         192
       ],
+      "roi_boxes": [
+        [
+          432,
+          192,
+          192,
+          192
+        ],
+        [
+          336,
+          216,
+          192,
+          192
+        ]
+      ],
+      "roi_hit_iou03": {
+        "roi_00": true,
+        "any": true
+      },
+      "roi_union_coverage_of_gt": 0.671630859375,
       "gt_coverage": 1.0,
       "gt": {
         "A": {
@@ -754,6 +1087,25 @@
         192,
         192
       ],
+      "roi_boxes": [
+        [
+          432,
+          408,
+          192,
+          192
+        ],
+        [
+          408,
+          504,
+          192,
+          192
+        ]
+      ],
+      "roi_hit_iou03": {
+        "roi_00": true,
+        "any": true
+      },
+      "roi_union_coverage_of_gt": 0.6490478515625,
       "gt_coverage": 1.0,
       "gt": {
         "A": {
@@ -800,6 +1152,25 @@
         192,
         192
       ],
+      "roi_boxes": [
+        [
+          600,
+          48,
+          192,
+          192
+        ],
+        [
+          672,
+          120,
+          192,
+          192
+        ]
+      ],
+      "roi_hit_iou03": {
+        "roi_00": true,
+        "any": true
+      },
+      "roi_union_coverage_of_gt": 0.7606201171875,
       "gt_coverage": 1.0,
       "gt": {
         "A": {
@@ -846,6 +1217,25 @@
         192,
         192
       ],
+      "roi_boxes": [
+        [
+          216,
+          192,
+          192,
+          192
+        ],
+        [
+          648,
+          168,
+          192,
+          192
+        ]
+      ],
+      "roi_hit_iou03": {
+        "roi_00": true,
+        "any": true
+      },
+      "roi_union_coverage_of_gt": 0.52764892578125,
       "gt_coverage": 1.0,
       "gt": {
         "A": {
@@ -892,6 +1282,25 @@
         192,
         192
       ],
+      "roi_boxes": [
+        [
+          192,
+          240,
+          192,
+          192
+        ],
+        [
+          552,
+          216,
+          192,
+          192
+        ]
+      ],
+      "roi_hit_iou03": {
+        "roi_00": true,
+        "any": true
+      },
+      "roi_union_coverage_of_gt": 0.5508270263671875,
       "gt_coverage": 1.0,
       "gt": {
         "A": {
@@ -938,6 +1347,25 @@
         192,
         192
       ],
+      "roi_boxes": [
+        [
+          528,
+          168,
+          192,
+          192
+        ],
+        [
+          432,
+          192,
+          192,
+          192
+        ]
+      ],
+      "roi_hit_iou03": {
+        "roi_00": true,
+        "any": true
+      },
+      "roi_union_coverage_of_gt": 0.78515625,
       "gt_coverage": 1.0,
       "gt": {
         "A": {
@@ -984,6 +1412,25 @@
         192,
         192
       ],
+      "roi_boxes": [
+        [
+          816,
+          168,
+          192,
+          192
+        ],
+        [
+          832,
+          72,
+          192,
+          192
+        ]
+      ],
+      "roi_hit_iou03": {
+        "roi_00": true,
+        "any": true
+      },
+      "roi_union_coverage_of_gt": 0.677734375,
       "gt_coverage": 0.609375,
       "gt": {
         "A": {
@@ -1030,6 +1477,25 @@
         192,
         192
       ],
+      "roi_boxes": [
+        [
+          768,
+          432,
+          192,
+          192
+        ],
+        [
+          696,
+          360,
+          192,
+          192
+        ]
+      ],
+      "roi_hit_iou03": {
+        "roi_00": false,
+        "any": false
+      },
+      "roi_union_coverage_of_gt": 0.07470703125,
       "gt_coverage": 1.0,
       "gt": {
         "A": {
@@ -1076,6 +1542,25 @@
         192,
         192
       ],
+      "roi_boxes": [
+        [
+          576,
+          168,
+          192,
+          192
+        ],
+        [
+          168,
+          336,
+          192,
+          192
+        ]
+      ],
+      "roi_hit_iou03": {
+        "roi_00": false,
+        "any": true
+      },
+      "roi_union_coverage_of_gt": 0.494140625,
       "gt_coverage": 0.875,
       "gt": {
         "A": {
@@ -1122,6 +1607,25 @@
         192,
         192
       ],
+      "roi_boxes": [
+        [
+          528,
+          96,
+          192,
+          192
+        ],
+        [
+          600,
+          168,
+          192,
+          192
+        ]
+      ],
+      "roi_hit_iou03": {
+        "roi_00": false,
+        "any": false
+      },
+      "roi_union_coverage_of_gt": 0.0,
       "gt_coverage": 0.75,
       "gt": {
         "A": {
@@ -1168,6 +1672,25 @@
         192,
         192
       ],
+      "roi_boxes": [
+        [
+          240,
+          504,
+          192,
+          192
+        ],
+        [
+          456,
+          24,
+          192,
+          192
+        ]
+      ],
+      "roi_hit_iou03": {
+        "roi_00": true,
+        "any": true
+      },
+      "roi_union_coverage_of_gt": 0.513336181640625,
       "gt_coverage": 1.0,
       "gt": {
         "A": {
@@ -1214,6 +1737,25 @@
         192,
         192
       ],
+      "roi_boxes": [
+        [
+          816,
+          144,
+          192,
+          192
+        ],
+        [
+          792,
+          48,
+          192,
+          192
+        ]
+      ],
+      "roi_hit_iou03": {
+        "roi_00": true,
+        "any": true
+      },
+      "roi_union_coverage_of_gt": 0.7119140625,
       "gt_coverage": 0.60546875,
       "gt": {
         "A": {
@@ -1260,6 +1802,25 @@
         192,
         192
       ],
+      "roi_boxes": [
+        [
+          552,
+          240,
+          192,
+          192
+        ],
+        [
+          456,
+          264,
+          192,
+          192
+        ]
+      ],
+      "roi_hit_iou03": {
+        "roi_00": true,
+        "any": true
+      },
+      "roi_union_coverage_of_gt": 0.78515625,
       "gt_coverage": 1.0,
       "gt": {
         "A": {
@@ -1306,6 +1867,25 @@
         192,
         192
       ],
+      "roi_boxes": [
+        [
+          408,
+          408,
+          192,
+          192
+        ],
+        [
+          288,
+          408,
+          192,
+          192
+        ]
+      ],
+      "roi_hit_iou03": {
+        "roi_00": true,
+        "any": true
+      },
+      "roi_union_coverage_of_gt": 0.7047119140625,
       "gt_coverage": 1.0,
       "gt": {
         "A": {
@@ -1352,6 +1932,25 @@
         192,
         192
       ],
+      "roi_boxes": [
+        [
+          240,
+          144,
+          192,
+          192
+        ],
+        [
+          216,
+          240,
+          192,
+          192
+        ]
+      ],
+      "roi_hit_iou03": {
+        "roi_00": false,
+        "any": false
+      },
+      "roi_union_coverage_of_gt": 0.3475341796875,
       "gt_coverage": 1.0,
       "gt": {
         "A": {
@@ -1398,6 +1997,25 @@
         192,
         192
       ],
+      "roi_boxes": [
+        [
+          432,
+          504,
+          192,
+          192
+        ],
+        [
+          336,
+          408,
+          192,
+          192
+        ]
+      ],
+      "roi_hit_iou03": {
+        "roi_00": true,
+        "any": true
+      },
+      "roi_union_coverage_of_gt": 0.8040771484375,
       "gt_coverage": 1.0,
       "gt": {
         "A": {
@@ -1444,6 +2062,25 @@
         192,
         192
       ],
+      "roi_boxes": [
+        [
+          744,
+          288,
+          192,
+          192
+        ],
+        [
+          648,
+          264,
+          192,
+          192
+        ]
+      ],
+      "roi_hit_iou03": {
+        "roi_00": true,
+        "any": true
+      },
+      "roi_union_coverage_of_gt": 0.7532958984375,
       "gt_coverage": 0.89453125,
       "gt": {
         "A": {
@@ -1490,6 +2127,25 @@
         192,
         192
       ],
+      "roi_boxes": [
+        [
+          360,
+          264,
+          192,
+          192
+        ],
+        [
+          432,
+          336,
+          192,
+          192
+        ]
+      ],
+      "roi_hit_iou03": {
+        "roi_00": false,
+        "any": true
+      },
+      "roi_union_coverage_of_gt": 0.5048828125,
       "gt_coverage": 1.0,
       "gt": {
         "A": {
@@ -1536,6 +2192,25 @@
         192,
         192
       ],
+      "roi_boxes": [
+        [
+          96,
+          120,
+          192,
+          192
+        ],
+        [
+          168,
+          48,
+          192,
+          192
+        ]
+      ],
+      "roi_hit_iou03": {
+        "roi_00": false,
+        "any": false
+      },
+      "roi_union_coverage_of_gt": 0.0,
       "gt_coverage": 1.0,
       "gt": {
         "A": {
@@ -1582,6 +2257,25 @@
         192,
         192
       ],
+      "roi_boxes": [
+        [
+          336,
+          120,
+          192,
+          192
+        ],
+        [
+          240,
+          144,
+          192,
+          192
+        ]
+      ],
+      "roi_hit_iou03": {
+        "roi_00": false,
+        "any": false
+      },
+      "roi_union_coverage_of_gt": 0.3636474609375,
       "gt_coverage": 0.91015625,
       "gt": {
         "A": {
@@ -1628,6 +2322,25 @@
         192,
         192
       ],
+      "roi_boxes": [
+        [
+          504,
+          360,
+          192,
+          192
+        ],
+        [
+          600,
+          336,
+          192,
+          192
+        ]
+      ],
+      "roi_hit_iou03": {
+        "roi_00": true,
+        "any": true
+      },
+      "roi_union_coverage_of_gt": 0.70477294921875,
       "gt_coverage": 1.0,
       "gt": {
         "A": {
@@ -1674,6 +2387,25 @@
         192,
         192
       ],
+      "roi_boxes": [
+        [
+          432,
+          168,
+          192,
+          192
+        ],
+        [
+          360,
+          96,
+          192,
+          192
+        ]
+      ],
+      "roi_hit_iou03": {
+        "roi_00": false,
+        "any": false
+      },
+      "roi_union_coverage_of_gt": 0.0,
       "gt_coverage": 0.7265625,
       "gt": {
         "A": {
@@ -1720,6 +2452,25 @@
         192,
         192
       ],
+      "roi_boxes": [
+        [
+          120,
+          288,
+          192,
+          192
+        ],
+        [
+          48,
+          360,
+          192,
+          192
+        ]
+      ],
+      "roi_hit_iou03": {
+        "roi_00": false,
+        "any": false
+      },
+      "roi_union_coverage_of_gt": 0.0723724365234375,
       "gt_coverage": 1.0,
       "gt": {
         "A": {
@@ -1766,6 +2517,25 @@
         192,
         192
       ],
+      "roi_boxes": [
+        [
+          288,
+          144,
+          192,
+          192
+        ],
+        [
+          360,
+          72,
+          192,
+          192
+        ]
+      ],
+      "roi_hit_iou03": {
+        "roi_00": false,
+        "any": false
+      },
+      "roi_union_coverage_of_gt": 0.0,
       "gt_coverage": 0.90234375,
       "gt": {
         "A": {
@@ -1812,6 +2582,25 @@
         192,
         192
       ],
+      "roi_boxes": [
+        [
+          432,
+          192,
+          192,
+          192
+        ],
+        [
+          336,
+          216,
+          192,
+          192
+        ]
+      ],
+      "roi_hit_iou03": {
+        "roi_00": true,
+        "any": true
+      },
+      "roi_union_coverage_of_gt": 0.671630859375,
       "gt_coverage": 1.0,
       "gt": {
         "A": {
@@ -1858,6 +2647,25 @@
         192,
         192
       ],
+      "roi_boxes": [
+        [
+          432,
+          408,
+          192,
+          192
+        ],
+        [
+          408,
+          504,
+          192,
+          192
+        ]
+      ],
+      "roi_hit_iou03": {
+        "roi_00": true,
+        "any": true
+      },
+      "roi_union_coverage_of_gt": 0.6490478515625,
       "gt_coverage": 1.0,
       "gt": {
         "A": {
@@ -1904,6 +2712,25 @@
         192,
         192
       ],
+      "roi_boxes": [
+        [
+          600,
+          48,
+          192,
+          192
+        ],
+        [
+          672,
+          120,
+          192,
+          192
+        ]
+      ],
+      "roi_hit_iou03": {
+        "roi_00": true,
+        "any": true
+      },
+      "roi_union_coverage_of_gt": 0.7606201171875,
       "gt_coverage": 1.0,
       "gt": {
         "A": {
@@ -1950,6 +2777,25 @@
         192,
         192
       ],
+      "roi_boxes": [
+        [
+          216,
+          192,
+          192,
+          192
+        ],
+        [
+          648,
+          168,
+          192,
+          192
+        ]
+      ],
+      "roi_hit_iou03": {
+        "roi_00": true,
+        "any": true
+      },
+      "roi_union_coverage_of_gt": 0.52764892578125,
       "gt_coverage": 1.0,
       "gt": {
         "A": {
@@ -1996,6 +2842,25 @@
         192,
         192
       ],
+      "roi_boxes": [
+        [
+          192,
+          240,
+          192,
+          192
+        ],
+        [
+          552,
+          216,
+          192,
+          192
+        ]
+      ],
+      "roi_hit_iou03": {
+        "roi_00": true,
+        "any": true
+      },
+      "roi_union_coverage_of_gt": 0.5508270263671875,
       "gt_coverage": 1.0,
       "gt": {
         "A": {
@@ -2042,6 +2907,25 @@
         192,
         192
       ],
+      "roi_boxes": [
+        [
+          528,
+          168,
+          192,
+          192
+        ],
+        [
+          432,
+          192,
+          192,
+          192
+        ]
+      ],
+      "roi_hit_iou03": {
+        "roi_00": true,
+        "any": true
+      },
+      "roi_union_coverage_of_gt": 0.78515625,
       "gt_coverage": 1.0,
       "gt": {
         "A": {
@@ -2088,6 +2972,25 @@
         192,
         192
       ],
+      "roi_boxes": [
+        [
+          816,
+          168,
+          192,
+          192
+        ],
+        [
+          832,
+          72,
+          192,
+          192
+        ]
+      ],
+      "roi_hit_iou03": {
+        "roi_00": true,
+        "any": true
+      },
+      "roi_union_coverage_of_gt": 0.677734375,
       "gt_coverage": 0.609375,
       "gt": {
         "A": {
@@ -2134,6 +3037,25 @@
         192,
         192
       ],
+      "roi_boxes": [
+        [
+          768,
+          432,
+          192,
+          192
+        ],
+        [
+          696,
+          360,
+          192,
+          192
+        ]
+      ],
+      "roi_hit_iou03": {
+        "roi_00": false,
+        "any": false
+      },
+      "roi_union_coverage_of_gt": 0.07470703125,
       "gt_coverage": 1.0,
       "gt": {
         "A": {
@@ -2180,6 +3102,25 @@
         192,
         192
       ],
+      "roi_boxes": [
+        [
+          576,
+          168,
+          192,
+          192
+        ],
+        [
+          168,
+          336,
+          192,
+          192
+        ]
+      ],
+      "roi_hit_iou03": {
+        "roi_00": false,
+        "any": true
+      },
+      "roi_union_coverage_of_gt": 0.494140625,
       "gt_coverage": 0.875,
       "gt": {
         "A": {
@@ -2226,6 +3167,25 @@
         192,
         192
       ],
+      "roi_boxes": [
+        [
+          528,
+          96,
+          192,
+          192
+        ],
+        [
+          600,
+          168,
+          192,
+          192
+        ]
+      ],
+      "roi_hit_iou03": {
+        "roi_00": false,
+        "any": false
+      },
+      "roi_union_coverage_of_gt": 0.0,
       "gt_coverage": 0.75,
       "gt": {
         "A": {
@@ -2272,6 +3232,25 @@
         192,
         192
       ],
+      "roi_boxes": [
+        [
+          240,
+          504,
+          192,
+          192
+        ],
+        [
+          456,
+          24,
+          192,
+          192
+        ]
+      ],
+      "roi_hit_iou03": {
+        "roi_00": true,
+        "any": true
+      },
+      "roi_union_coverage_of_gt": 0.513336181640625,
       "gt_coverage": 1.0,
       "gt": {
         "A": {
@@ -2318,6 +3297,25 @@
         192,
         192
       ],
+      "roi_boxes": [
+        [
+          816,
+          144,
+          192,
+          192
+        ],
+        [
+          792,
+          48,
+          192,
+          192
+        ]
+      ],
+      "roi_hit_iou03": {
+        "roi_00": true,
+        "any": true
+      },
+      "roi_union_coverage_of_gt": 0.7119140625,
       "gt_coverage": 0.60546875,
       "gt": {
         "A": {
@@ -2364,6 +3362,25 @@
         192,
         192
       ],
+      "roi_boxes": [
+        [
+          552,
+          240,
+          192,
+          192
+        ],
+        [
+          456,
+          264,
+          192,
+          192
+        ]
+      ],
+      "roi_hit_iou03": {
+        "roi_00": true,
+        "any": true
+      },
+      "roi_union_coverage_of_gt": 0.78515625,
       "gt_coverage": 1.0,
       "gt": {
         "A": {
@@ -2410,6 +3427,25 @@
         192,
         192
       ],
+      "roi_boxes": [
+        [
+          408,
+          408,
+          192,
+          192
+        ],
+        [
+          288,
+          408,
+          192,
+          192
+        ]
+      ],
+      "roi_hit_iou03": {
+        "roi_00": true,
+        "any": true
+      },
+      "roi_union_coverage_of_gt": 0.7047119140625,
       "gt_coverage": 1.0,
       "gt": {
         "A": {
@@ -2456,6 +3492,25 @@
         192,
         192
       ],
+      "roi_boxes": [
+        [
+          240,
+          144,
+          192,
+          192
+        ],
+        [
+          216,
+          240,
+          192,
+          192
+        ]
+      ],
+      "roi_hit_iou03": {
+        "roi_00": false,
+        "any": false
+      },
+      "roi_union_coverage_of_gt": 0.3475341796875,
       "gt_coverage": 1.0,
       "gt": {
         "A": {
@@ -2502,6 +3557,25 @@
         192,
         192
       ],
+      "roi_boxes": [
+        [
+          432,
+          504,
+          192,
+          192
+        ],
+        [
+          336,
+          408,
+          192,
+          192
+        ]
+      ],
+      "roi_hit_iou03": {
+        "roi_00": true,
+        "any": true
+      },
+      "roi_union_coverage_of_gt": 0.8040771484375,
       "gt_coverage": 1.0,
       "gt": {
         "A": {
@@ -2548,6 +3622,25 @@
         192,
         192
       ],
+      "roi_boxes": [
+        [
+          744,
+          288,
+          192,
+          192
+        ],
+        [
+          648,
+          264,
+          192,
+          192
+        ]
+      ],
+      "roi_hit_iou03": {
+        "roi_00": true,
+        "any": true
+      },
+      "roi_union_coverage_of_gt": 0.7532958984375,
       "gt_coverage": 0.89453125,
       "gt": {
         "A": {
@@ -2594,6 +3687,25 @@
         192,
         192
       ],
+      "roi_boxes": [
+        [
+          360,
+          264,
+          192,
+          192
+        ],
+        [
+          432,
+          336,
+          192,
+          192
+        ]
+      ],
+      "roi_hit_iou03": {
+        "roi_00": false,
+        "any": true
+      },
+      "roi_union_coverage_of_gt": 0.5048828125,
       "gt_coverage": 1.0,
       "gt": {
         "A": {
@@ -2640,6 +3752,25 @@
         192,
         192
       ],
+      "roi_boxes": [
+        [
+          96,
+          120,
+          192,
+          192
+        ],
+        [
+          168,
+          48,
+          192,
+          192
+        ]
+      ],
+      "roi_hit_iou03": {
+        "roi_00": false,
+        "any": false
+      },
+      "roi_union_coverage_of_gt": 0.0,
       "gt_coverage": 1.0,
       "gt": {
         "A": {
@@ -2686,6 +3817,25 @@
         192,
         192
       ],
+      "roi_boxes": [
+        [
+          336,
+          120,
+          192,
+          192
+        ],
+        [
+          240,
+          144,
+          192,
+          192
+        ]
+      ],
+      "roi_hit_iou03": {
+        "roi_00": false,
+        "any": false
+      },
+      "roi_union_coverage_of_gt": 0.3636474609375,
       "gt_coverage": 0.91015625,
       "gt": {
         "A": {
@@ -2732,6 +3882,25 @@
         192,
         192
       ],
+      "roi_boxes": [
+        [
+          504,
+          360,
+          192,
+          192
+        ],
+        [
+          600,
+          336,
+          192,
+          192
+        ]
+      ],
+      "roi_hit_iou03": {
+        "roi_00": true,
+        "any": true
+      },
+      "roi_union_coverage_of_gt": 0.70477294921875,
       "gt_coverage": 1.0,
       "gt": {
         "A": {
@@ -2778,6 +3947,25 @@
         192,
         192
       ],
+      "roi_boxes": [
+        [
+          432,
+          168,
+          192,
+          192
+        ],
+        [
+          360,
+          96,
+          192,
+          192
+        ]
+      ],
+      "roi_hit_iou03": {
+        "roi_00": false,
+        "any": false
+      },
+      "roi_union_coverage_of_gt": 0.0,
       "gt_coverage": 0.7265625,
       "gt": {
         "A": {
@@ -2824,6 +4012,25 @@
         192,
         192
       ],
+      "roi_boxes": [
+        [
+          120,
+          288,
+          192,
+          192
+        ],
+        [
+          48,
+          360,
+          192,
+          192
+        ]
+      ],
+      "roi_hit_iou03": {
+        "roi_00": false,
+        "any": false
+      },
+      "roi_union_coverage_of_gt": 0.0723724365234375,
       "gt_coverage": 1.0,
       "gt": {
         "A": {
@@ -2870,6 +4077,25 @@
         192,
         192
       ],
+      "roi_boxes": [
+        [
+          288,
+          144,
+          192,
+          192
+        ],
+        [
+          360,
+          72,
+          192,
+          192
+        ]
+      ],
+      "roi_hit_iou03": {
+        "roi_00": false,
+        "any": false
+      },
+      "roi_union_coverage_of_gt": 0.0,
       "gt_coverage": 0.90234375,
       "gt": {
         "A": {
@@ -2916,6 +4142,25 @@
         192,
         192
       ],
+      "roi_boxes": [
+        [
+          432,
+          192,
+          192,
+          192
+        ],
+        [
+          336,
+          216,
+          192,
+          192
+        ]
+      ],
+      "roi_hit_iou03": {
+        "roi_00": true,
+        "any": true
+      },
+      "roi_union_coverage_of_gt": 0.671630859375,
       "gt_coverage": 1.0,
       "gt": {
         "A": {
@@ -2962,6 +4207,25 @@
         192,
         192
       ],
+      "roi_boxes": [
+        [
+          432,
+          408,
+          192,
+          192
+        ],
+        [
+          408,
+          504,
+          192,
+          192
+        ]
+      ],
+      "roi_hit_iou03": {
+        "roi_00": true,
+        "any": true
+      },
+      "roi_union_coverage_of_gt": 0.6490478515625,
       "gt_coverage": 1.0,
       "gt": {
         "A": {
@@ -3008,6 +4272,25 @@
         192,
         192
       ],
+      "roi_boxes": [
+        [
+          600,
+          48,
+          192,
+          192
+        ],
+        [
+          672,
+          120,
+          192,
+          192
+        ]
+      ],
+      "roi_hit_iou03": {
+        "roi_00": true,
+        "any": true
+      },
+      "roi_union_coverage_of_gt": 0.7606201171875,
       "gt_coverage": 1.0,
       "gt": {
         "A": {
@@ -3054,6 +4337,25 @@
         192,
         192
       ],
+      "roi_boxes": [
+        [
+          216,
+          192,
+          192,
+          192
+        ],
+        [
+          648,
+          168,
+          192,
+          192
+        ]
+      ],
+      "roi_hit_iou03": {
+        "roi_00": true,
+        "any": true
+      },
+      "roi_union_coverage_of_gt": 0.52764892578125,
       "gt_coverage": 1.0,
       "gt": {
         "A": {
@@ -3100,6 +4402,25 @@
         192,
         192
       ],
+      "roi_boxes": [
+        [
+          192,
+          240,
+          192,
+          192
+        ],
+        [
+          552,
+          216,
+          192,
+          192
+        ]
+      ],
+      "roi_hit_iou03": {
+        "roi_00": true,
+        "any": true
+      },
+      "roi_union_coverage_of_gt": 0.5508270263671875,
       "gt_coverage": 1.0,
       "gt": {
         "A": {
@@ -3146,6 +4467,25 @@
         192,
         192
       ],
+      "roi_boxes": [
+        [
+          528,
+          168,
+          192,
+          192
+        ],
+        [
+          432,
+          192,
+          192,
+          192
+        ]
+      ],
+      "roi_hit_iou03": {
+        "roi_00": true,
+        "any": true
+      },
+      "roi_union_coverage_of_gt": 0.78515625,
       "gt_coverage": 1.0,
       "gt": {
         "A": {
@@ -3192,6 +4532,25 @@
         192,
         192
       ],
+      "roi_boxes": [
+        [
+          816,
+          168,
+          192,
+          192
+        ],
+        [
+          832,
+          72,
+          192,
+          192
+        ]
+      ],
+      "roi_hit_iou03": {
+        "roi_00": true,
+        "any": true
+      },
+      "roi_union_coverage_of_gt": 0.677734375,
       "gt_coverage": 0.609375,
       "gt": {
         "A": {
@@ -3238,6 +4597,25 @@
         192,
         192
       ],
+      "roi_boxes": [
+        [
+          768,
+          432,
+          192,
+          192
+        ],
+        [
+          696,
+          360,
+          192,
+          192
+        ]
+      ],
+      "roi_hit_iou03": {
+        "roi_00": false,
+        "any": false
+      },
+      "roi_union_coverage_of_gt": 0.07470703125,
       "gt_coverage": 1.0,
       "gt": {
         "A": {
@@ -3284,6 +4662,25 @@
         192,
         192
       ],
+      "roi_boxes": [
+        [
+          576,
+          168,
+          192,
+          192
+        ],
+        [
+          168,
+          336,
+          192,
+          192
+        ]
+      ],
+      "roi_hit_iou03": {
+        "roi_00": false,
+        "any": true
+      },
+      "roi_union_coverage_of_gt": 0.494140625,
       "gt_coverage": 0.875,
       "gt": {
         "A": {
@@ -3330,6 +4727,25 @@
         192,
         192
       ],
+      "roi_boxes": [
+        [
+          528,
+          96,
+          192,
+          192
+        ],
+        [
+          600,
+          168,
+          192,
+          192
+        ]
+      ],
+      "roi_hit_iou03": {
+        "roi_00": false,
+        "any": false
+      },
+      "roi_union_coverage_of_gt": 0.0,
       "gt_coverage": 0.75,
       "gt": {
         "A": {
@@ -3376,6 +4792,25 @@
         192,
         192
       ],
+      "roi_boxes": [
+        [
+          240,
+          504,
+          192,
+          192
+        ],
+        [
+          456,
+          24,
+          192,
+          192
+        ]
+      ],
+      "roi_hit_iou03": {
+        "roi_00": true,
+        "any": true
+      },
+      "roi_union_coverage_of_gt": 0.513336181640625,
       "gt_coverage": 1.0,
       "gt": {
         "A": {
@@ -3422,6 +4857,25 @@
         192,
         192
       ],
+      "roi_boxes": [
+        [
+          816,
+          144,
+          192,
+          192
+        ],
+        [
+          792,
+          48,
+          192,
+          192
+        ]
+      ],
+      "roi_hit_iou03": {
+        "roi_00": true,
+        "any": true
+      },
+      "roi_union_coverage_of_gt": 0.7119140625,
       "gt_coverage": 0.60546875,
       "gt": {
         "A": {
@@ -3468,6 +4922,25 @@
         192,
         192
       ],
+      "roi_boxes": [
+        [
+          552,
+          240,
+          192,
+          192
+        ],
+        [
+          456,
+          264,
+          192,
+          192
+        ]
+      ],
+      "roi_hit_iou03": {
+        "roi_00": true,
+        "any": true
+      },
+      "roi_union_coverage_of_gt": 0.78515625,
       "gt_coverage": 1.0,
       "gt": {
         "A": {
@@ -3514,6 +4987,25 @@
         192,
         192
       ],
+      "roi_boxes": [
+        [
+          408,
+          408,
+          192,
+          192
+        ],
+        [
+          288,
+          408,
+          192,
+          192
+        ]
+      ],
+      "roi_hit_iou03": {
+        "roi_00": true,
+        "any": true
+      },
+      "roi_union_coverage_of_gt": 0.7047119140625,
       "gt_coverage": 1.0,
       "gt": {
         "A": {
@@ -3549,10 +5041,10 @@
   "provenance": {
     "script": {
       "path": "scripts/recompute_backtrack.py",
-      "sha256": "3cc77b0ccd7332a200b2820293fd552c6535128c307c12e687d0c3dd3eec868c"
+      "sha256": "3bcce61cb44dc97a38b8cf8beed95198db71f96a73d6b51c9ca94ca92e67f4c0"
     },
     "git": {
-      "commit": "9a8e1d12a00381076e7c7e866347edffcaebf5e0",
+      "commit": "c9c9941ff3ccd32bab194bed114a09661b19c539",
       "branch": "task/1-phase0-1-remediation",
       "dirty": false
     },
