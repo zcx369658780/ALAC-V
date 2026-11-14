@@ -12,9 +12,10 @@ issue: https://github.com/zcx369658780/ALAC-V/issues/1
 
 ## Status
 
-**Owner-authorized / implementation in progress (2026-11-14).** Issue #1 records the authorization and
-is the authoritative online discussion and acceptance record. This snapshot tracks the eight remediation
-work packages; acceptance remains reserved to the Owner.
+**Owner-authorized / implementation submitted for review (2026-11-15).** Issue #1 records the
+authorization and is the authoritative online discussion and acceptance record. All eight remediation
+work packages are implemented on branch `task/1-phase0-1-remediation` (PR #2); acceptance remains
+reserved to the Owner.
 
 ## Objective
 

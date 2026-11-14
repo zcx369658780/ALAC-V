@@ -42,7 +42,12 @@ The current engineering baseline is committed, but the first independent review 
 - DS-0001 is a programmatically generated synthetic benchmark with 24 gallery scenes, 72 query variants, and 2 local wallpaper samples.
 - A/B/C results do not support a general efficiency-improvement claim; the report explicitly says so.
 
-## Key review findings
+## Key review findings (first review, 2026-11-14 — historical)
+
+> These are the **first-round** findings that triggered TASK-0002. They are kept for history and are
+> **not** a description of the current tree. Current remediation status is in
+> [Remediation status](#remediation-status-task-0002-2026-11-14) below; each item is closed or
+> superseded as recorded there.
 
 1. Public repository excludes `artifacts/runs/*`; only aggregate summaries are public. This does not meet the repository's own run-level evidence rule for formal independent audit.
 2. A-variant backtrack reconstruction in `scripts/run_experiments.py` appears not to apply the center-crop offset used by `fit_to_input()`; A backtrack PSNR/SSIM require correction and re-evaluation.
@@ -51,7 +56,7 @@ The current engineering baseline is committed, but the first independent review 
 5. TASK-0001 refers to `tests/test_pyramid.py`, while the current repository test is `tests/test_imaging.py::test_pyramid_sizes`.
 6. CPU peak percentage and OS product/build identification need source-level validation before reuse as formal claims.
 
-See `PHASE0_1_ACCEPTANCE.md` and Issue #1 for the complete list.
+See `PHASE0_1_ACCEPTANCE.md` and Issue #1 for the complete original list; see the remediation table below for current status.
 
 ## Remediation status (TASK-0002, 2026-11-14)
 
