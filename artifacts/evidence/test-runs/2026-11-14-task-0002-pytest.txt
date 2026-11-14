@@ -1,7 +1,7 @@
 command: .venv\Scripts\python.exe -m pytest -v
-executed_at_utc: 2026-11-14T14:19:27.3957177Z
+executed_at_utc: 2026-11-14T14:20:16.1287268Z
 cwd: <REPO>
-git_head: 04d66d1f9650d6100cf641b18d37f429b5d87ebc
+git_head: 07a723c469d7877560377a2112656092f98de9e5
 git_branch: task/1-phase0-1-remediation
 git_dirty: false
 environment: python=3.11.9 2.14.1+cu130 2.4.6 13.0.0
@@ -26,5 +26,5 @@ tests\test_pipeline.py ....                                              [ 86%]
 tests\test_retrieval.py ....                                             [ 91%]
 tests\test_store.py .......                                              [100%]
 
-============================= 83 passed in 9.43s ==============================
+============================= 83 passed in 8.04s ==============================
 
