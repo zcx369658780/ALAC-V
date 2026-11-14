@@ -34,7 +34,7 @@
 | 项 | 报告值 |
 |---|---|
 | CPU | Intel Core Ultra 7 265K（20 线程） |
-| RAM | 31.48 GB 可用总量 |
+| RAM | 31.48 GB 识别总量；审计时可用 10.9 GB |
 | GPU | NVIDIA GeForce RTX 5070，12227 MiB，sm_120 |
 | 驱动 / CUDA | 616.92 / UMD 13.4 / toolkit 12.8 / PyTorch cu130 |
 
