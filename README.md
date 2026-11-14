@@ -118,6 +118,6 @@ docs/
 
 ## 许可证
 
-- 项目代码：Apache-2.0（见仓库许可证文件/声明）
+- 项目代码：**许可证尚未确定/尚未发布 LICENSE 文件**；在 Owner 明确选择前，不应假定为 Apache-2.0
 - Phase 1 模型：DINOv2（Meta AI），Apache-2.0
 - DS-0001 合成数据集：CC0-1.0
