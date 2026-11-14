@@ -23,6 +23,44 @@ def test_gradient_energy_peaks_on_texture():
     assert e[80:176, 80:176].mean() > e[0:40, 0:40].mean() * 5
 
 
+def test_gradient_operator_matches_central_difference():
+    """ADR-0008：算子必须是中心差分，而不是 3×3 Sobel。"""
+    rng = np.random.default_rng(7)
+    gray = rng.integers(0, 255, (24, 24), dtype=np.uint8)
+    e = gradient_energy_map(gray, blur_radius=0.0)
+
+    a = gray.astype(np.float32) / 255.0
+    gx = np.zeros_like(a)
+    gy = np.zeros_like(a)
+    gx[:, 1:-1] = a[:, 2:] - a[:, :-2]
+    gy[1:-1, :] = a[2:, :] - a[:-2, :]
+    mag = np.sqrt(gx * gx + gy * gy)
+    expected = mag / mag.max()
+
+    assert np.allclose(e, expected, atol=1e-6)
+
+    # 与标准 3×3 Sobel 不同：纵向权重为 2
+    def sobel(a):
+        kx = np.array([[-1, 0, 1], [-2, 0, 2], [-1, 0, 1]], dtype=np.float32)
+        ky = kx.T
+        out = np.zeros_like(a)
+        for y in range(1, a.shape[0] - 1):
+            for x in range(1, a.shape[1] - 1):
+                win = a[y - 1 : y + 2, x - 1 : x + 2]
+                out[y, x] = np.hypot((win * kx).sum(), (win * ky).sum())
+        return out
+
+    s = sobel(a)
+    s = s / s.max()
+    assert not np.allclose(e[1:-1, 1:-1], s[1:-1, 1:-1], atol=1e-4)
+
+
+def test_gradient_energy_zero_on_flat():
+    flat = np.full((16, 16), 128, dtype=np.uint8)
+    e = gradient_energy_map(flat, blur_radius=0.0)
+    assert e.max() == 0.0
+
+
 def test_select_roi_hits_texture():
     img = _checker_scene()
     roi = select_rois(img, roi_frac=96 / 256, max_rois=1)[0]

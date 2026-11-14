@@ -1,4 +1,8 @@
-"""解码、色彩归一、多尺度金字塔。"""
+"""解码、RGB 模式归一、多尺度金字塔。
+
+色彩边界：只做 PIL 模式转换（统一到 RGB，alpha 合成白底），
+**不执行 ICC profile → sRGB 色彩管理变换**；ICC 仅作为元数据记录（见 ADR 与 WP4）。
+"""
 
 from __future__ import annotations
 
@@ -38,7 +42,7 @@ class DecodedImage:
 
 
 def to_rgb(img: Image.Image) -> Image.Image:
-    """统一到 RGB；含 alpha 的图像合成到白底（避免黑边）。"""
+    """统一到 RGB 模式（PIL convert / alpha 合成白底），不做 ICC profile 变换。"""
     if img.mode == "RGB":
         return img
     if img.mode in ("RGBA", "LA", "PA") or (img.mode == "P" and "transparency" in img.info):
@@ -73,16 +77,49 @@ def open_image(path: str | Path, *, exif_transpose: bool = True) -> DecodedImage
     )
 
 
+@dataclass(frozen=True)
+class FitGeometry:
+    """`fit_to_input` 的精确几何参数，供回溯/重建复用（单一事实来源）。
+
+    Pillow 实际执行的是**逐轴**缩放：``scale_x = resized_w / W``、``scale_y = resized_h / H``。
+    两者可能与名义 ``scale = input_size / min(W, H)`` 不同（例如 1024×768 → 691×518），
+    因此坐标映射必须使用逐轴比例，不能只用名义 scale。
+    """
+
+    input_size: int
+    scale: float
+    resized: tuple[int, int]
+    left: int
+    top: int
+    x_scale: float = 0.0
+    y_scale: float = 0.0
+
+
+def fit_geometry(width: int, height: int, size: int) -> FitGeometry:
+    """短边缩放到 size、再中心裁剪 size×size 的精确几何。
+
+    取整方式必须与 PIL 实际 resize 一致：`int(round(...))`，下取整用于裁剪偏移。
+    """
+    scale = size / min(width, height)
+    nw = max(size, int(round(width * scale)))
+    nh = max(size, int(round(height * scale)))
+    return FitGeometry(
+        input_size=size,
+        scale=scale,
+        resized=(nw, nh),
+        left=(nw - size) // 2,
+        top=(nh - size) // 2,
+        x_scale=nw / width,
+        y_scale=nh / height,
+    )
+
+
 def fit_to_input(img: Image.Image, size: int, method: str = "bicubic") -> Image.Image:
     """DINOv2 标准评估式预处理：短边缩放到 size，再中心裁剪 size×size。"""
     interp = resolve_interp(method)
-    w, h = img.size
-    scale = size / min(w, h)
-    nw, nh = max(size, int(round(w * scale))), max(size, int(round(h * scale)))
-    resized = img.resize((nw, nh), interp)
-    left = (nw - size) // 2
-    top = (nh - size) // 2
-    return resized.crop((left, top, left + size, top + size))
+    g = fit_geometry(img.width, img.height, size)
+    resized = img.resize(g.resized, interp)
+    return resized.crop((g.left, g.top, g.left + size, g.top + size))
 
 
 def build_pyramid(img: Image.Image, scales: list[int], method: str = "bicubic") -> dict[int, Image.Image]:

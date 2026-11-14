@@ -1,7 +1,7 @@
 ---
 id: TASK-0002
 title: Phase 0/1 independent acceptance remediation
-status: proposed; awaiting Owner authorization
+status: owner-authorized; implementation submitted for review
 date: 2026-11-14
 owner: Owner
 source: ALAC-0001
@@ -12,7 +12,10 @@ issue: https://github.com/zcx369658780/ALAC-V/issues/1
 
 ## Status
 
-**Proposed / awaiting explicit Owner authorization.** This snapshot records the independent review findings. The GitHub Issue is the authoritative online discussion and acceptance record.
+**Owner-authorized / implementation submitted for review (2026-11-15).** Issue #1 records the
+authorization and is the authoritative online discussion and acceptance record. All eight remediation
+work packages are implemented on branch `task/1-phase0-1-remediation` (PR #2); acceptance remains
+reserved to the Owner.
 
 ## Objective
 

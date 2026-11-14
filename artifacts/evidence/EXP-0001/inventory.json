@@ -1,0 +1,542 @@
+{
+  "experiment_id": "EXP-0001",
+  "generated_at": "2026-11-14T13:34:32.585109+00:00",
+  "runs_dir": "artifacts/runs",
+  "n_runs_found": 9,
+  "dataset": {
+    "dataset_id": "ds-0001-alacv-synthetic-v1",
+    "manifest_sha256_lf": "e604b3ffe6ab39e3fbcf71703aa87fa95a057255011db16493bb395055ada6e7",
+    "manifest_sha256_runtime_original_bytes": "596fcb3c66220312277781148592380c9398724aa0887a3d76c9e371de9a9845",
+    "hash_spec": "sha256 over LF-normalized bytes (Git blob / GitHub file)"
+  },
+  "model": {
+    "model_id": "facebook/dinov2-small",
+    "revision": "ed25f3a31f01632728cabb09d1542f84ab7b0056",
+    "weights_sha256": "ae1e99fcefd534ed978cdeb8326f08030c96e28b7a81ffcbc98a857c84d14be1",
+    "license": "Apache-2.0"
+  },
+  "runs": [
+    {
+      "run_id": "20261114T104749Z_EXP-0001_C_r2",
+      "variant": "C",
+      "repeat": 2,
+      "files": {
+        "metrics.json": {
+          "sha256": "c4912700ec50fc6fdd6790aa7af058dadb12367b932dfb98e68e178e16ff197c",
+          "bytes": 1998
+        },
+        "config.snapshot.yaml": {
+          "sha256": "369326f5f129f02d5f99ba37e344de26bb30a38880541037250ca31e4f615ad1",
+          "bytes": 1864
+        },
+        "config.sha256": {
+          "sha256": "1f28930afb13c3f447f7c7f2a4a87514ca879bed651b1ff162e201fc590ab980",
+          "bytes": 66
+        },
+        "env.json": {
+          "sha256": "a1a48115236908b003438ee6a0f4879fca7eec2a30f1a43c6c569092dc563a29",
+          "bytes": 414
+        },
+        "model.json": {
+          "sha256": "064e3bdc48ac4be545462aac61a1f72294136a2e5abd270dcd3b70f41657a827",
+          "bytes": 1754
+        },
+        "items.jsonl": {
+          "sha256": "3280813f8bd4bf05efeb9de2ebffefc1a0ff266258e692c00f768f104b4bdb78",
+          "bytes": 77845
+        },
+        "run.log": {
+          "sha256": "966daa49d68cf3412863709e66c2168806f802f83a2d889d5330ebfa446eac38",
+          "bytes": 162
+        }
+      },
+      "missing": [],
+      "complete": true,
+      "code": {
+        "git_commit_raw": "",
+        "git_dirty_raw": false,
+        "status": "pre_git_initialization"
+      },
+      "config_sha256": "c5bf4414bc67f769849d260f99eeb40daedc24c11a130d2ca8756d9dfd06bd5a",
+      "config_sha256_matches_record": true,
+      "metrics": {
+        "n_processed": 98,
+        "recall@1": 0.8888888888888888,
+        "mAP@10": 0.9217923280423282,
+        "t_total_median_ms": 357.0052499999292,
+        "feature_bytes_per_image": 6317254.0,
+        "backtrack_psnr_mean": 29.09954774997709
+      },
+      "model": {
+        "model_id": "facebook/dinov2-small",
+        "revision": "ed25f3a31f01632728cabb09d1542f84ab7b0056",
+        "weights_sha256": "ae1e99fcefd534ed978cdeb8326f08030c96e28b7a81ffcbc98a857c84d14be1",
+        "license": "Apache-2.0"
+      }
+    },
+    {
+      "run_id": "20261114T104854Z_EXP-0001_A_r1",
+      "variant": "A",
+      "repeat": 1,
+      "files": {
+        "metrics.json": {
+          "sha256": "bdd221cdb107cae339539cbdb5008e90c44506f0040bba7680c845bfce200163",
+          "bytes": 1838
+        },
+        "config.snapshot.yaml": {
+          "sha256": "49c1a760d4503e81e7d119067918ce71ceabade0cd5926ed1239d457add0de24",
+          "bytes": 1864
+        },
+        "config.sha256": {
+          "sha256": "8519064ced6c0e61c9df2a75b6ad830e37aae8d2669f1ecfc043c3d25186c0d5",
+          "bytes": 66
+        },
+        "env.json": {
+          "sha256": "e0fb1251d3adf306f5cbf04a2312060e6cae3d7ffc500ebc6a167c00e2096e44",
+          "bytes": 454
+        },
+        "model.json": {
+          "sha256": "064e3bdc48ac4be545462aac61a1f72294136a2e5abd270dcd3b70f41657a827",
+          "bytes": 1754
+        },
+        "items.jsonl": {
+          "sha256": "19471513ba4f427998a5537400ae3ce7f0974a37bad9f8dd3bae16bd40ba9ff0",
+          "bytes": 43072
+        },
+        "run.log": {
+          "sha256": "e591d7bb2bf952ffbb6775b0fc099ef5a445cebd4259ed099471e9301b8360b3",
+          "bytes": 161
+        }
+      },
+      "missing": [],
+      "complete": true,
+      "code": {
+        "git_commit_raw": "0f83806303e5aeb18f8e4ac8798ddc5931f9817c",
+        "git_dirty_raw": false,
+        "status": "anchored"
+      },
+      "config_sha256": "f061e1375614b787d266c90d68c2efd5ec6aadfada8105914dc5e357a8530abb",
+      "config_sha256_matches_record": true,
+      "metrics": {
+        "n_processed": 98,
+        "recall@1": 0.8333333333333334,
+        "mAP@10": 0.8829861111111114,
+        "t_total_median_ms": 33.726299996487796,
+        "feature_bytes_per_image": 1052874.0,
+        "backtrack_psnr_mean": 26.76222647919738
+      },
+      "model": {
+        "model_id": "facebook/dinov2-small",
+        "revision": "ed25f3a31f01632728cabb09d1542f84ab7b0056",
+        "weights_sha256": "ae1e99fcefd534ed978cdeb8326f08030c96e28b7a81ffcbc98a857c84d14be1",
+        "license": "Apache-2.0"
+      }
+    },
+    {
+      "run_id": "20261114T104900Z_EXP-0001_C_r0",
+      "variant": "C",
+      "repeat": 0,
+      "files": {
+        "metrics.json": {
+          "sha256": "9efd49006c87581e7ddbbe6d1888ccdecf1937394906dc4b2edd56983fe7c180",
+          "bytes": 2001
+        },
+        "config.snapshot.yaml": {
+          "sha256": "419cd6c5f7ebf4b64a7193aa473745f56609defa8a417428b7165ed0d7942e1f",
+          "bytes": 1864
+        },
+        "config.sha256": {
+          "sha256": "aec6ed9ba1b28fc90268a0d89188055999a3ba75c5faf804d418220d7bdf6e00",
+          "bytes": 66
+        },
+        "env.json": {
+          "sha256": "e0fb1251d3adf306f5cbf04a2312060e6cae3d7ffc500ebc6a167c00e2096e44",
+          "bytes": 454
+        },
+        "model.json": {
+          "sha256": "064e3bdc48ac4be545462aac61a1f72294136a2e5abd270dcd3b70f41657a827",
+          "bytes": 1754
+        },
+        "items.jsonl": {
+          "sha256": "6966af170a6639aa2f1b49480d7f3242c4d955e431cca7e5167837ee797d2460",
+          "bytes": 77829
+        },
+        "run.log": {
+          "sha256": "c91e2a916ab3364c7c24ac2dbbed8b8fbe8331eb2f674da459472570eca99942",
+          "bytes": 162
+        }
+      },
+      "missing": [],
+      "complete": true,
+      "code": {
+        "git_commit_raw": "0f83806303e5aeb18f8e4ac8798ddc5931f9817c",
+        "git_dirty_raw": false,
+        "status": "anchored"
+      },
+      "config_sha256": "3cc32073ab4655d427e6b2afb6f57a7b800c47f1e132ba63cce7e4ce7e64b102",
+      "config_sha256_matches_record": true,
+      "metrics": {
+        "n_processed": 98,
+        "recall@1": 0.8888888888888888,
+        "mAP@10": 0.9217923280423282,
+        "t_total_median_ms": 361.32694999105297,
+        "feature_bytes_per_image": 6317254.0,
+        "backtrack_psnr_mean": 29.09954774997709
+      },
+      "model": {
+        "model_id": "facebook/dinov2-small",
+        "revision": "ed25f3a31f01632728cabb09d1542f84ab7b0056",
+        "weights_sha256": "ae1e99fcefd534ed978cdeb8326f08030c96e28b7a81ffcbc98a857c84d14be1",
+        "license": "Apache-2.0"
+      }
+    },
+    {
+      "run_id": "20261114T104948Z_EXP-0001_C_r1",
+      "variant": "C",
+      "repeat": 1,
+      "files": {
+        "metrics.json": {
+          "sha256": "cef100fed8c4fa886eab772c1abec015fc91399d283b86e4290b16ba9cd6e952",
+          "bytes": 2000
+        },
+        "config.snapshot.yaml": {
+          "sha256": "9275daffaaed8e89573a33f6590daaf7ba8e3336939db38f7a16767a443429d4",
+          "bytes": 1864
+        },
+        "config.sha256": {
+          "sha256": "f5936afb17f58f60e3b151b7e6bb04cb60e8040ed90fadf8bfd820c03411592d",
+          "bytes": 66
+        },
+        "env.json": {
+          "sha256": "e0fb1251d3adf306f5cbf04a2312060e6cae3d7ffc500ebc6a167c00e2096e44",
+          "bytes": 454
+        },
+        "model.json": {
+          "sha256": "064e3bdc48ac4be545462aac61a1f72294136a2e5abd270dcd3b70f41657a827",
+          "bytes": 1754
+        },
+        "items.jsonl": {
+          "sha256": "8bad5f7d99b645a76258f10450c217dffe3911445846c88c1e8b04ecd8f9b06e",
+          "bytes": 77812
+        },
+        "run.log": {
+          "sha256": "add1e842ce7f9b647370371c987c009ba7cfc5603cf47e3a8a112d83d2fd3efc",
+          "bytes": 162
+        }
+      },
+      "missing": [],
+      "complete": true,
+      "code": {
+        "git_commit_raw": "0f83806303e5aeb18f8e4ac8798ddc5931f9817c",
+        "git_dirty_raw": false,
+        "status": "anchored"
+      },
+      "config_sha256": "a845fe212df7c7e92843636e4b8978b4010497e9d725d084fb2c0dedbd12de1f",
+      "config_sha256_matches_record": true,
+      "metrics": {
+        "n_processed": 98,
+        "recall@1": 0.8888888888888888,
+        "mAP@10": 0.9217923280423282,
+        "t_total_median_ms": 367.3502000165172,
+        "feature_bytes_per_image": 6317254.0,
+        "backtrack_psnr_mean": 29.09954774997709
+      },
+      "model": {
+        "model_id": "facebook/dinov2-small",
+        "revision": "ed25f3a31f01632728cabb09d1542f84ab7b0056",
+        "weights_sha256": "ae1e99fcefd534ed978cdeb8326f08030c96e28b7a81ffcbc98a857c84d14be1",
+        "license": "Apache-2.0"
+      }
+    },
+    {
+      "run_id": "20261114T105035Z_EXP-0001_B_r1",
+      "variant": "B",
+      "repeat": 1,
+      "files": {
+        "metrics.json": {
+          "sha256": "b54048e055c65d5359e3648f63481c15e31586ee4e7214e303ba745c9e965be0",
+          "bytes": 1933
+        },
+        "config.snapshot.yaml": {
+          "sha256": "26fc3cfa5dd64ae503e57aad9c2f94e65141884c349fae84c7da7822736be235",
+          "bytes": 1864
+        },
+        "config.sha256": {
+          "sha256": "c7e7d4f99696a9b5e1ff4db59ac077c49e85699e7d0295ff9c7935b4d9f4cfac",
+          "bytes": 66
+        },
+        "env.json": {
+          "sha256": "e0fb1251d3adf306f5cbf04a2312060e6cae3d7ffc500ebc6a167c00e2096e44",
+          "bytes": 454
+        },
+        "model.json": {
+          "sha256": "064e3bdc48ac4be545462aac61a1f72294136a2e5abd270dcd3b70f41657a827",
+          "bytes": 1754
+        },
+        "items.jsonl": {
+          "sha256": "7d7051ed20b875a37aec9b5f0d7b4435afcac2a002ae8bdfea24b359d44b397d",
+          "bytes": 48816
+        },
+        "run.log": {
+          "sha256": "8f02c18e7ba55341478c0a2a01e2b25110dff596eee960127a1c1152a320ae36",
+          "bytes": 162
+        }
+      },
+      "missing": [],
+      "complete": true,
+      "code": {
+        "git_commit_raw": "0f83806303e5aeb18f8e4ac8798ddc5931f9817c",
+        "git_dirty_raw": false,
+        "status": "anchored"
+      },
+      "config_sha256": "2a20734c1e29bff425284577569b24b2dfb214981d6dd7fb76a7d5b56628873c",
+      "config_sha256_matches_record": true,
+      "metrics": {
+        "n_processed": 98,
+        "recall@1": 0.875,
+        "mAP@10": 0.9175925925925925,
+        "t_total_median_ms": 216.19619999546558,
+        "feature_bytes_per_image": 4211504.0,
+        "backtrack_psnr_mean": 29.192368679680346
+      },
+      "model": {
+        "model_id": "facebook/dinov2-small",
+        "revision": "ed25f3a31f01632728cabb09d1542f84ab7b0056",
+        "weights_sha256": "ae1e99fcefd534ed978cdeb8326f08030c96e28b7a81ffcbc98a857c84d14be1",
+        "license": "Apache-2.0"
+      }
+    },
+    {
+      "run_id": "20261114T105105Z_EXP-0001_A_r2",
+      "variant": "A",
+      "repeat": 2,
+      "files": {
+        "metrics.json": {
+          "sha256": "15bfd43f86532a50d0f5d3856224364fd8f7b111920a7beb033253aa5827fd85",
+          "bytes": 1841
+        },
+        "config.snapshot.yaml": {
+          "sha256": "3fc9e2f56f05e05bd8674ccd9f6521262dd7ace5b50321d2b87e52e99cf322eb",
+          "bytes": 1864
+        },
+        "config.sha256": {
+          "sha256": "97e53ddbe9ebd8d58e6e97e577ed4b28bc33db7620d9b6661b32973419c7b2df",
+          "bytes": 66
+        },
+        "env.json": {
+          "sha256": "e0fb1251d3adf306f5cbf04a2312060e6cae3d7ffc500ebc6a167c00e2096e44",
+          "bytes": 454
+        },
+        "model.json": {
+          "sha256": "064e3bdc48ac4be545462aac61a1f72294136a2e5abd270dcd3b70f41657a827",
+          "bytes": 1754
+        },
+        "items.jsonl": {
+          "sha256": "3de4d8e0dc63561dbba86a58d6b0963ee6a01bed993769ed02ab4759e802cd38",
+          "bytes": 43038
+        },
+        "run.log": {
+          "sha256": "ca14cb13adc07edc43bdbf05812d8c68248d4404a45c5eec12b99d9afb6d0db2",
+          "bytes": 161
+        }
+      },
+      "missing": [],
+      "complete": true,
+      "code": {
+        "git_commit_raw": "0f83806303e5aeb18f8e4ac8798ddc5931f9817c",
+        "git_dirty_raw": false,
+        "status": "anchored"
+      },
+      "config_sha256": "f3175455f5b222d7baac76ada1f9860e08d486c3d4663a7a4a72562578f59a70",
+      "config_sha256_matches_record": true,
+      "metrics": {
+        "n_processed": 98,
+        "recall@1": 0.8333333333333334,
+        "mAP@10": 0.8829861111111114,
+        "t_total_median_ms": 34.41569999267813,
+        "feature_bytes_per_image": 1052874.0,
+        "backtrack_psnr_mean": 26.76222647919738
+      },
+      "model": {
+        "model_id": "facebook/dinov2-small",
+        "revision": "ed25f3a31f01632728cabb09d1542f84ab7b0056",
+        "weights_sha256": "ae1e99fcefd534ed978cdeb8326f08030c96e28b7a81ffcbc98a857c84d14be1",
+        "license": "Apache-2.0"
+      }
+    },
+    {
+      "run_id": "20261114T105111Z_EXP-0001_A_r0",
+      "variant": "A",
+      "repeat": 0,
+      "files": {
+        "metrics.json": {
+          "sha256": "e8d504b29783682c074f552d589846e0aebcd21e4717d494c6806c6af4cd3b19",
+          "bytes": 1841
+        },
+        "config.snapshot.yaml": {
+          "sha256": "9b5ba77a1cf1e060b8ef986f4500d04a869a3fa21755a10fb3c88dc0c48d864d",
+          "bytes": 1864
+        },
+        "config.sha256": {
+          "sha256": "679aaf968815d42559bb64fae2754212d3bd6dab7f510cf2bdaf8abbe66bf717",
+          "bytes": 66
+        },
+        "env.json": {
+          "sha256": "e0fb1251d3adf306f5cbf04a2312060e6cae3d7ffc500ebc6a167c00e2096e44",
+          "bytes": 454
+        },
+        "model.json": {
+          "sha256": "064e3bdc48ac4be545462aac61a1f72294136a2e5abd270dcd3b70f41657a827",
+          "bytes": 1754
+        },
+        "items.jsonl": {
+          "sha256": "d1e4c99b99a5d599086817616801a4b8b5af615423f0e5c1cd8d8e9f9f3d51a4",
+          "bytes": 43056
+        },
+        "run.log": {
+          "sha256": "3b3af4284ef8d958595c97897285978c2aa06d7c533050bfa74c637069340ac0",
+          "bytes": 161
+        }
+      },
+      "missing": [],
+      "complete": true,
+      "code": {
+        "git_commit_raw": "0f83806303e5aeb18f8e4ac8798ddc5931f9817c",
+        "git_dirty_raw": false,
+        "status": "anchored"
+      },
+      "config_sha256": "fd3e3aa9489f7418de68e3eb7ef3805c61c905d6dc765600a51db4bd91ad3918",
+      "config_sha256_matches_record": true,
+      "metrics": {
+        "n_processed": 98,
+        "recall@1": 0.8333333333333334,
+        "mAP@10": 0.8829861111111114,
+        "t_total_median_ms": 35.56035000656266,
+        "feature_bytes_per_image": 1052874.0,
+        "backtrack_psnr_mean": 26.76222647919738
+      },
+      "model": {
+        "model_id": "facebook/dinov2-small",
+        "revision": "ed25f3a31f01632728cabb09d1542f84ab7b0056",
+        "weights_sha256": "ae1e99fcefd534ed978cdeb8326f08030c96e28b7a81ffcbc98a857c84d14be1",
+        "license": "Apache-2.0"
+      }
+    },
+    {
+      "run_id": "20261114T105117Z_EXP-0001_B_r0",
+      "variant": "B",
+      "repeat": 0,
+      "files": {
+        "metrics.json": {
+          "sha256": "b88d52a4c2836e706ac012f034dda4d88e2c7a3342dfb308bfb022b132f25ae2",
+          "bytes": 1939
+        },
+        "config.snapshot.yaml": {
+          "sha256": "676c1266f56e6b38b075af4da0f19e024c107ab22e5c8a56bd2aae9913a1a657",
+          "bytes": 1864
+        },
+        "config.sha256": {
+          "sha256": "0fd3d148cf318eee5f5d4a1a19c04962ad60cf95fc51a065d1bb61fb813356ed",
+          "bytes": 66
+        },
+        "env.json": {
+          "sha256": "e0fb1251d3adf306f5cbf04a2312060e6cae3d7ffc500ebc6a167c00e2096e44",
+          "bytes": 454
+        },
+        "model.json": {
+          "sha256": "064e3bdc48ac4be545462aac61a1f72294136a2e5abd270dcd3b70f41657a827",
+          "bytes": 1754
+        },
+        "items.jsonl": {
+          "sha256": "ed2bdeddde530d72e62b44ca5c756e663f6127504e6d7d9282455386a4d0a987",
+          "bytes": 48805
+        },
+        "run.log": {
+          "sha256": "f7fc715cc2b576bf47a22e9f6c7c7774365a5d5066440dba9f1241236107141d",
+          "bytes": 162
+        }
+      },
+      "missing": [],
+      "complete": true,
+      "code": {
+        "git_commit_raw": "0f83806303e5aeb18f8e4ac8798ddc5931f9817c",
+        "git_dirty_raw": false,
+        "status": "anchored"
+      },
+      "config_sha256": "d848b9cb83a89d70a90154d2a3bcc8011a6424ee6d33f6b93ae51fe084c34ccb",
+      "config_sha256_matches_record": true,
+      "metrics": {
+        "n_processed": 98,
+        "recall@1": 0.875,
+        "mAP@10": 0.9175925925925925,
+        "t_total_median_ms": 219.41350000270177,
+        "feature_bytes_per_image": 4211504.0,
+        "backtrack_psnr_mean": 29.192368679680346
+      },
+      "model": {
+        "model_id": "facebook/dinov2-small",
+        "revision": "ed25f3a31f01632728cabb09d1542f84ab7b0056",
+        "weights_sha256": "ae1e99fcefd534ed978cdeb8326f08030c96e28b7a81ffcbc98a857c84d14be1",
+        "license": "Apache-2.0"
+      }
+    },
+    {
+      "run_id": "20261114T105148Z_EXP-0001_B_r2",
+      "variant": "B",
+      "repeat": 2,
+      "files": {
+        "metrics.json": {
+          "sha256": "318dd035d43c7efdf1151708bb8b99aebb580aa03e8bf475756079be2c96af8d",
+          "bytes": 1939
+        },
+        "config.snapshot.yaml": {
+          "sha256": "f509c3e27751090ada4a34efb6a1becb79b06a09fc3335abf9d7db352b31d89b",
+          "bytes": 1864
+        },
+        "config.sha256": {
+          "sha256": "885c31ab521101e4b12bea61b8498e52b82e3ea41bd421d67ad1f8cca2acb525",
+          "bytes": 66
+        },
+        "env.json": {
+          "sha256": "e0fb1251d3adf306f5cbf04a2312060e6cae3d7ffc500ebc6a167c00e2096e44",
+          "bytes": 454
+        },
+        "model.json": {
+          "sha256": "064e3bdc48ac4be545462aac61a1f72294136a2e5abd270dcd3b70f41657a827",
+          "bytes": 1754
+        },
+        "items.jsonl": {
+          "sha256": "95cc0d51bf8681bac1fb408b7ed1aea4f6f2f67e7c4de927c741a4c35a99c404",
+          "bytes": 48816
+        },
+        "run.log": {
+          "sha256": "a6975a328d5be7ab7e7f74c3b8f37275eca6e6cf492e131a18997684c60d3b41",
+          "bytes": 162
+        }
+      },
+      "missing": [],
+      "complete": true,
+      "code": {
+        "git_commit_raw": "0f83806303e5aeb18f8e4ac8798ddc5931f9817c",
+        "git_dirty_raw": false,
+        "status": "anchored"
+      },
+      "config_sha256": "eee1216c1cbeac915e5def5ce6041aada9b11a18485cd9ffd99c55ba10f71b60",
+      "config_sha256_matches_record": true,
+      "metrics": {
+        "n_processed": 98,
+        "recall@1": 0.875,
+        "mAP@10": 0.9175925925925925,
+        "t_total_median_ms": 212.43714999582153,
+        "feature_bytes_per_image": 4211504.0,
+        "backtrack_psnr_mean": 29.192368679680346
+      },
+      "model": {
+        "model_id": "facebook/dinov2-small",
+        "revision": "ed25f3a31f01632728cabb09d1542f84ab7b0056",
+        "weights_sha256": "ae1e99fcefd534ed978cdeb8326f08030c96e28b7a81ffcbc98a857c84d14be1",
+        "license": "Apache-2.0"
+      }
+    }
+  ]
+}

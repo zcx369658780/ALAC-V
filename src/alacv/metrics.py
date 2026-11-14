@@ -75,9 +75,13 @@ class ResourceSampler:
         self._stop = threading.Event()
         self._thread: threading.Thread | None = None
         self.peak_rss_mb = 0.0
-        self.peak_cpu_pct = 0.0
+        # 以 CPU 时间增量 / wall 时间增量计算"占用核数"，避免 psutil.cpu_percent 的
+        # 短间隔量化噪声（历史 peak_cpu_pct 曾出现 >100*ncpu 的无效值，已弃用）。
+        self.peak_cpu_cores = 0.0
         self._proc = None
         self._base_cpu = 0.0
+        self._last_cpu = 0.0
+        self._last_wall = 0.0
 
     def start(self) -> None:
         import psutil
@@ -86,7 +90,9 @@ class ResourceSampler:
         self._proc.cpu_percent(None)
         self.peak_rss_mb = self._proc.memory_info().rss / (1024 * 1024)
         self._base_cpu = sum(self._proc.cpu_times()[:2])
+        self._last_cpu = self._base_cpu
         self._t0 = time.perf_counter()
+        self._last_wall = self._t0
         self._stop.clear()
         self._thread = threading.Thread(target=self._run, daemon=True)
         self._thread.start()
@@ -96,8 +102,13 @@ class ResourceSampler:
             try:
                 rss = self._proc.memory_info().rss / (1024 * 1024)
                 self.peak_rss_mb = max(self.peak_rss_mb, rss)
-                cpu = self._proc.cpu_percent(None)
-                self.peak_cpu_pct = max(self.peak_cpu_pct, cpu)
+                now = time.perf_counter()
+                cpu_now = sum(self._proc.cpu_times()[:2])
+                dt = now - self._last_wall
+                if dt > 0:
+                    cores = max(0.0, (cpu_now - self._last_cpu) / dt)
+                    self.peak_cpu_cores = max(self.peak_cpu_cores, cores)
+                self._last_cpu, self._last_wall = cpu_now, now
             except Exception:
                 return
 
@@ -115,7 +126,7 @@ class ResourceSampler:
         return {
             "wall_s": wall,
             "avg_cpu_cores": float(cores),
-            "peak_cpu_pct": float(self.peak_cpu_pct),
+            "peak_cpu_cores": float(self.peak_cpu_cores),
             "peak_rss_mb": float(self.peak_rss_mb),
         }
 

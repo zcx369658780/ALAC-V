@@ -1,0 +1,2 @@
+# 公开数据清单必须保持 LF，否则跨平台 SHA-256 不可复算（Issue #1 R11 / PR #2 P1-3）
+data/manifests/*.json text eol=lf

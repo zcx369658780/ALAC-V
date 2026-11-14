@@ -74,39 +74,14 @@ def iou(a, b) -> float:
     return inter / float(aw * ah + bw * bh - inter)
 
 
-def recover(cfg, store, image_id: str, variant: str, box) -> np.ndarray:
-    """按变体实际保存的表示，还原 box 区域（用于回溯质量对比）。"""
-    row = store.get_image(image_id)
-    p = cfg.path("paths.raw_dir") / row["rel_path"]
-    img = open_image(p).image
-    x, y, w, h = box
-    if variant == "A":
-        size = int(cfg.get("model.input_size", 518))
-        s = size / min(img.size)
-        small = img.resize((max(1, int(img.width * s)), max(1, int(img.height * s))), PIL.Resampling.BICUBIC)
-        crop = small.crop((int(x * s), int(y * s), int((x + w) * s), int((y + h) * s)))
-        return np.asarray(crop.resize((w, h), PIL.Resampling.BICUBIC))
-    if variant == "B":
-        assets = {a["level"]: a for a in store.assets(image_id, "pyramid")}
-        if 0 in assets:
-            im = open_image(cfg.path("paths.processed_dir").parent / assets[0]["rel_path"]).image
-            return np.asarray(im.crop((x, y, x + w, y + h)))
-    if variant == "C":
-        for a in store.assets(image_id, "roi_crop"):
-            if a["label"] == "roi_00":
-                im = open_image(cfg.path("paths.processed_dir").parent / a["rel_path"]).image
-                if im.size == (w, h):
-                    return np.asarray(im)
-        fov = [a for a in store.assets(image_id, "foveated")]
-        if fov:
-            meta_p = (cfg.path("paths.processed_dir").parent / fov[0]["rel_path"]).with_suffix(".json")
-            cs = 0.5
-            if meta_p.exists():
-                cs = float(json.loads(meta_p.read_text(encoding="utf-8"))["canvas_scale"])
-            im = open_image(cfg.path("paths.processed_dir").parent / fov[0]["rel_path"]).image
-            cb = (int(x * cs), int(y * cs), int((x + w) * cs), int((y + h) * cs))
-            return np.asarray(im.crop(cb).resize((w, h), PIL.Resampling.BICUBIC))
-    return np.asarray(img.crop((x, y, x + w, y + h)))
+def recover(cfg, store, image_id: str, variant: str, box):
+    """按变体实际保存的表示还原 ROI，返回 (重建像素, 可见交集)。
+
+    具体实现位于 `alacv.backtrack.recover_variant`，与 CLI 共用同一坐标契约。
+    """
+    from alacv.backtrack import recover_variant
+
+    return recover_variant(cfg, store, image_id, variant, box)
 
 
 def run_one(config_path: Path, exp_id: str, variant: str, rep: int, manifest: dict, seed: int) -> dict:
@@ -198,25 +173,35 @@ def run_one(config_path: Path, exp_id: str, variant: str, rep: int, manifest: di
     negatives = [(gid, gid2) for bid, gid in queries[:24] for bid2, gid2 in gallery if bid != bid2][:200]
     sep = similarity_separation(index, positives, negatives)
 
-    # ---------------- 回溯质量 + ROI ----------------
+    # ---------------- 派生表示可见像素保真度 + ROI ----------------
+    from alacv.backtrack import visible_region
+
     backtrack_psnr, backtrack_ssim, roi_hits = [], [], []
+    coverages: list[float] = []
+    excluded = 0
     roi_method = float(cfg.get("foveation.roi_frac", 0.25))
+    input_size = int(cfg.get("model.input_size", 518))
     for f in manifest["files"]:
         if f["role"] != "base":
             continue
         iid = by_sha[f["sha256"]]
         rois = store.rois_of(iid)
+        src_img = open_image(ROOT / f["path"]).image
         if rois:
             box = (rois[0]["x"], rois[0]["y"], rois[0]["w"], rois[0]["h"])
         else:
-            img = open_image(ROOT / f["path"]).image
-            r = select_rois(img, roi_frac=roi_method, max_rois=1)[0]
+            r = select_rois(src_img, roi_frac=roi_method, max_rois=1)[0]
             box = (r.x, r.y, r.w, r.h)
         if f.get("gt_bbox"):
             roi_hits.append(1.0 if iou(box, f["gt_bbox"]) >= 0.3 else 0.0)
-        gt = np.asarray(open_image(ROOT / f["path"]).image.crop((box[0], box[1], box[0] + box[2], box[1] + box[3])))
-        rec = recover(cfg, store, iid, variant, box)
-        if rec.shape == gt.shape:
+        region = visible_region(box, src_img.size, input_size)
+        if not region.visible:
+            excluded += 1
+            continue
+        coverages.append(region.coverage)
+        gt = np.asarray(src_img.crop((region.box[0], region.box[1], region.box[0] + region.box[2], region.box[1] + region.box[3])))
+        rec, _ = recover(cfg, store, iid, variant, box)
+        if rec is not None and rec.shape == gt.shape:
             backtrack_psnr.append(psnr(gt, rec))
             backtrack_ssim.append(ssim(gt, rec))
 
@@ -274,9 +259,13 @@ def run_one(config_path: Path, exp_id: str, variant: str, rep: int, manifest: di
         "retrieval": retrieval,
         "separation": sep,
         "backtrack": {
+            "metric": "derived_representation_visible_pixel_fidelity",
             "psnr_mean": float(np.mean(backtrack_psnr)) if backtrack_psnr else None,
             "ssim_mean": float(np.mean(backtrack_ssim)) if backtrack_ssim else None,
             "n": len(backtrack_psnr),
+            "coverage_mean": float(np.mean(coverages)) if coverages else None,
+            "coverage_min": float(np.min(coverages)) if coverages else None,
+            "excluded_invisible": excluded,
         },
         "roi_hit_rate": float(np.mean(roi_hits)) if roi_hits else None,
         "db_stats": store.stats(),
@@ -315,7 +304,7 @@ def aggregate(per_variant: dict[str, list[dict]]) -> dict:
                 agg.setdefault(sect, {})[key] = float(np.median(vals))
         agg["resources"] = {
             k: float(np.median([r["resources"][k] for r in runs]))
-            for k in ("avg_cpu_cores", "peak_cpu_pct", "peak_rss_mb")
+            for k in ("avg_cpu_cores", "peak_cpu_cores", "peak_rss_mb")
         }
         agg["roi_hit_rate"] = next((r["roi_hit_rate"] for r in runs if r["roi_hit_rate"] is not None), None)
         agg["dim"] = int(np.median([r["dim"] for r in runs]))

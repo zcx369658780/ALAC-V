@@ -5,9 +5,15 @@ status: 已接受
 date: 2026-11-14
 owner: lead
 task: TASK-0001
+superseded_by: ADR-0008
+superseded_scope: 仅"算子名称与描述"（Sobel → 中心差分）；本 ADR 的决策本身继续有效
 ---
 
 # ADR-0007：ROI 重要性用无监督梯度能量
+
+> **更正（2026-11-14，TASK-0002 / Issue #1 R3）**：本 ADR 原文把算子称为 "Sobel"，
+> 但实际实现为**中心差分**梯度幅值，且该实现**保持不变**。术语与算子定义由
+> [ADR-0008](ADR-0008-roi-central-difference.md) 取代；本文件保留历史原文，不重写。
 
 ## 背景
 

@@ -2,19 +2,26 @@
 
 **Visual-first Autonomous Learning and Adaptive Cognition** —— 一种不依赖 LLM 作为核心推理引擎的视觉智能系统的工程基础。
 
-> **当前状态（2026-11-14）：** Phase 0/1 工程实现已提交；独立验收发现若干证据链与指标口径问题，正在等待 Owner 决定是否授权修复。**Phase 2 保持 BLOCKED。**
+> **当前状态（2026-11-14）：** Phase 0/1 工程实现与整改已提交为 PR #2（`task/1-phase0-1-remediation`），
+> 第二轮独立复核已通过核心修复（GT bbox、逐轴缩放、manifest 哈希、provenance），第三轮为收尾修订；
+> 等待最终复核与 Owner 验收。**Phase 2 保持 BLOCKED。**
 
 ## 当前实验基线（DSH 报告值，尚未独立复现）
 
-| 变体 | 单图时间 (ms) | 派生存储/图 | Recall@1 | 回溯 PSNR |
+| 变体 | 单图时间 (ms) | 派生存储/图 | Recall@1 | 回溯 PSNR（GT bbox） |
 |---|---:|---:|---:|---:|
-| A 原始分辨率 | 34.4 | 1.00 MB | 0.833 | 26.76 dB* |
-| B 多尺度 | 216.2 | 4.10 MB | 0.875 | 29.19 dB |
-| C 多尺度 + Foveated ROI | 361.3 | 6.14 MB | 0.889 | 29.10 dB |
+| A 原始分辨率 | 34.4 | 1.00 MB | 0.833 | 31.66 dB* |
+| B 多尺度 | 216.2 | 4.10 MB | 0.875 | 31.05 dB* |
+| C 多尺度 + Foveated ROI | 361.3 | 6.14 MB | 0.889 | 28.53 dB* |
 
 （DS-0001：24 张合成基准 + 72 条查询；3 次重复中位数。详见 `docs/04_experiments/EXP-0001-abc-comparison.md`。）
 
-**重要说明：** 当前公开仓库缺少九次 run 的最小原始证据包；A 变体回溯代码还存在中心裁剪坐标对齐疑点。因此上述数字均为 DSH 报告值，尤其 A 回溯 PSNR 标记为待复核。当前报告没有宣称整体效率提升。
+\* 回溯列为 TASK-0002 修正后、按预注册 **ground-truth bbox** 区域重算的 PSNR；原始值（26.76 / 29.19 / 29.10 dB）
+与修订说明见 `docs/04_experiments/EXP-0001-AMD-0001-backtrack-coordinates.md`。
+
+**重要说明：** 九次 run 的脱敏证据、GT bbox 主指标、逐轴缩放修正、LF manifest 哈希规范均已随 PR 提交
+（`artifacts/evidence/EXP-0001/`）。上述数字仍为 **DSH 报告值**，尚未在 Owner 工作站独立复现；
+当前报告没有宣称整体效率提升。
 
 ## 它做什么
 
@@ -38,7 +45,7 @@
 | GPU | NVIDIA GeForce RTX 5070，12227 MiB，sm_120 |
 | 驱动 / CUDA | 616.92 / UMD 13.4 / toolkit 12.8 / PyTorch cu130 |
 
-单卡 12 GB 是本项目的硬约束。详见 `docs/02_audit/environment-audit.md`；OS 产品名/build 尚待直接系统证据复核。
+单卡 12 GB 是本项目的硬约束。详见 `docs/02_audit/environment-audit.md`；OS 产品名/版本取自注册表直接证据（`docs/02_audit/os-evidence.json`）。
 
 ## 快速开始
 

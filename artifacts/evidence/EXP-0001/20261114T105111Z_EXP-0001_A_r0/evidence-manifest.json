@@ -1,0 +1,90 @@
+{
+  "run_id": "20261114T105111Z_EXP-0001_A_r0",
+  "experiment_id": "EXP-0001",
+  "variant": "A",
+  "repeat": 0,
+  "executed_at_utc": "20261114T105111Z",
+  "executed_timezone": "Asia/Shanghai (UTC+08:00)",
+  "original_command": "cd <REPO> && .\\.venv\\Scripts\\python.exe scripts\\run_experiments.py",
+  "code": {
+    "git_commit_raw": "0f83806303e5aeb18f8e4ac8798ddc5931f9817c",
+    "git_dirty_raw": false,
+    "status": "anchored"
+  },
+  "config": {
+    "original_sha256": "fd3e3aa9489f7418de68e3eb7ef3805c61c905d6dc765600a51db4bd91ad3918",
+    "public_snapshot_sha256": "233098a744dbbbd9ba389b44e8614783f32cfe0ef5eadc82040252a465b6903a",
+    "sanitization_map": {
+      "raw_dir": {
+        "original": "<REPO>\\artifacts\\runs\\20261114T105111Z_EXP-0001_A_r0\\store\\raw",
+        "public": "<RUN_STORE>/raw"
+      },
+      "processed_dir": {
+        "original": "<REPO>\\artifacts\\runs\\20261114T105111Z_EXP-0001_A_r0\\store\\processed",
+        "public": "<RUN_STORE>/processed"
+      },
+      "features_dir": {
+        "original": "<REPO>\\artifacts\\runs\\20261114T105111Z_EXP-0001_A_r0\\store\\features",
+        "public": "<RUN_STORE>/features"
+      },
+      "index_db": {
+        "original": "<REPO>\\artifacts\\runs\\20261114T105111Z_EXP-0001_A_r0\\store\\index\\alacv.sqlite",
+        "public": "<RUN_STORE>/index/alacv.sqlite"
+      },
+      "manifests_dir": {
+        "original": "<REPO>\\data\\manifests",
+        "public": "<REPO>/data/manifests"
+      }
+    }
+  },
+  "dataset": {
+    "dataset_id": "ds-0001-alacv-synthetic-v1",
+    "manifest_sha256_lf": "e604b3ffe6ab39e3fbcf71703aa87fa95a057255011db16493bb395055ada6e7",
+    "manifest_sha256_runtime_original_bytes": "596fcb3c66220312277781148592380c9398724aa0887a3d76c9e371de9a9845",
+    "hash_spec": "sha256 over LF-normalized bytes (Git blob / GitHub file)",
+    "image_hashes_unchanged_by_sanitization": true,
+    "sanitization_record": "data/manifests/ds-0001-manifest-sanitization.json",
+    "n_files": 98
+  },
+  "model": {
+    "model_id": "facebook/dinov2-small",
+    "revision": "ed25f3a31f01632728cabb09d1542f84ab7b0056",
+    "weights_sha256": "ae1e99fcefd534ed978cdeb8326f08030c96e28b7a81ffcbc98a857c84d14be1",
+    "license": "Apache-2.0"
+  },
+  "source_files": {
+    "metrics.json": {
+      "sha256": "e8d504b29783682c074f552d589846e0aebcd21e4717d494c6806c6af4cd3b19",
+      "bytes": 1841
+    },
+    "config.snapshot.yaml": {
+      "sha256": "9b5ba77a1cf1e060b8ef986f4500d04a869a3fa21755a10fb3c88dc0c48d864d",
+      "bytes": 1864
+    },
+    "config.sha256": {
+      "sha256": "679aaf968815d42559bb64fae2754212d3bd6dab7f510cf2bdaf8abbe66bf717",
+      "bytes": 66
+    },
+    "env.json": {
+      "sha256": "e0fb1251d3adf306f5cbf04a2312060e6cae3d7ffc500ebc6a167c00e2096e44",
+      "bytes": 454
+    },
+    "model.json": {
+      "sha256": "064e3bdc48ac4be545462aac61a1f72294136a2e5abd270dcd3b70f41657a827",
+      "bytes": 1754
+    },
+    "items.jsonl": {
+      "sha256": "d1e4c99b99a5d599086817616801a4b8b5af615423f0e5c1cd8d8e9f9f3d51a4",
+      "bytes": 43056
+    },
+    "run.log": {
+      "sha256": "3b3af4284ef8d958595c97897285978c2aa06d7c533050bfa74c637069340ac0",
+      "bytes": 161
+    }
+  },
+  "anonymization": {
+    "real_image_ids": 2,
+    "rule": "anon_<sha256('alacv-public:'+id)[:12]> for role=real only"
+  },
+  "limitations": []
+}

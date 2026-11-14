@@ -41,7 +41,7 @@ task: TASK-0001
    │  ① ingest：解码校验 → SHA-256 → 元数据 → 只读归档（内容寻址）
    ▼
 data/raw/<sha256 前2位>/<sha256>.<ext>        ← 只读，永不改写
-   │  ② imaging：色彩归一 → 四档金字塔 (1/1, 1/2, 1/4, 1/8)
+   │  ② imaging：RGB 模式归一（不做 ICC 变换）→ 四档金字塔 (1/1, 1/2, 1/4, 1/8)
    ▼
 data/processed/<image_id>/pyramid/L0..L3.webp
    │  ③ foveation：ROI 选择 → 分级合成 → ROI 坐标 + 高清 ROI 裁片
@@ -74,8 +74,8 @@ data/index/alacv.sqlite
 | 模块 | 职责 | 不负责 |
 |---|---|---|
 | `config.py` | 读取 YAML、校验、补默认值、算配置 SHA-256、快照 | 业务逻辑 |
-| `ingest.py` | 格式识别、解码验证、SHA-256、EXIF/ICC、只读归档、清单 | 缩放、特征 |
-| `imaging.py` | 色彩/ICC 归一、金字塔生成、可配置插值、尺寸对齐 | ROI 选择 |
+| `ingest.py` | 格式识别、解码验证、SHA-256、EXIF/ICC **元数据记录**、只读归档、清单 | 缩放、特征、ICC 色彩变换 |
+| `imaging.py` | RGB 模式归一（PIL convert / alpha 合成，**不做 ICC profile 变换**）、金字塔生成、可配置插值、尺寸对齐 | ROI 选择、ICC 色彩管理 |
 | `foveation.py` | 重要性图 → ROI 选择 → 分级 paste 合成 → ROI 裁片与坐标 | 特征 |
 | `features.py` | 模型加载、预处理、前向、CLS/Patch 提取、FP16 转换 | 存储路径 |
 | `store.py` | SQLite schema、事务、SafeTensors 落盘/读取、完整性校验 | 检索算法 |
