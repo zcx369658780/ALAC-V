@@ -71,4 +71,7 @@ The executing agent reports exact commands, test output, run IDs, config/data/mo
 
 ## 7. Current transition
 
-The initial Phase 0/1 delivery is recorded in TASK-0001. Independent review findings are tracked in [ALAC-0001](https://github.com/zcx369658780/ALAC-V/issues/1). The remediation Issue is open as an audit backlog; implementation remains pending explicit Owner authorization.
+- Phase 0/1 initial delivery: TASK-0001.
+- Phase 0/1 remediation: TASK-0002; [ALAC-0001 / Issue #1](https://github.com/zcx369658780/ALAC-V/issues/1) is closed as completed after PR #2 merged at `367035318172ba1bbc0103b6231847750143d1d7`.
+- Current task: [ALAC-0002 / Issue #3 — Phase 2A autonomous visual learning design](https://github.com/zcx369658780/ALAC-V/issues/3), snapshot `TASK-0003`.
+- Current authorization is limited to literature review, design comparison, data plan, resource estimation and experiment pre-registration. Model training, weight/data downloads and Phase 2B/2C/3 work are not authorized.

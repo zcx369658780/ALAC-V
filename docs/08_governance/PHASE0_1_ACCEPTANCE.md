@@ -1,7 +1,7 @@
 ---
 id: ACCEPT-0001
-title: Preliminary Independent Review of Phase 0 and Phase 1
-status: remediation-required
+title: Final Independent Acceptance of Phase 0 and Phase 1
+status: accepted
 date: 2026-11-14
 owner: ChatGPT reviewer; final decision reserved to Owner
 task: TASK-0001
@@ -25,11 +25,15 @@ Reviewed the live public repository at baseline `10cb05d379c39043a17dc840643535f
 
 This was a repository/document/source inspection. The reviewer did **not** execute code on the Owner's workstation, access the local D:\ALAC_V working tree, or independently reproduce the 56 tests and GPU runs. DSH-reported local execution is therefore distinguished from independent runtime verification.
 
-## 2. Preliminary verdict
+## 2. Preliminary verdict (historical)
 
-**Engineering baseline: PASS WITH LIMITATIONS (repository structure and implementation are present).**
+The initial review was remediation-required. The findings below are retained as historical records and were resolved or explicitly bounded by TASK-0002.
 
-**Formal Phase 1 scientific acceptance: BLOCKED pending remediation and evidence completion.**
+## 2A. Final verdict (2026-11-15)
+
+**TASK-0002 final independent acceptance: PASS.** PR #2 was merged into `main` at `367035318172ba1bbc0103b6231847750143d1d7`; Issue #1 was closed as completed after Owner approval.
+
+The PASS applies to the Phase 0/1 remediation deliverable and its published evidence. It does not imply independent execution of tests on the Owner's workstation, natural-image generalization, or completion of work marked NOT RUN.
 
 This is not a rejection of the delivered work. The repository has a coherent modular structure, a useful task/ADR/experiment document system, a frozen DINOv2 image pipeline, and transparent reporting that does not claim an overall efficiency gain.
 
@@ -112,10 +116,10 @@ Reported ablations show C2 (foveated + ROI) at 2.01 MB and Recall@1 0.903, and C
 
 The report's conclusion that no overall efficiency improvement is established is appropriately conservative and should be retained.
 
-## 6. Required next actions
+## 6. Final remediation record
 
-Tracked in [ALAC-0001](https://github.com/zcx369658780/ALAC-V/issues/1). The Issue is an audit/remediation backlog. DSH must first synchronize governance files and wait for explicit Owner authorization before changing code or rerunning experiments.
+The required remediation was completed in TASK-0002 and merged via [PR #2](https://github.com/zcx369658780/ALAC-V/pull/2). [Issue #1](https://github.com/zcx369658780/ALAC-V/issues/1) is closed as completed. The final accepted state and remaining scientific limitations are recorded in `docs/08_governance/ACTIVE_STATE.md`.
 
-## 7. Phase gate
+## 7. Subsequent phase gate
 
-**Phase 2: BLOCKED.** No video model training, temporal model implementation, Event Camera work, SNN work, or autonomous learning expansion is authorized by this review.
+Phase 0/1 is accepted. Owner has separately authorized [ALAC-0002 / Issue #3](https://github.com/zcx369658780/ALAC-V/issues/3) for Phase 2A autonomous visual learning research design and pre-registration only. Model training remains unauthorized until a new implementation task order is reviewed and approved. Phase 2B/2C and Phase 3 remain blocked.

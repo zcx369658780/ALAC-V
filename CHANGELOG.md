@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## 2026-11-15 — Phase 0/1 accepted; Phase 2A design authorized
+
+- Owner approved and merged PR #2; merge commit: `367035318172ba1bbc0103b6231847750143d1d7`.
+- Closed ALAC-0001 / Issue #1 as completed after final independent acceptance PASS.
+- Recorded corrected GT bbox result: H3 rejected; C is 3.14 dB below A on the preregistered target-region fidelity metric.
+- Opened ALAC-0002 / Issue #3 for Phase 2A autonomous visual learning literature review, architecture comparison, data design and experiment pre-registration.
+- Phase 2A model training, backbone fine-tuning, new model-weight downloads and natural-image dataset downloads remain unauthorized.
+- Owner-approved sequence: Phase 2A autonomous visual learning → Phase 2B long-term visual memory → Phase 2C dynamic compute allocation → Phase 3 video/real-time streams.
+
 ## 2026-11-14 — Governance bootstrap
 
 - Added root-level `AGENTS.md` and GitHub Issue/PR templates.
