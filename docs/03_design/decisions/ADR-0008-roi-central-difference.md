@@ -1,7 +1,7 @@
 ---
 id: ADR-0008
 title: ROI 重要性使用中心差分梯度能量（术语修订，行为冻结）
-status: 已接受
+status: 提议（待 Owner 验收）
 date: 2026-11-14
 owner: lead
 task: TASK-0002

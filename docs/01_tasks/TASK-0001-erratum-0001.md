@@ -1,7 +1,7 @@
 ---
 id: ERRATUM-0001
 title: TASK-0001 证据指针勘误（tests/test_pyramid.py）
-status: 已接受
+status: 提议（待 Owner 验收）
 date: 2026-11-14
 owner: lead
 task: TASK-0002

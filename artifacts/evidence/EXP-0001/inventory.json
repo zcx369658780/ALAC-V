@@ -1,12 +1,13 @@
 {
   "experiment_id": "EXP-0001",
-  "generated_at": "2026-11-14T13:12:23.797158+00:00",
+  "generated_at": "2026-11-14T13:34:32.585109+00:00",
   "runs_dir": "artifacts/runs",
   "n_runs_found": 9,
   "dataset": {
     "dataset_id": "ds-0001-alacv-synthetic-v1",
-    "manifest_sha256_at_run_time": "596fcb3c66220312277781148592380c9398724aa0887a3d76c9e371de9a9845",
-    "manifest_sha256_public": "32e0108791cd158b21bdf523d1c7f3c4c219d476c34341ff0ee03962b53df3a8"
+    "manifest_sha256_lf": "e604b3ffe6ab39e3fbcf71703aa87fa95a057255011db16493bb395055ada6e7",
+    "manifest_sha256_runtime_original_bytes": "596fcb3c66220312277781148592380c9398724aa0887a3d76c9e371de9a9845",
+    "hash_spec": "sha256 over LF-normalized bytes (Git blob / GitHub file)"
   },
   "model": {
     "model_id": "facebook/dinov2-small",

@@ -79,13 +79,20 @@ def open_image(path: str | Path, *, exif_transpose: bool = True) -> DecodedImage
 
 @dataclass(frozen=True)
 class FitGeometry:
-    """`fit_to_input` 的精确几何参数，供回溯/重建复用（单一事实来源）。"""
+    """`fit_to_input` 的精确几何参数，供回溯/重建复用（单一事实来源）。
+
+    Pillow 实际执行的是**逐轴**缩放：``scale_x = resized_w / W``、``scale_y = resized_h / H``。
+    两者可能与名义 ``scale = input_size / min(W, H)`` 不同（例如 1024×768 → 691×518），
+    因此坐标映射必须使用逐轴比例，不能只用名义 scale。
+    """
 
     input_size: int
     scale: float
     resized: tuple[int, int]
     left: int
     top: int
+    x_scale: float = 0.0
+    y_scale: float = 0.0
 
 
 def fit_geometry(width: int, height: int, size: int) -> FitGeometry:
@@ -96,7 +103,15 @@ def fit_geometry(width: int, height: int, size: int) -> FitGeometry:
     scale = size / min(width, height)
     nw = max(size, int(round(width * scale)))
     nh = max(size, int(round(height * scale)))
-    return FitGeometry(input_size=size, scale=scale, resized=(nw, nh), left=(nw - size) // 2, top=(nh - size) // 2)
+    return FitGeometry(
+        input_size=size,
+        scale=scale,
+        resized=(nw, nh),
+        left=(nw - size) // 2,
+        top=(nh - size) // 2,
+        x_scale=nw / width,
+        y_scale=nh / height,
+    )
 
 
 def fit_to_input(img: Image.Image, size: int, method: str = "bicubic") -> Image.Image:

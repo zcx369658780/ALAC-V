@@ -32,7 +32,7 @@ pr: https://github.com/zcx369658780/ALAC-V/pull/2
 | 配置哈希可复算 | 9/9：由 `config.snapshot.yaml` 重新规范化计算得到与 `config.sha256` 完全一致的 SHA-256 |
 | 代码 commit 锚定 | **8/9** 记录 `0f83806303e5aeb18f8e4ac8798ddc5931f9817c`，`git_dirty=false` |
 | 代码身份无法锚定 | **1/9**：`20261114T104749Z_EXP-0001_C_r2` 启动于首次提交之前（`env.json` 的 `git_commit` 为空），只能推断代码与 `0f83806` 相同，**未伪造 commit** |
-| 数据清单 | 运行期 `596fcb3c66220312277781148592380c9398724aa0887a3d76c9e371de9a9845`；脱敏后 `32e0108791cd158b21bdf523d1c7f3c4c219d476c34341ff0ee03962b53df3a8`（仅 origin 标签变化，图像 SHA 未变） |
+| 数据清单 | 公开 LF 规范化 SHA-256 `e604b3ffe6ab39e3fbcf71703aa87fa95a057255011db16493bb395055ada6e7`（GitHub 可复算）；运行期原始字节（CRLF）`596fcb3c…` 仅存档，不混用 |
 | 模型指纹 | `facebook/dinov2-small`，revision `ed25f3a31f01632728cabb09d1542f84ab7b0056`，权重 SHA-256 `ae1e99fce…14be1` |
 | 原始 run 目录 | **未修改**（只读盘点；公开副本另存） |
 
@@ -76,22 +76,35 @@ pr: https://github.com/zcx369658780/ALAC-V/pull/2
 
 ### 修复前后对照（24 张基准图 × 3 次重复，中位数）
 
-| 变体 | 原 PSNR | 修正后 PSNR | Δ | 原 SSIM | 修正后 SSIM | Δ |
-|---|---|---|---|---|---|---|
-| A | 26.76 | **29.13** | +2.37 | 0.869 | **0.913** | +0.044 |
-| B | 29.19 | **29.43** | +0.23 | 0.852 | **0.853** | +0.002 |
-| C | 29.10 | **29.35** | +0.25 | 0.851 | **0.853** | +0.002 |
+**主指标（预注册口径：GT bbox 区域）**
 
-- 有效样本 24/24；**排除 0**；平均可见覆盖率 **0.919**。
-- **H3（C 回溯优于 A ≥2 dB）撤回**：修正后 C−A = +0.22 dB，三组基本持平。
-- 原始预注册 §3–§6 未改写；修订另立
-  [EXP-0001-AMD-0001](../04_experiments/EXP-0001-AMD-0001-backtrack-coordinates.md)。
-- 复算脚本 `scripts/recompute_backtrack.py`，输出
-  `artifacts/experiments/EXP-0001-backtrack-corrected.json`（含逐图明细），**未重跑编码**。
+| 变体 | 原始运行 PSNR | 第一轮（ROI 区域，已作废） | **第二轮（GT bbox，现行）** | 相对 A |
+|---|---|---|---|---|
+| A | 26.76 | 29.13 | **31.66** | — |
+| B | 29.19 | 29.43 | **31.05** | −0.62 dB |
+| C | 29.10 | 29.35 | **28.53** | **−3.14 dB** |
+
+- 有效样本 24/24；**排除 0**；GT 区域平均可见覆盖率 **0.928**。
+- **H3 被拒绝**：C 在真实目标区域反而比 A 低 3.14 dB。原「C 优于 A」的结论来自评价区域错误
+  （使用了模型自己选中的 ROI）；GT 目标只有约 58% 与 ROI 重叠。
+- 副指标（attended ROI，探索性，不替代主指标）：A 29.44 / B 29.43 / C 29.35 dB。
+
+### 坐标与评价口径修正（第二轮复核 R9/R10）
+
+1. **评价区域**：`scripts/recompute_backtrack.py` 改为读取 manifest 的 `gt_bbox`；
+   `recover_gt_region()` 与 `recover_variant()`（attended ROI）严格分离命名。
+2. **C 的 GT 回溯规则**：ROI 裁片覆盖处用全分辨率像素，其余用 foveated 马赛克上采样，
+   逐像素合成（`_c_full_canvas`），不因 ROI 未命中而只评价 ROI 内部。
+3. **逐轴缩放**：`FitGeometry` 新增 `x_scale = resized_w/W`、`y_scale = resized_h/H`；
+   可见区域逆映射与 A 重建均使用逐轴比例，消除 1 px 偏差；新增回归测试
+   `test_per_axis_scales_differ_and_cause_1px_shift` 与 `test_reconstruction_matches_per_axis_mapping`。
+4. **复算 provenance**：`EXP-0001-backtrack-corrected.json` 记录 9 个 run_id、脚本 SHA-256、
+   git commit/dirty、执行命令、环境、九次配置哈希与参数摘要（已验证九次参数一致）、
+   数据清单 LF 哈希、模型指纹；配置直接取自各 run 的 `config.snapshot.yaml`，不依赖当前配置文件。
 
 ## 4. 新增测试与完整输出（WP2/WP3）
 
-新增 `tests/test_backtrack.py`（16 项）与 `tests/test_foveation.py` 中 2 项算子测试：
+新增 `tests/test_backtrack.py`（19 项）与 `tests/test_foveation.py` 中 2 项算子测试：
 
 | 测试 | 覆盖 |
 |---|---|

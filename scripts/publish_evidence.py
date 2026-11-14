@@ -48,6 +48,11 @@ def sha256_text(s: str) -> str:
     return hashlib.sha256(s.encode("utf-8")).hexdigest()
 
 
+def sha256_file_lf(p: Path) -> str:
+    """公开文件哈希规范：LF 规范化字节（= Git blob / GitHub 公开内容）。"""
+    return hashlib.sha256(p.read_bytes().replace(b"\r\n", b"\n")).hexdigest()
+
+
 def redact_string(s: str, repo_root: Path) -> str:
     """去掉本机绝对路径与用户名，保留相对语义。"""
     home = str(Path.home())
@@ -109,11 +114,11 @@ def main() -> int:
     out_dir = Path(args.out)
 
     manifest = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
-    dataset_public_sha = sha256_file(MANIFEST_PATH)
     sanitize_record = MANIFEST_PATH.parent / "ds-0001-manifest-sanitization.json"
-    dataset_run_sha = dataset_public_sha
-    if sanitize_record.exists():
-        dataset_run_sha = json.loads(sanitize_record.read_text(encoding="utf-8"))["manifest_sha256_before"]
+    record = json.loads(sanitize_record.read_text(encoding="utf-8"))
+    dataset_public_sha = record["manifest_sha256_lf"]
+    dataset_runtime_sha = record.get("manifest_sha256_runtime_original_bytes")
+    assert sha256_file_lf(MANIFEST_PATH) == dataset_public_sha, "manifest LF 哈希与记录不一致"
     model_manifest = json.loads(MODEL_MANIFEST.read_text(encoding="utf-8"))
     anon = anonymize_real_ids(manifest)
 
@@ -224,8 +229,9 @@ def main() -> int:
                     },
                     "dataset": {
                         "dataset_id": DATASET_ID,
-                        "manifest_sha256_at_run_time": dataset_run_sha,
-                        "manifest_sha256_public": dataset_public_sha,
+                        "manifest_sha256_lf": dataset_public_sha,
+                        "manifest_sha256_runtime_original_bytes": dataset_runtime_sha,
+                        "hash_spec": "sha256 over LF-normalized bytes (Git blob / GitHub file)",
                         "image_hashes_unchanged_by_sanitization": True,
                         "sanitization_record": "data/manifests/ds-0001-manifest-sanitization.json",
                         "n_files": len(manifest["files"]),
@@ -256,8 +262,9 @@ def main() -> int:
         "n_runs_found": len(runs),
         "dataset": {
             "dataset_id": DATASET_ID,
-            "manifest_sha256_at_run_time": dataset_run_sha,
-            "manifest_sha256_public": dataset_public_sha,
+            "manifest_sha256_lf": dataset_public_sha,
+            "manifest_sha256_runtime_original_bytes": dataset_runtime_sha,
+            "hash_spec": "sha256 over LF-normalized bytes (Git blob / GitHub file)",
         },
         "model": {
             "model_id": model_manifest.get("model_id"),
@@ -282,7 +289,8 @@ def write_inventory_md(inv: dict, path: Path) -> None:
         "# EXP-0001 历史 run 证据盘点",
         "",
         f"- 生成时间：{inv['generated_at']}",
-        f"- 数据清单：`{inv['dataset']['dataset_id']}`，运行期 SHA-256 `{inv['dataset']['manifest_sha256_at_run_time']}`；脱敏后 `{inv['dataset']['manifest_sha256_public']}`",
+        f"- 数据清单：`{inv['dataset']['dataset_id']}`，公开 LF 规范化 SHA-256 `{inv['dataset']['manifest_sha256_lf']}`；"
+        f"运行期原始字节 SHA-256 `{inv['dataset']['manifest_sha256_runtime_original_bytes']}`（历史 CRLF，仅存档）",
         f"- 模型：`{inv['model']['model_id']}` revision `{inv['model']['revision']}`",
         f"- 发现 run 数：**{inv['n_runs_found']}**",
         "",
