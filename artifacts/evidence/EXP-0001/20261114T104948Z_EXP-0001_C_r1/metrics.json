@@ -1,0 +1,77 @@
+{
+  "run_id": "20261114T104948Z_EXP-0001_C_r1",
+  "exp_id": "EXP-0001",
+  "variant": "C",
+  "rep": 1,
+  "n_processed": 98,
+  "n_failed": 0,
+  "sources": [
+    "pyramid:L0",
+    "pyramid:L1",
+    "pyramid:L2",
+    "pyramid:L3",
+    "foveated",
+    "roi:roi_00"
+  ],
+  "dim": 2304,
+  "timing": {
+    "t_total_median_ms": 367.3502000165172,
+    "t_total_p95_ms": 412.01353500073304,
+    "t_encode_median_ms": 97.83820000302512,
+    "t_pyramid_median_ms": 102.57129999808967,
+    "t_fovea_median_ms": 99.12814998824615,
+    "t_ingest_median_ms": 6.170500011648983,
+    "t_store_median_ms": 45.429100006003864,
+    "wall_s": 40.52161060000071,
+    "images_per_s": 2.418462606715792
+  },
+  "vram": {
+    "peak_alloc_median_mb": 91.1171875,
+    "activation_peak_median_mb": 16.017578125,
+    "activation_peak_max_mb": 16.017578125
+  },
+  "resources": {
+    "wall_s": 40.522039800009225,
+    "avg_cpu_cores": 10.800449635802893,
+    "peak_cpu_pct": 3750.0,
+    "peak_rss_mb": 1548.38671875
+  },
+  "storage": {
+    "feature_bytes_per_image": 6317254.0,
+    "asset_bytes_per_image": 120746.9387755102,
+    "total_bytes_per_image": 6438000.9387755105
+  },
+  "retrieval": {
+    "n_queries": 72,
+    "recall@1": 0.8888888888888888,
+    "recall@5": 0.9722222222222222,
+    "mAP@10": 0.9217923280423282,
+    "query_ms_median": 8.921094444506,
+    "index_build_ms": 211.7634000023827
+  },
+  "separation": {
+    "n_pos": 72,
+    "n_neg": 200,
+    "pos_mean": 0.8925905898213387,
+    "neg_mean": 0.7162213626503945,
+    "auc": 0.9175694444444444,
+    "gap": 0.17636922717094417
+  },
+  "backtrack": {
+    "psnr_mean": 29.09954774997709,
+    "ssim_mean": 0.8509945819775263,
+    "n": 24
+  },
+  "roi_hit_rate": 0.5833333333333334,
+  "db_stats": {
+    "images": 98,
+    "rejected": 0,
+    "features": 588,
+    "feature_bytes": 619090892,
+    "assets": 686,
+    "asset_bytes": 11833200,
+    "rois": 196,
+    "runs": 1,
+    "db_bytes": 692224
+  }
+}

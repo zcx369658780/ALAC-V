@@ -1,0 +1,75 @@
+{
+  "run_id": "20261114T105148Z_EXP-0001_B_r2",
+  "exp_id": "EXP-0001",
+  "variant": "B",
+  "rep": 2,
+  "n_processed": 98,
+  "n_failed": 0,
+  "sources": [
+    "pyramid:L0",
+    "pyramid:L1",
+    "pyramid:L2",
+    "pyramid:L3"
+  ],
+  "dim": 1536,
+  "timing": {
+    "t_total_median_ms": 212.43714999582153,
+    "t_total_p95_ms": 396.25405997940044,
+    "t_encode_median_ms": 63.50504999863915,
+    "t_pyramid_median_ms": 101.01899999426678,
+    "t_fovea_median_ms": 0.0,
+    "t_ingest_median_ms": 6.083000000216998,
+    "t_store_median_ms": 30.777100007981062,
+    "wall_s": 25.31842749999487,
+    "images_per_s": 3.870698525807729
+  },
+  "vram": {
+    "peak_alloc_median_mb": 91.1171875,
+    "activation_peak_median_mb": 16.017578125,
+    "activation_peak_max_mb": 16.017578125
+  },
+  "resources": {
+    "wall_s": 25.318775499996264,
+    "avg_cpu_cores": 14.741407024208382,
+    "peak_cpu_pct": 3418.0,
+    "peak_rss_mb": 1396.52734375
+  },
+  "storage": {
+    "feature_bytes_per_image": 4211504.0,
+    "asset_bytes_per_image": 88919.59183673469,
+    "total_bytes_per_image": 4300423.591836735
+  },
+  "retrieval": {
+    "n_queries": 72,
+    "recall@1": 0.875,
+    "recall@5": 0.9861111111111112,
+    "mAP@10": 0.9175925925925925,
+    "query_ms_median": 5.860791666539929,
+    "index_build_ms": 131.95229999837466
+  },
+  "separation": {
+    "n_pos": 72,
+    "n_neg": 200,
+    "pos_mean": 0.9003227113021744,
+    "neg_mean": 0.7385226491093636,
+    "auc": 0.8990972222222222,
+    "gap": 0.16180006219281085
+  },
+  "backtrack": {
+    "psnr_mean": 29.192368679680346,
+    "ssim_mean": 0.8515235309799513,
+    "n": 24
+  },
+  "roi_hit_rate": 0.5833333333333334,
+  "db_stats": {
+    "images": 98,
+    "rejected": 0,
+    "features": 392,
+    "feature_bytes": 412727392,
+    "assets": 392,
+    "asset_bytes": 8714120,
+    "rois": 0,
+    "runs": 1,
+    "db_bytes": 475136
+  }
+}

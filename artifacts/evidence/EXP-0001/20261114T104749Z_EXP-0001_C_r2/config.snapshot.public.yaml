@@ -1,0 +1,98 @@
+ablations:
+  A0:
+  - pyramid:L0
+  B2:
+  - pyramid:L0
+  - pyramid:L2
+  C2:
+  - foveated
+  - roi:roi_00
+  C3:
+  - pyramid:L2
+  - pyramid:L3
+  - foveated
+  - roi:roi_00
+encoding:
+  descriptor: concat_l2norm
+  store_patch_tokens: true
+  variants:
+    A:
+    - original
+    B:
+    - pyramid:L0
+    - pyramid:L1
+    - pyramid:L2
+    - pyramid:L3
+    C:
+    - pyramid:L0
+    - pyramid:L1
+    - pyramid:L2
+    - pyramid:L3
+    - foveated
+    - roi:roi_00
+experiment:
+  dataset: ds-0001-alacv-synthetic-v1
+  id: EXP-0001
+  primary_metric: recall@1
+  repeat: 3
+  variants:
+  - A
+  - B
+  - C
+  warmup_images: 3
+foveation:
+  canvas_scale: 0.5
+  enabled: true
+  feather_px: 8
+  format: webp
+  fovea_scale: 0.5
+  max_rois: 2
+  parafovea_scale: 0.5
+  periphery_scale: 0.25
+  quality: 92
+  ring_ratio:
+  - 1.0
+  - 1.75
+  roi_frac: 0.25
+  roi_quality: 96
+image:
+  color_mode: RGB
+  exif_transpose: true
+  max_side: 8192
+logging:
+  jsonl: true
+  level: INFO
+model:
+  arch: dinov2_vits14
+  batch_size: 1
+  device: auto
+  id: facebook/dinov2-small
+  input_size: 518
+  local_dir: artifacts/models/dinov2_vits14
+  patch_size: 14
+  precision: fp16
+  provider: huggingface
+paths:
+  artifacts_root: artifacts
+  data_root: data
+  features_dir: <RUN_STORE>/features
+  index_db: <RUN_STORE>/index/alacv.sqlite
+  manifests_dir: <REPO>/data/manifests
+  processed_dir: <RUN_STORE>/processed
+  raw_dir: <RUN_STORE>/raw
+project:
+  name: ALAC-V
+  phase: 1
+  seed: 1234
+pyramid:
+  format: webp
+  method: bicubic
+  quality: 95
+  scales:
+  - 1
+  - 2
+  - 4
+  - 8
+retrieval:
+  metric: cosine
+  topk: 5
