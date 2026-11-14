@@ -105,12 +105,12 @@ supersedes: null
 | `00_charter/ALAC-V-charter.md` | 项目宪章 | 已接受 |
 | `01_tasks/TASK-0001-phase0-phase1.md` | Phase 0/1 原始任务单快照 | 已完成并验收 |
 | `01_tasks/TASK-0002-phase0-1-remediation.md` | Phase 0/1 独立验收修复任务快照 | 已完成；PASS；PR #2 已合并 |
-| `02_audit/environment-audit.md` | 环境审计报告 | DSH 报告已完成；部分系统标识待复核 |
+| `02_audit/environment-audit.md` | 环境审计报告 | DSH 审计完成；OS 产品/版本另有注册表直接证据；未声称独立重跑审计 |
 | `02_audit/model-licenses.md` | 模型许可证登记 | 已记录 |
 | `03_design/architecture.md` | 系统架构 | 已接受（Phase 1） |
 | `03_design/data-model.md` | 数据模型与目录布局 | 已接受（Phase 1） |
 | `03_design/decisions/` | ADR 决策记录 | ADR-0001 至 ADR-0008；Phase 1 设计已接受 |
-| `04_experiments/EXP-0001-abc-comparison.md` | A/B/C 预注册与结果 | DSH 报告完成；证据链待补齐 |
+| `04_experiments/EXP-0001-abc-comparison.md` | A/B/C 预注册与结果 | 证据链已补齐；GT bbox 修订结果已验收；H3 拒绝 |
 | `05_reports/PHASE1-REPORT.md` | Phase 1 交付报告 | 已验收；H3 按 GT bbox 口径拒绝 |
 | `06_ops/runbook.md` | 运行手册 | 已接受（初版） |
 | `07_risks/risk-register.md` | 风险登记册 | 已接受（初版） |
@@ -119,7 +119,7 @@ supersedes: null
 | `08_governance/ISSUE_WORKFLOW.md` | GitHub 任务工作流 | 生效 |
 | `08_governance/PROJECT_SOURCE_INDEX.md` | 项目源索引 | 当前入口 |
 | `08_governance/PHASE0_1_ACCEPTANCE.md` | Phase 0/1 最终独立验收 | PASS；PR #2 merged；Issue #1 closed |
-| `01_tasks/TASK-0003-phase2a-autonomous-visual-learning-design.md` | Phase 2A 自主视觉学习研究设计任务 | Owner 已授权；仅设计/预注册 | 
+| `01_tasks/TASK-0003-phase2a-autonomous-visual-learning-design.md` | Phase 2A 自主视觉学习研究设计任务 | Owner 已授权；仅设计/预注册 |
 | `submissions/PHASE_0_1_SUBMISSION.md` | 首次公开仓库交付记录 | 历史记录 |
 
 

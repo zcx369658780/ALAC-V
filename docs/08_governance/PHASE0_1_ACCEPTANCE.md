@@ -9,7 +9,7 @@ baseline: 10cb05d379c39043a17dc840643535fd150bce20
 issue: https://github.com/zcx369658780/ALAC-V/issues/1
 ---
 
-# Preliminary Independent Review — Phase 0/1
+# Final Independent Acceptance — Phase 0/1
 
 ## 1. Review scope and method
 
@@ -35,9 +35,7 @@ The initial review was remediation-required. The findings below are retained as 
 
 The PASS applies to the Phase 0/1 remediation deliverable and its published evidence. It does not imply independent execution of tests on the Owner's workstation, natural-image generalization, or completion of work marked NOT RUN.
 
-This is not a rejection of the delivered work. The repository has a coherent modular structure, a useful task/ADR/experiment document system, a frozen DINOv2 image pipeline, and transparent reporting that does not claim an overall efficiency gain.
-
-However, several source-level and evidence-chain issues affect the validity or independent auditability of reported metrics. Phase 2 remains BLOCKED.
+**Historical context:** The initial review found a coherent modular structure but also source-level and evidence-chain issues. Those findings are retained below as an audit trail; they were addressed or explicitly bounded by TASK-0002. The current final verdict is in §2A.
 
 ## 3. Positive findings
 
@@ -50,7 +48,7 @@ However, several source-level and evidence-chain issues affect the validity or i
 7. The reported DS-0001 benchmark is explicitly synthetic and the report warns against generalizing it to natural-image performance.
 8. The repository excludes raw images, model weights, local caches, and full local run stores from public Git history.
 
-## 4. Findings requiring remediation
+## 4. First-round findings (historical; resolved or explicitly bounded by TASK-0002)
 
 ### R1 — Run-level evidence is not in the public repository (blocking)
 
