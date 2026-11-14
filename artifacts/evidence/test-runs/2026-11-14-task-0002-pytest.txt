@@ -1,26 +1,30 @@
 command: .venv\Scripts\python.exe -m pytest -v
-executed_at_utc: 2026-11-14T13:13:41.1676222Z
-cwd: D:\ALAC_V
-commit: 2bc71dfba3d6ccebcda44124a324f697ba2f0b1d
-branch: task/1-phase0-1-remediation
+executed_at_utc: 2026-11-14T13:37:04.3210264Z
+cwd: <REPO>
+git_head: a257b0995f8fa9844ba327b2a1af5b30fc12b66b
+git_branch: task/1-phase0-1-remediation
+git_dirty: false
+environment: python=3.11.9 2.14.1+cu130 2.4.6 13.0.0
+host_os: Windows 10 Pro 26H2 build 26300.9711 (registry evidence: docs/02_audit/os-evidence.json)
 ---
 ============================= test session starts =============================
 platform win32 -- Python 3.11.9, pytest-9.2.0, pluggy-1.7.0
-rootdir: D:\ALAC_V
+rootdir: <REPO>
 configfile: pyproject.toml
 testpaths: tests
-collected 74 items
+collected 80 items
 
-tests\test_backtrack.py ................                                 [ 21%]
-tests\test_config.py .......                                             [ 31%]
-tests\test_features.py .....                                             [ 37%]
+tests\test_backtrack.py ...................                              [ 23%]
+tests\test_config.py .......                                             [ 32%]
+tests\test_features.py .....                                             [ 38%]
 tests\test_foveation.py ........                                         [ 48%]
 tests\test_imaging.py ......                                             [ 56%]
-tests\test_ingest.py ...........                                         [ 71%]
-tests\test_metrics.py ......                                             [ 79%]
-tests\test_pipeline.py ....                                              [ 85%]
-tests\test_retrieval.py ....                                             [ 90%]
+tests\test_ingest.py ...........                                         [ 70%]
+tests\test_manifest_hash.py ...                                          [ 73%]
+tests\test_metrics.py ......                                             [ 81%]
+tests\test_pipeline.py ....                                              [ 86%]
+tests\test_retrieval.py ....                                             [ 91%]
 tests\test_store.py .......                                              [100%]
 
-============================= 74 passed in 19.44s =============================
+============================= 80 passed in 20.57s =============================
 
