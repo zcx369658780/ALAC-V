@@ -1,7 +1,7 @@
 ---
 id: OPS-0001
 title: 运行手册
-status: 草案
+status: 已接受
 date: 2026-11-14
 owner: lead
 task: TASK-0001

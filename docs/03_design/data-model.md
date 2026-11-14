@@ -1,7 +1,7 @@
 ---
 id: DATA-0001
 title: 数据模型与目录布局
-status: 草案
+status: 已接受
 date: 2026-11-14
 owner: lead
 task: TASK-0001

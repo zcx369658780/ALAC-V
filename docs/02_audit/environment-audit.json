@@ -1,6 +1,6 @@
 {
   "environment": {
-    "timestamp_utc": "2026-11-14T10:36:15.837240+00:00",
+    "timestamp_utc": "2026-11-14T10:52:48.745941+00:00",
     "os": {
       "platform": "Windows-10-10.0.26300-SP0",
       "system": "Windows",
@@ -20,17 +20,17 @@
       "cpu_logical_cores": 20,
       "cpu_freq_mhz": 3900.0,
       "ram_total_gb": 31.48,
-      "ram_available_gb": 10.92,
+      "ram_available_gb": 11.2,
       "disks": [
         {
           "mount": "C:\\",
           "total_gb": 930.34,
-          "free_gb": 247.03
+          "free_gb": 246.98
         },
         {
           "mount": "D:\\",
           "total_gb": 1907.73,
-          "free_gb": 986.64
+          "free_gb": 983.05
         }
       ]
     },
@@ -38,14 +38,14 @@
       "nvidia_smi_query": {
         "cmd": "nvidia-smi --query-gpu=name,driver_version,memory.total,memory.used,compute_cap,pcie.link.gen.max,pcie.link.width.max,power.limit --format=csv,noheader",
         "code": 0,
-        "stdout": "NVIDIA GeForce RTX 5070, 616.92, 12227 MiB, 2783 MiB, 12.0, 4, 16, 250.00 W",
+        "stdout": "NVIDIA GeForce RTX 5070, 616.92, 12227 MiB, 2986 MiB, 12.0, 4, 16, 250.00 W",
         "stderr": ""
       },
       "parsed": {
         "name": "NVIDIA GeForce RTX 5070",
         "driver": "616.92",
         "memory_total": "12227 MiB",
-        "memory_used": "2783 MiB",
+        "memory_used": "2986 MiB",
         "compute_cap": "12.0",
         "pcie_gen": "4",
         "pcie_width": "16",
@@ -54,7 +54,7 @@
       "full": {
         "cmd": "nvidia-smi",
         "code": 0,
-        "stdout": "Sat Nov 14 18:36:15 2026       \n+-----------------------------------------------------------------------------------------+\n| NVIDIA-SMI 616.92                 KMD Version: 616.92        CUDA UMD Version: 13.4     |\n+-----------------------------------------+------------------------+----------------------+\n| GPU  Name                  Driver-Model | Bus-Id          Disp.A | Volatile Uncorr. ECC |\n| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |\n|                                         |                        |               MIG M. |\n|=========================================+========================+======================|\n|   0  NVIDIA GeForce RTX 5070      WDDM  |   00000000:81:00.0  On |                  N/A |\n|  0%   33C    P0             19W /  250W |    2783MiB /  12227MiB |      2%      Default |\n|                                         |                        |                  N/A |\n+-----------------------------------------+------------------------+----------------------+\n\n+-----------------------------------------------------------------------------------------+\n| Processes:                                                                              |\n|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |\n|        ID   ID                                                               Usage      |\n|=========================================================================================|\n|    0   N/A  N/A            1524    C+G   ...s\\@clawsgodesktop\\ClawsGO.exe      N/A      |\n|    0   N/A  N/A           13868    C+G   ....0.4341.46\\msedgewebview2.exe      N/A      |\n|    0   N/A  N/A           14412    C+G   ....0.4341.46\\msedgewebview2.exe      N/A      |\n|    0   N/A  N/A           16812    C+G   ...ot\\Application\\copilotapp.exe      N/A      |\n|    0   N/A  N/A           25168    C+G   ...t\\Edge\\Application\\msedge.exe      N/A      |\n|    0   N/A  N/A           27184    C+G   ... Harness\\DeepSeek Harness.exe      N/A      |\n|    0   N/A  N/A           29316    C+G   ...ns\\RadiumWMPF\\WeChatAppEx.exe      N/A      |\n|    0   N/A  N/A           30664    C+G   ....0.4341.46\\msedgewebview2.exe      N/A      |\n|    0   N/A  N/A           54056    C+G   ...r\\frontend\\Docker Desktop.exe      N/A      |\n|    0   N/A  N/A           56560    C+G   ...2p2nqsd0c76g0\\app\\ChatGPT.exe      N/A      |\n+-----------------------------------------------------------------------------------------+",
+        "stdout": "Sat Nov 14 18:52:48 2026       \n+-----------------------------------------------------------------------------------------+\n| NVIDIA-SMI 616.92                 KMD Version: 616.92        CUDA UMD Version: 13.4     |\n+-----------------------------------------+------------------------+----------------------+\n| GPU  Name                  Driver-Model | Bus-Id          Disp.A | Volatile Uncorr. ECC |\n| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |\n|                                         |                        |               MIG M. |\n|=========================================+========================+======================|\n|   0  NVIDIA GeForce RTX 5070      WDDM  |   00000000:81:00.0  On |                  N/A |\n|  0%   40C    P0             27W /  250W |    2986MiB /  12227MiB |     24%      Default |\n|                                         |                        |                  N/A |\n+-----------------------------------------+------------------------+----------------------+\n\n+-----------------------------------------------------------------------------------------+\n| Processes:                                                                              |\n|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |\n|        ID   ID                                                               Usage      |\n|=========================================================================================|\n|    0   N/A  N/A            1524    C+G   ...s\\@clawsgodesktop\\ClawsGO.exe      N/A      |\n|    0   N/A  N/A           13868    C+G   ....0.4341.46\\msedgewebview2.exe      N/A      |\n|    0   N/A  N/A           14412    C+G   ....0.4341.46\\msedgewebview2.exe      N/A      |\n|    0   N/A  N/A           25168    C+G   ...t\\Edge\\Application\\msedge.exe      N/A      |\n|    0   N/A  N/A           27184    C+G   ... Harness\\DeepSeek Harness.exe      N/A      |\n|    0   N/A  N/A           29316    C+G   ...ns\\RadiumWMPF\\WeChatAppEx.exe      N/A      |\n|    0   N/A  N/A           30664    C+G   ....0.4341.46\\msedgewebview2.exe      N/A      |\n|    0   N/A  N/A           54056    C+G   ...r\\frontend\\Docker Desktop.exe      N/A      |\n|    0   N/A  N/A           56560    C+G   ...2p2nqsd0c76g0\\app\\ChatGPT.exe      N/A      |\n+-----------------------------------------------------------------------------------------+",
         "stderr": ""
       }
     },
@@ -64,26 +64,74 @@
       "venv_active": true,
       "sys_prefix": "D:\\ALAC_V\\.venv",
       "base_prefix": "C:\\Users\\zcxve\\AppData\\Local\\Programs\\Python\\Python311",
-      "packages": {},
+      "packages": {
+        "alacv": "0.1.0",
+        "annotated-types": "0.8.0",
+        "certifi": "2026.10.23",
+        "charset-normalizer": "3.5.2",
+        "colorama": "0.4.6",
+        "contourpy": "1.3.3",
+        "cycler": "0.12.1",
+        "filelock": "4.2.4",
+        "fonttools": "4.68.0",
+        "fsspec": "2026.9.0",
+        "huggingface_hub": "0.36.2",
+        "idna": "3.20",
+        "iniconfig": "2.3.1",
+        "jinja2": "3.1.6",
+        "kiwisolver": "1.5.1",
+        "markupsafe": "3.0.3",
+        "matplotlib": "3.11.2",
+        "mpmath": "1.3.0",
+        "networkx": "3.6.1",
+        "numpy": "2.4.6",
+        "opencv-python-headless": "5.0.0.93",
+        "packaging": "26.3",
+        "pillow": "13.0.0",
+        "pluggy": "1.7.0",
+        "psutil": "7.2.2",
+        "pyarrow": "26.0.1",
+        "pydantic": "2.14.3",
+        "pydantic_core": "2.50.4",
+        "pygments": "2.21.0",
+        "pyparsing": "3.3.3",
+        "pytest": "9.2.0",
+        "python-dateutil": "4.0.0",
+        "pyyaml": "6.0.3",
+        "regex": "2026.11.9",
+        "requests": "2.34.2",
+        "safetensors": "0.8.0",
+        "setuptools": "78.1.0",
+        "sympy": "1.14.0",
+        "tokenizers": "0.22.2",
+        "torch": "2.14.1+cu130",
+        "torchvision": "0.29.1+cu130",
+        "tqdm": "4.70.1",
+        "transformers": "4.57.1",
+        "typing_extensions": "4.16.0",
+        "typing-inspection": "0.4.5",
+        "tzdata": "2026.6",
+        "urllib3": "2.8.0"
+      },
       "nvcc": "nvcc: NVIDIA (R) Cuda compiler driver\nCopyright (c) 2005-2025 NVIDIA Corporation\nBuilt on Fri_Feb_21_20:42:46_Pacific_Standard_Time_2025\nCuda compilation tools, release 12.8, V12.8.93\nBuild cuda_12.8.r12.8/compiler.35583870_0"
     },
     "cwd": "D:\\ALAC_V",
     "project_root": "D:\\ALAC_V",
     "git": {
       "cmd": "git rev-parse HEAD",
-      "code": 128,
-      "stdout": "",
-      "stderr": "fatal: not a git repository (or any of the parent directories): .git"
+      "code": 0,
+      "stdout": "0f83806303e5aeb18f8e4ac8798ddc5931f9817c",
+      "stderr": ""
     },
     "git_status": {
       "cmd": "git status --porcelain",
-      "code": 128,
-      "stdout": "",
-      "stderr": "fatal: not a git repository (or any of the parent directories): .git"
+      "code": 0,
+      "stdout": "?? scripts/eval_ablations.py",
+      "stderr": ""
     }
   },
   "gpu_selfcheck": {
-    "timestamp_utc": "2026-11-14T10:36:16.434103+00:00",
+    "timestamp_utc": "2026-11-14T10:52:49.396260+00:00",
     "torch": "2.14.1+cu130",
     "torch_cuda": "13.0",
     "cudnn": 92400,
@@ -113,14 +161,26 @@
       "inf": false
     },
     "fp16_bench": {
-      "ms_per_matmul_2048": 0.36,
-      "tflops": 47.7
+      "ms_per_matmul_2048": 0.316,
+      "tflops": 54.33
     },
     "fp32_bench": {
-      "ms_per_matmul_2048": 0.856,
-      "tflops": 20.08
+      "ms_per_matmul_2048": 0.9,
+      "tflops": 19.09
     },
     "peak_mem_during_bench_mb": 56.0,
+    "dinov2_fp16": {
+      "forward_ms": 5.23,
+      "hidden_shape": [
+        1,
+        1370,
+        384
+      ],
+      "params_m": 22.06,
+      "weights_mb": 42.1,
+      "peak_alloc_mb": 117.1,
+      "activation_peak_mb": 61.1
+    },
     "verdict": "通过"
   }
 }

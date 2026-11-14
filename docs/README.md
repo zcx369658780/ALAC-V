@@ -87,12 +87,13 @@ supersedes: null
 | 文档 | 说明 | 状态 |
 |---|---|---|
 | `00_charter/ALAC-V-charter.md` | 项目宪章 | 已接受 |
-| `01_tasks/TASK-0001-phase0-phase1.md` | Phase 0 + Phase 1 任务单 | 执行中 |
-| `02_audit/environment-audit.md` | 环境审计报告 | 待生成 |
-| `03_design/architecture.md` | 系统架构 | 草案 |
-| `03_design/data-model.md` | 数据模型与目录布局 | 草案 |
+| `01_tasks/TASK-0001-phase0-phase1.md` | Phase 0 + Phase 1 任务单 | 已完成（待审） |
+| `02_audit/environment-audit.md` | 环境审计报告 | 已接受 |
+| `02_audit/model-licenses.md` | 模型许可证登记 | 已接受 |
+| `03_design/architecture.md` | 系统架构 | 已接受 |
+| `03_design/data-model.md` | 数据模型与目录布局 | 已接受 |
 | `03_design/decisions/` | ADR 决策记录 | 见目录 |
-| `04_experiments/EXP-0001-abc-comparison.md` | 三组对照实验 | 预注册 |
-| `05_reports/PHASE1-REPORT.md` | Phase 1 交付报告 | 待生成 |
-| `06_ops/runbook.md` | 运行手册 | 草案 |
-| `07_risks/risk-register.md` | 风险登记册 | 草案 |
+| `04_experiments/EXP-0001-abc-comparison.md` | 三组对照实验 | 已完成 |
+| `05_reports/PHASE1-REPORT.md` | Phase 1 交付报告 | 待 Owner 审核 |
+| `06_ops/runbook.md` | 运行手册 | 已接受 |
+| `07_risks/risk-register.md` | 风险登记册 | 已接受 |

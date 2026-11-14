@@ -227,7 +227,7 @@ class VisualStore:
 
     # ------------------------------------------------------------------ assets
     def add_asset(self, rec: dict) -> int:
-        cur = self.conn.execute(
+        self.conn.execute(
             """INSERT INTO assets (image_id, kind, level, label, rel_path, width, height,
                  format, bytes, sha256, config_sha256, created_at)
                VALUES (:image_id,:kind,:level,:label,:rel_path,:width,:height,
@@ -236,8 +236,14 @@ class VisualStore:
                  bytes=excluded.bytes, sha256=excluded.sha256, rel_path=excluded.rel_path""",
             rec,
         )
+        row = self.conn.execute(
+            "SELECT asset_id FROM assets WHERE image_id=? AND kind=? AND label=? AND config_sha256=?",
+            (rec["image_id"], rec["kind"], rec["label"], rec["config_sha256"]),
+        ).fetchone()
         self.conn.commit()
-        return int(cur.lastrowid)
+        if row is None:
+            raise RuntimeError("asset 写入后无法回读 asset_id")
+        return int(row["asset_id"])
 
     def assets(self, image_id: str, kind: str | None = None) -> list[sqlite3.Row]:
         if kind:

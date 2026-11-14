@@ -7,6 +7,7 @@ __pycache__/
 # 环境
 .venv/
 .uv-cache/
+.hf-cache/
 
 # 数据：原始图与派生资产不入库（可由脚本重放生成）
 data/raw/*
@@ -20,15 +21,18 @@ data/index/*
 data/datasets/*
 !data/datasets/.gitkeep
 
-# 运行产物
+# 运行产物：run 目录较大，保留本地；汇总与插图入库
 artifacts/runs/*
 !artifacts/runs/.gitkeep
-artifacts/experiments/*
-!artifacts/experiments/.gitkeep
-artifacts/figures/*
-!artifacts/figures/.gitkeep
 artifacts/models/*
 !artifacts/models/.gitkeep
+artifacts/experiments/*
+!artifacts/experiments/.gitkeep
+!artifacts/experiments/*.json
+!artifacts/experiments/*.md
+artifacts/figures/*
+!artifacts/figures/.gitkeep
+!artifacts/figures/*.png
 
 # OS
 Thumbs.db

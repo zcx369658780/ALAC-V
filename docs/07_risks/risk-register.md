@@ -1,7 +1,7 @@
 ---
 id: RISK-0001
 title: 风险登记册与已知问题
-status: 草案
+status: 已接受
 date: 2026-11-14
 owner: lead
 task: TASK-0001

@@ -1,0 +1,55 @@
+{
+  "A0": {
+    "sources": [
+      "pyramid:L0"
+    ],
+    "n_runs": 6,
+    "dim": 384,
+    "recall@1": 0.8333333333333334,
+    "recall@5": 0.9444444444444444,
+    "mAP@10": 0.8829861111111114,
+    "feature_bytes_per_image": 1052876.0,
+    "query_ms_median": 1.7523520833088293
+  },
+  "B2": {
+    "sources": [
+      "pyramid:L0",
+      "pyramid:L2"
+    ],
+    "n_runs": 6,
+    "dim": 768,
+    "recall@1": 0.8194444444444444,
+    "recall@5": 0.9444444444444444,
+    "mAP@10": 0.8855489417989418,
+    "feature_bytes_per_image": 2105752.0,
+    "query_ms_median": 3.3596694443581834
+  },
+  "C2": {
+    "sources": [
+      "foveated",
+      "roi:roi_00"
+    ],
+    "n_runs": 3,
+    "dim": 768,
+    "recall@1": 0.9027777777777778,
+    "recall@5": 0.9583333333333334,
+    "mAP@10": 0.9268298059964728,
+    "feature_bytes_per_image": 2105750.0,
+    "query_ms_median": 3.1163055553204484
+  },
+  "C3": {
+    "sources": [
+      "pyramid:L2",
+      "pyramid:L3",
+      "foveated",
+      "roi:roi_00"
+    ],
+    "n_runs": 3,
+    "dim": 1536,
+    "recall@1": 0.9305555555555556,
+    "recall@5": 0.9722222222222222,
+    "mAP@10": 0.9525462962962964,
+    "feature_bytes_per_image": 4211502.0,
+    "query_ms_median": 6.441359722278624
+  }
+}
