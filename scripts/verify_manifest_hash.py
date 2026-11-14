@@ -21,7 +21,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 MANIFEST = ROOT / "data" / "manifests" / "ds-0001-alacv-synthetic-v1.json"
 RECORD = ROOT / "data" / "manifests" / "ds-0001-manifest-sanitization.json"
-RAW_URL = "https://raw.githubusercontent.com/zcx369658780/ALAC-V/main/data/manifests/ds-0001-alacv-synthetic-v1.json"
+REPO_RAW = "https://raw.githubusercontent.com/zcx369658780/ALAC-V"
+MANIFEST_PATH = "data/manifests/ds-0001-alacv-synthetic-v1.json"
 
 
 def lf_bytes(b: bytes) -> bytes:
@@ -45,6 +46,7 @@ def git_blob(rev: str, path: str) -> bytes | None:
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--github", action="store_true")
+    ap.add_argument("--ref", default="main", help="GitHub ref to fetch (branch/tag/sha)")
     args = ap.parse_args()
 
     worktree = MANIFEST.read_bytes()
@@ -59,7 +61,8 @@ def main() -> int:
     if blob is not None:
         checks["git_blob_lf"] = sha256_lf(blob)
     if args.github:
-        req = urllib.request.Request(RAW_URL, headers={"Cache-Control": "no-cache"})
+        url = f"{REPO_RAW}/{args.ref}/{MANIFEST_PATH}"
+        req = urllib.request.Request(url, headers={"Cache-Control": "no-cache"})
         with urllib.request.urlopen(req, timeout=30) as r:
             checks["github_raw_lf"] = sha256_lf(r.read())
 
