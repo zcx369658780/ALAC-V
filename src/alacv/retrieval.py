@@ -119,38 +119,37 @@ def backtrack_crop(cfg, store, image_id: str, roi_index: int = 0) -> tuple[np.nd
     return np.asarray(crop), {"image_id": image_id, "roi_index": roi_index, "box": box, "source": str(p)}
 
 
-def recovery_from_variant(cfg, store, image_id: str, variant: str, roi_index: int = 0) -> np.ndarray:
+def recovery_from_variant(cfg, store, image_id: str, variant: str, roi_index: int = 0):
     """按变体实际保存的表示还原 ROI 区域（用于回溯质量对比）。
 
-    - A : 只有 518 归一化输入 → 从原图裁 ROI 后缩放到 518 的等效细节（低分上界）
-    - B : 金字塔 L0（近原始分辨率）→ 从 L0 裁同坐标
-    - C : foveated 马赛克 ROI 区（画布尺度）+ 全分辨率 ROI 裁片
+    与 `scripts/run_experiments.py::recover` 共用同一坐标契约：只在与 518 中心裁剪
+    窗口的共同可见区域上重建（见 `alacv.backtrack`），不再使用缩放后未减偏移的坐标。
+
+    - A : 518 归一化输入的可见部分（低分上界）
+    - B : 金字塔 L0（近原始分辨率）
+    - C : 全分辨率 ROI 裁片；缺失时退回 foveated 马赛克 ROI 区
     """
+    from .backtrack import reconstruct_from_visible, reconstruct_full_resolution, visible_region
+
     row = store.get_image(image_id)
     if row is None:
         raise KeyError(image_id)
     rois = store.rois_of(image_id)
     r = rois[roi_index]
-    box = (int(r["x"]), int(r["y"]), int(r["x"] + r["w"]), int(r["y"] + r["h"]))
-    from PIL import Image
-
+    box = (int(r["x"]), int(r["y"]), int(r["w"]), int(r["h"]))
     img = open_image(cfg.path("paths.raw_dir") / row["rel_path"]).image
+    region = visible_region(box, img.size, int(cfg.get("model.input_size", 518)))
+    if not region.visible:
+        raise ValueError("ROI 完全落在编码器可见区域之外，不可比较")
 
     if variant == "A":
-        # 模拟 A 的可回溯细节：整图压到 518 短边后的等效采样
-        side = int(cfg.get("model.input_size", 518))
-        s = side / min(img.size)
-        small = img.resize((max(1, int(img.width * s)), max(1, int(img.height * s))), Image.Resampling.BICUBIC)
-        sx, sy = s, s
-        crop = small.crop((int(box[0] * sx), int(box[1] * sy), int(box[2] * sx), int(box[3] * sy)))
-        return np.asarray(crop.resize((box[2] - box[0], box[3] - box[1]), Image.Resampling.BICUBIC))
+        return reconstruct_from_visible(img, region)
 
     if variant == "B":
         assets = {a["level"]: a for a in store.assets(image_id, "pyramid")}
         if 0 in assets:
             p = cfg.path("paths.processed_dir").parent / assets[0]["rel_path"]
-            im = open_image(p).image
-            return np.asarray(im.crop(box))
+            return reconstruct_full_resolution(open_image(p).image, region)
 
     if variant == "C":
         assets = {a["label"]: a for a in store.assets(image_id, "roi_crop")}
@@ -158,8 +157,9 @@ def recovery_from_variant(cfg, store, image_id: str, variant: str, roi_index: in
         if label in assets:
             p = cfg.path("paths.processed_dir").parent / assets[label]["rel_path"]
             im = open_image(p).image
-            if im.size == (box[2] - box[0], box[3] - box[1]):
-                return np.asarray(im)
+            if im.size == (box[2], box[3]):
+                x, y, w, h = region.box
+                return np.asarray(im.crop((x - box[0], y - box[1], x - box[0] + w, y - box[1] + h)))
         fov = [a for a in store.assets(image_id, "foveated")]
         if fov:
             import json
@@ -170,7 +170,10 @@ def recovery_from_variant(cfg, store, image_id: str, variant: str, roi_index: in
             if meta_path.exists():
                 cs = float(json.loads(meta_path.read_text(encoding="utf-8"))["canvas_scale"])
             im = open_image(p).image
-            cb = (int(box[0] * cs), int(box[1] * cs), int(box[2] * cs), int(box[3] * cs))
-            return np.asarray(im.crop(cb).resize((box[2] - box[0], box[3] - box[1]), Image.Resampling.BICUBIC))
+            x, y, w, h = region.box
+            cb = (int(x * cs), int(y * cs), int((x + w) * cs), int((y + h) * cs))
+            from PIL import Image
 
-    return np.asarray(img.crop(box))
+            return np.asarray(im.crop(cb).resize((w, h), Image.Resampling.BICUBIC))
+
+    return reconstruct_full_resolution(img, region)

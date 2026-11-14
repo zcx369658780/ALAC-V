@@ -37,7 +37,11 @@ def _integral(a: np.ndarray) -> np.ndarray:
 
 
 def gradient_energy_map(gray: np.ndarray, blur_radius: float = 1.0) -> np.ndarray:
-    """灰度 → 高斯模糊 → Sobel 梯度幅值 → 归一化到 [0,1]。"""
+    """灰度 → 高斯模糊 → **中心差分**梯度幅值 → 归一化到 [0,1]。
+
+    算子为 gx = I[:,2:] - I[:,:-2], gy = I[2:,:] - I[:-2,:]（见 ADR-0008），
+    不是标准 3×3 Sobel；不要在此处改用 Sobel（会改变已冻结的实验输入）。
+    """
     img = Image.fromarray(gray.astype(np.uint8), mode="L")
     if blur_radius > 0:
         img = img.filter(ImageFilter.GaussianBlur(radius=blur_radius))

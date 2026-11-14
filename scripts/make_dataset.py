@@ -212,7 +212,8 @@ def add_real(cfg, out_root: Path) -> dict:
                 "role": "real",
                 "base_id": None,
                 "gt_bbox": None,
-                "origin": str(p),
+                "origin": f"os-wallpaper-sample-{len(files):02d}",
+                "origin_note": "local OS wallpaper sample; image not committed to the repository",
             }
         )
     return {"files": files, "note": "本机 Windows 壁纸，本地只读复制，未上传/未下载"}
