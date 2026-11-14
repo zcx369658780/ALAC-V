@@ -1,19 +1,14 @@
-# CHANGELOG
+# Changelog
 
-## [Unreleased] — Phase 1
+## 2026-11-14 — Governance bootstrap
 
-### Added
-- Phase 0 环境审计脚本与报告（硬件、驱动、CUDA、Python、依赖、磁盘、GPU FP16 自检）。
-- 原始图像归档：内容寻址、SHA-256、只读、EXIF 摆正、JPEG/PNG/WebP/AVIF 支持。
-- 多尺度金字塔：可配置 1/1、1/2、1/4、1/8，WebP 落盘。
-- Foveated ROI：梯度能量重要性、分级马赛克、全分辨率 ROI 裁片、ROI 坐标入库。
-- DINOv2 ViT-S/14 编码器：CLS + Patch、FP16、预处理参数与模型指纹记录。
-- 视觉知识库：SQLite（7 表）+ SafeTensors 特征 + 完整性校验。
-- 检索与回溯：余弦 Top-K、Recall@K/mAP、ROI 高清回溯与 PSNR/SSIM 评估。
-- EXP-0001：A/B/C 三组对照实验（预注册 + 自动汇总）。
-- 文档系统：宪章、任务单、审计、架构、数据模型、7 篇 ADR、实验、报告、运维、风险。
-- 单元测试：配置、归档、金字塔、foveation、存储、检索、指标、管线、特征。
+- Added root-level `AGENTS.md` and GitHub Issue/PR templates.
+- Added `docs/08_governance/` for active state, acceptance protocol, Issue workflow, project source index, and Phase 0/1 independent review.
+- Clarified that GitHub Issues are authoritative online task orders; Markdown task files are versioned snapshots.
+- Recorded Phase 0/1 as engineering-complete per DSH report but not yet independently accepted; Phase 2 remains BLOCKED.
+- Opened ALAC-0001 to track evidence-chain and metric-validity remediation.
 
-### Notes
-- 已知限制与风险见 `docs/07_risks/risk-register.md`。
-- Phase 1 完成后停止，不自动进入 Phase 2。
+## 2026-11-14 — Initial Phase 0/1 delivery
+
+- Established the static-image pipeline, environment audit, DINOv2 feature extraction, multi-scale/foveated processing, SQLite + SafeTensors storage, retrieval, tests, and EXP-0001 reports.
+- See [Phase 0/1 submission](docs/submissions/PHASE_0_1_SUBMISSION.md) and [Phase 1 report](docs/05_reports/PHASE1-REPORT.md).

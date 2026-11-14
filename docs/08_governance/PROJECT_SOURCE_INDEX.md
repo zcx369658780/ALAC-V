@@ -1,0 +1,90 @@
+---
+id: INDEX-0001
+title: ALAC-V Project Source Index
+status: active
+date: 2026-11-14
+owner: Owner
+---
+
+# ALAC-V Project Source Index
+
+> This file is the navigation entry for the ChatGPT Project Source pack and for agents joining the repository. The GitHub repository is canonical; any uploaded ZIP is a dated snapshot, not a replacement for live GitHub state.
+
+## 1. Canonical project source
+
+- Repository: https://github.com/zcx369658780/ALAC-V
+- Default branch: `main`
+- Baseline at initial governance bootstrap: `10cb05d379c39043a17dc840643535fd150bce20`
+- Local implementation workspace reported by DSH: `D:\ALAC_V`
+
+## 2. Recommended reading order for a new agent
+
+1. [Root AGENTS.md](../../AGENTS.md) — operating rules, authority order, safety, and phase gates.
+2. [Active State](ACTIVE_STATE.md) — current phase, blockers, and task status.
+3. [Project Charter](../00_charter/ALAC-V-charter.md) — research goals, non-goals, and stage gates.
+4. [Documentation Index](../README.md) — document taxonomy and evidence rules.
+5. [Phase 0/1 Task Snapshot](../01_tasks/TASK-0001-phase0-phase1.md) — original authorized scope.
+6. [Phase 1 Architecture](../03_design/architecture.md) and [Data Model](../03_design/data-model.md).
+7. [ADR directory](../03_design/decisions/) — accepted design decisions.
+8. [EXP-0001](../04_experiments/EXP-0001-abc-comparison.md) — preregistration and reported results.
+9. [Phase 1 Report](../05_reports/PHASE1-REPORT.md) and [Submission Record](../submissions/PHASE_0_1_SUBMISSION.md).
+10. [Acceptance Review](PHASE0_1_ACCEPTANCE.md) and [Open remediation Issue](https://github.com/zcx369658780/ALAC-V/issues/1).
+
+## 3. Repository document map
+
+| Area | Canonical path | Purpose |
+|---|---|---|
+| Project entry | `README.md` | Overview, status, install and quick start |
+| Agent rules | `AGENTS.md` | Rules every coding/review agent must follow |
+| Change history | `CHANGELOG.md` | Versioned project changes |
+| Charter | `docs/00_charter/ALAC-V-charter.md` | Long-term goals, principles, phase boundaries |
+| Tasks | `docs/01_tasks/` | Immutable/versioned task snapshots |
+| Environment | `docs/02_audit/` | Hardware, runtime, dependency and model license audits |
+| Design | `docs/03_design/` | Architecture, data model and ADRs |
+| Experiments | `docs/04_experiments/` | Preregistration, metrics and interpretation |
+| Reports | `docs/05_reports/` | Phase reports |
+| Operations | `docs/06_ops/` | Setup, runbook and troubleshooting |
+| Risks | `docs/07_risks/` | Risk register |
+| Governance | `docs/08_governance/` | Active state, acceptance protocol, Issue workflow and source index |
+| Submission history | `docs/submissions/` | Immutable delivery records |
+| Source code | `src/alacv/` | Image archive, pyramid, foveation, features, store, retrieval, metrics and pipeline |
+| Scripts | `scripts/` | Audit, model fetch, dataset generation, experiments and integrity checks |
+| Tests | `tests/` | Unit and integration tests |
+| Configurations | `configs/` | Defaults, experiment and dataset parameters |
+| Data manifests | `data/manifests/` | Dataset and model fingerprints; raw datasets are not committed |
+| Experiment summaries | `artifacts/experiments/` | Aggregated JSON/Markdown results and confidence intervals |
+| Figures | `artifacts/figures/` | Report figures |
+| Evidence bundles | `artifacts/evidence/` | Sanitized per-run evidence for independent review |
+
+## 4. Important implementation files
+
+| File | Responsibility |
+|---|---|
+| `src/alacv/ingest.py` | Decode validation, SHA-256 content-addressed raw archive, metadata |
+| `src/alacv/imaging.py` | RGB conversion, image decode, multi-scale pyramid and input fitting |
+| `src/alacv/foveation.py` | ROI scoring and foveated mosaic / ROI crop generation |
+| `src/alacv/features.py` | Frozen DINOv2 encoder and CLS/Patch feature extraction |
+| `src/alacv/store.py` | SQLite metadata and SafeTensors feature storage |
+| `src/alacv/retrieval.py` | Cosine retrieval, metrics and ROI backtracking |
+| `src/alacv/pipeline.py` | A/B/C image pipeline orchestration |
+| `scripts/run_experiments.py` | EXP-0001 experiment execution and run artifact generation |
+| `scripts/bootstrap_ci.py` | Local CI/bootstrap helper |
+| `tests/` | Regression and unit tests |
+
+## 5. Key accepted design records
+
+- ADR-0001: HuggingFace DINOv2 ViT-S/14, frozen.
+- ADR-0002: SHA-256 content-addressed immutable raw archive.
+- ADR-0003: SQLite metadata + SafeTensors features; no vector database in Phase 1.
+- ADR-0004: independent 518×518 forward passes for pyramid levels.
+- ADR-0005: dual foveation artifacts (mosaic + full-resolution ROI crop).
+- ADR-0006: FP16 feature storage, FP32 retrieval accumulation.
+- ADR-0007: gradient-energy ROI importance (implementation/design wording currently under review; see Issue #1).
+
+## 6. Data and evidence boundaries
+
+The public repository intentionally excludes raw private images/videos, local dataset files, model weights, full local run stores, caches, and credentials. Dataset manifests and aggregate experiment summaries are versioned. For formal acceptance, sanitized run-level evidence belongs in `artifacts/evidence/`.
+
+## 7. Uploaded Project Source pack
+
+The companion ZIP should contain this index plus the project charter, current state, acceptance protocol, architecture, data model, task snapshot, ADRs, experiment record, audit, report, runbook, risk register, and submission record. Its timestamp/commit must be recorded when uploaded; always check GitHub for newer changes.
