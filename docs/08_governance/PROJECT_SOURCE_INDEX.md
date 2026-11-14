@@ -54,7 +54,7 @@ owner: Owner
 | Data manifests | `data/manifests/` | Dataset and model fingerprints; raw datasets are not committed |
 | Experiment summaries | `artifacts/experiments/` | Aggregated JSON/Markdown results and confidence intervals |
 | Figures | `artifacts/figures/` | Report figures |
-| Evidence bundles | `artifacts/evidence/` | Sanitized per-run evidence for independent review |
+| Evidence bundles | `artifacts/evidence/EXP-0001/` | Sanitized per-run evidence (9 runs) for independent review |
 
 ## 4. Important implementation files
 
@@ -79,7 +79,8 @@ owner: Owner
 - ADR-0004: independent 518×518 forward passes for pyramid levels.
 - ADR-0005: dual foveation artifacts (mosaic + full-resolution ROI crop).
 - ADR-0006: FP16 feature storage, FP32 retrieval accumulation.
-- ADR-0007: gradient-energy ROI importance (implementation/design wording currently under review; see Issue #1).
+- ADR-0007: gradient-energy ROI importance (original wording retained; superseded on terminology by ADR-0008).
+- ADR-0008: ROI importance uses central-difference gradient energy; behavior frozen, no Sobel substitution.
 
 ## 6. Data and evidence boundaries
 

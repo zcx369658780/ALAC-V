@@ -88,7 +88,7 @@ D:\ALAC_V\
 │   ├── config.py        # 加载/校验/哈希/快照
 │   ├── logging_utils.py # JSONL 结构化日志
 │   ├── ingest.py        # 只读、内容寻址归档
-│   ├── imaging.py       # 解码、色彩归一、金字塔
+│   ├── imaging.py       # 解码、RGB 模式归一（不做 ICC 变换）、金字塔
 │   ├── foveation.py     # ROI 选择 + 分级合成
 │   ├── features.py      # DINOv2 封装（CLS+Patch, FP16）
 │   ├── store.py         # SQLite + SafeTensors
@@ -191,6 +191,11 @@ python -m alacv.cli stats
 - 身份 = 文件字节 SHA-256；归档路径 `data/raw/<sha[:2]>/<sha>.<ext>`，同内容不同名只存一份。
 - 归档后设只读属性；代码层**没有任何覆盖/删除原始文件的接口**。
 - 元数据入库：宽高、通道、PIL mode、颜色空间（ICC 描述解析：sRGB / Display P3 / Adobe RGB / Gray）、ICC SHA-256、文件大小、EXIF 存在性（不保存原值，保护隐私）。
+
+> **色彩处理边界（TASK-0002 / WP4 澄清）**：管线只做 **PIL 模式转换**（统一到 RGB，含 alpha 合成白底），
+> 并把 ICC profile 的描述与 SHA-256 作为**元数据记录**。管线**不执行 ICC profile → sRGB 的色彩管理变换**，
+> 也不在特征提取前做色域映射。对普通 sRGB 输入无影响；对 Display P3 / Adobe RGB 输入，
+> 特征反映的是"未做色彩管理转换的 RGB 数值"。本任务不新增该变换。
 - 解码失败/不支持格式 → 记 `status=rejected` + 原因，不中断批处理。
 
 ### 4.3 视觉知识库（P1-7）
@@ -230,7 +235,7 @@ SQLite 7 张表：`models / images / assets / features / rois / runs / run_items
 
 ![foveated 示例](../../artifacts/figures/foveated_example.png)
 
-- **ROI 选择**：灰度 → 高斯模糊 → Sobel 梯度幅值 → 积分图滑窗能量 → 取最大 → NMS 得 ≤2 个 ROI；纯色图退化为中心。支持 `manual` 坐标覆盖。
+- **ROI 选择**：灰度 → 高斯模糊 → **中心差分**梯度幅值 → 积分图滑窗能量 → 取最大 → NMS 得 ≤2 个 ROI；纯色图退化为中心。支持 `manual` 坐标覆盖。（算子名称与定义见 [ADR-0008](decisions/ADR-0008-roi-central-difference.md)；原文误称 Sobel，行为未变。）
 - **双产物**：
   1. `foveated.webp`：画布 = 原图 1/2。周边 = 原图 1/4 上采样；旁中央环 = 原图 1/2；中央凹 = ROI 区 1/2；边界 8 px 羽化。
   2. `roi_XX.webp`：ROI 在**原图像素坐标**上的 1:1 裁片（WebP q96），用于真正的高清回溯。
@@ -250,7 +255,11 @@ SQLite 7 张表：`models / images / assets / features / rois / runs / run_items
 **协议**：3 变体 × 3 重复，每 run 独立 store，处理顺序随机化；报中位数。
 **预注册**：假设、指标、判定阈值在运行前写定（[`EXP-0001`](../04_experiments/EXP-0001-abc-comparison.md) §3–§6）。
 
-### 6.1 主结果
+### 6.1 主结果（原始运行值）
+
+> 下表是 2026-11-14 原始运行的数值，**其中回溯 PSNR/SSIM 已确认含坐标缺陷**（见
+> [EXP-0001-AMD-0001](../04_experiments/EXP-0001-AMD-0001-backtrack-coordinates.md)）。
+> 修正后的值见 §6.5，其余指标不受影响。
 
 | 变体 | 维度 | 总时间 中位/P95 (ms) | 编码 (ms) | 显存峰值 (MB) | 特征/图 | 合计/图 | Recall@1 | Recall@5 | mAP@10 | 回溯 PSNR | 回溯 SSIM |
 |---|---|---|---|---|---|---|---|---|---|---|---|
@@ -293,15 +302,25 @@ SQLite 7 张表：`models / images / assets / features / rois / runs / run_items
 
 同源对 vs 异源对余弦分布 AUC：A 0.891 / B 0.899 / **C 0.918**。三组都能把"同一场景"与"不同场景"分开，C 的分离度最高。
 
-### 6.5 局部高清回溯
+### 6.5 派生表示可见像素保真度（修正后）
 
-以选中 ROI 框为基准，比较"从该变体派生表示还原的裁剪"与原图裁剪：
+> **2026-11-14 修订**：原 `recover()` 的 A 分支未应用 518 中心裁剪偏移，且未排除编码器
+> 不可见区域。修正后 A/B/C 在同一可见交集上重算，详见
+> [EXP-0001-AMD-0001](../04_experiments/EXP-0001-AMD-0001-backtrack-coordinates.md)。
 
-- A 26.76 dB / 0.869（等效 518 采样，细节丢失）
-- B 29.19 dB / 0.852（L0 WebP q95）
-- C 29.10 dB / 0.851（ROI 裁片 WebP q96）
+| 变体 | 修正后 PSNR | 修正后 SSIM | 原 PSNR | Δ |
+|---|---|---|---|---|
+| A | **29.13 dB** | **0.913** | 26.76 | +2.37 |
+| B | **29.43 dB** | **0.853** | 29.19 | +0.23 |
+| C | **29.35 dB** | **0.853** | 29.10 | +0.25 |
 
-**口径声明**：原始归档对三组都永久保留，所以"系统级回溯"三组都能做到无损；该指标衡量的是**不触碰原始层时，派生表示保留了多少高清细节**。B 与 C 在该口径下等价（+2.4 dB vs A），说明"全分辨率 ROI 裁片"与"保留 L0"在像素代价上相当，但 C 少存了 3 个尺度。
+- 有效样本 24 张基准图 × 3 次重复，排除 0；ROI 对 518 窗口平均可见覆盖率 **0.919**。
+- **结论改变**：修正后三组基本持平（极差 0.30 dB），原"B/C 比 A 多保留 2.4 dB 细节"的
+  说法**撤回**；A 的"劣势"主要来自旧实现的坐标缺陷。
+- A 的 SSIM 反而更高（0.913 vs 0.853）：上采样平滑比 WebP 压缩伪影更利于结构相似度，
+  而 PSNR 对两者不敏感。这再次说明单一指标不足以支撑"更好/更差"的结论。
+
+**口径声明**：原始归档对三组都永久保留，所以"系统级回溯"三组都能做到无损；该指标衡量的是**不触碰原始层时，派生表示保留了多少可见像素细节**，不是从 embedding 解码重建，也不代表模型具备像素生成能力。
 
 ---
 
@@ -342,6 +361,12 @@ SQLite 7 张表：`models / images / assets / features / rois / runs / run_items
 | 单查询（含描述子读取+余弦） | 1.49 ms | 5.97 ms | 9.54 ms |
 | 平均 CPU 占用 | 15.5 核 | 14.7 核 | 10.8 核 |
 | RSS 峰值 | 1.33 GB | 1.38 GB | 1.51 GB |
+
+> **CPU 峰值口径更正（TASK-0002 / WP5）**：原 `peak_cpu_pct` 由 `psutil.Process.cpu_percent(None)`
+> 以 20 ms 间隔采样，短间隔量化噪声会产生远超 `100 × 逻辑 CPU 数` 的值（历史记录中出现 4062%），
+> **该指标已判定无效并停止使用**。替代指标为 `peak_cpu_cores = max(ΔCPU时间 / Δwall时间)`，
+> 与 `avg_cpu_cores` 同一口径；历史 run 的 `peak_cpu_pct` 仅作为无效值保留在原始 metrics 中，
+> 不再引用。
 
 CPU 占用高是因为 Pillow 的 WebP 编码与 numpy 操作走多线程；GPU 侧并不饱和（单图 batch 无法喂满 5070）。
 
@@ -404,6 +429,29 @@ CPU 占用高是因为 Pillow 的 WebP 编码与 numpy 操作走多线程；GPU 
 | 完成后停止，不进入 Phase 2 | ✅ | 本报告即终点；无 Phase 2 代码 |
 
 ---
+
+## 11. TASK-0002 整改记录（2026-11-14）
+
+本节记录 Phase 0/1 独立验收整改（Issue #1 / TASK-0002）对报告的影响。原始章节保留，
+修订处均标注日期与依据；未受影响的结果不改写。
+
+| WP | 内容 | 结果 |
+|---|---|---|
+| WP0 | 九次 run 证据盘点 | 9/9 完整；8 次锚定 commit `0f83806`（dirty=false），首次运行早于首次提交（commit 为空），已标注证据限制 |
+| WP1 | 脱敏证据包 | `artifacts/evidence/EXP-0001/<run-id>/`（9 套，含 metrics/config/env/model/items/evidence-manifest） |
+| WP2 | A 变体中心裁剪坐标 | 新增 `alacv/backtrack.py`；A/B/C 在同一可见交集重算；**H3 不再成立**（详见 §6.5 与 AMD-0001） |
+| WP3 | ROI 算子术语 | 保留中心差分实现，新增 [ADR-0008](../03_design/decisions/ADR-0008-roi-central-difference.md)，ADR-0007 加取代指针（原文保留） |
+| WP4 | ICC 声明 | 明确"仅 PIL 模式转换 + ICC 元数据记录，不做 profile→sRGB 变换"；未新增色彩变换 |
+| WP5 | 其他审计 | TASK-0001 测试指针勘误；`peak_cpu_pct` 失效并替换；OS 版本改为注册表直接证据；公开 manifest 去除本机壁纸路径 |
+
+**修订后的诚实结论**：
+
+1. 检索类结论（Recall/mAP/相似度）不变：三组差异有限，**不宣称效率提升**。
+2. 回溯类结论改变：A/B/C 的可见像素保真度基本持平，原"B/C 优于 A 2.4 dB"撤回。
+3. 证据链：9 次 run 的指标、配置、环境、模型指纹已公开，但**代码身份**对 8 次 run 锚定
+   于 `0f83806`，对 1 次 run 只能推断（早于首次提交）——该 run 的结果应视为
+   AGENT-REPORTED 级别，直至独立复核。
+4. Phase 2 仍然 **BLOCKED**。
 
 ## 10. 停止声明
 

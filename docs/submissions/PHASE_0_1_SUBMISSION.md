@@ -51,7 +51,7 @@ src/alacv/
   config.py        配置加载/校验/哈希/快照
   logging_utils.py JSONL 结构化日志
   ingest.py        只读内容寻址归档
-  imaging.py       解码、色彩归一、金字塔
+  imaging.py       解码、RGB 模式归一（不做 ICC 变换）、金字塔
   foveation.py     ROI 选择与分级合成
   features.py      DINOv2 封装（CLS+Patch, FP16）
   store.py         SQLite + SafeTensors

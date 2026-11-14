@@ -29,7 +29,9 @@ The current engineering baseline is committed, but the first independent review 
 ## Current open task
 
 - [ALAC-0001 — Phase 0/1 independent acceptance and evidence remediation](https://github.com/zcx369658780/ALAC-V/issues/1)
-- State: Open; governance/audit backlog created. DSH must synchronize repository governance first and wait for explicit Owner authorization before implementing remediation.
+- State: Open; **Owner authorized implementation on 2026-11-14**. DSH remediation submitted on branch
+  `task/1-phase0-1-remediation` (PR pending review). Acceptance remains reserved to the Owner; the Issue must
+  not be closed by the implementing agent.
 
 ## Verified project facts from repository
 
@@ -50,6 +52,21 @@ The current engineering baseline is committed, but the first independent review 
 6. CPU peak percentage and OS product/build identification need source-level validation before reuse as formal claims.
 
 See `PHASE0_1_ACCEPTANCE.md` and Issue #1 for the complete list.
+
+## Remediation status (TASK-0002, 2026-11-14)
+
+| Review finding | Remediation | Status |
+|---|---|---|
+| R1 run-level evidence | `artifacts/evidence/EXP-0001/` (9 sanitized run bundles) | submitted |
+| R2 A-variant center crop | `src/alacv/backtrack.py`, AMD-0001, recomputed metrics | submitted; **H3 withdrawn** |
+| R3 Sobel naming | ADR-0008 (central difference), ADR-0007 supersede pointer | submitted |
+| R4 ICC claim | docs corrected to "mode conversion + ICC metadata only" | submitted |
+| R5 test pointer | `TASK-0001-erratum-0001.md` | submitted |
+| R6 CPU peak metric | `peak_cpu_pct` withdrawn; `peak_cpu_cores` introduced | submitted |
+| R7 OS identity | `docs/02_audit/os-evidence.json` (direct registry read) | submitted |
+| R8 manifest paths | generic `os-wallpaper-sample-NN` labels; old/new SHA recorded | submitted |
+
+Phase 2 remains **BLOCKED** until Owner acceptance of this remediation.
 
 ## Owner decisions / workflow
 
