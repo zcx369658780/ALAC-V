@@ -96,6 +96,8 @@ GPU 0: NVIDIA GeForce RTX 5070   WDDM
 | 虚拟环境 | ✅ 独立 venv，`sys.prefix != base_prefix` |
 | 全局 Python | 未安装 torch，未被本项目修改 |
 
+> 公开仓库版说明：JSON 证据中的当前用户主目录已脱敏为 `%USERPROFILE%`（仅一处 `base_prefix`），其余内容为原始采集值。
+
 核心依赖（完整锁文件见 `requirements.lock.txt`）：
 
 | 包 | 版本 | 用途 |

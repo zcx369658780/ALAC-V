@@ -28,6 +28,21 @@ def run(cmd: list[str], timeout: int = 60) -> dict:
         return {"cmd": " ".join(cmd), "error": f"{type(exc).__name__}: {exc}"}
 
 
+def redact(obj):
+    """把当前用户主目录替换为 %USERPROFILE%，避免公开仓库泄露账户路径。"""
+    home = str(Path.home())
+    variants = sorted({home, home.replace("\\", "/"), home.replace("/", "\\")}, key=len, reverse=True)
+    if isinstance(obj, str):
+        for v in variants:
+            obj = obj.replace(v, "%USERPROFILE%")
+        return obj
+    if isinstance(obj, list):
+        return [redact(x) for x in obj]
+    if isinstance(obj, dict):
+        return {k: redact(v) for k, v in obj.items()}
+    return obj
+
+
 def cpu_name() -> str | None:
     try:
         import winreg
@@ -244,6 +259,7 @@ def main() -> int:
         "git": run(["git", "rev-parse", "HEAD"]),
         "git_status": run(["git", "status", "--porcelain"]),
     }
+    env = redact(env)
     (out_dir / "environment.json").write_text(json.dumps(env, ensure_ascii=False, indent=2), encoding="utf-8")
 
     check = gpu_selfcheck()

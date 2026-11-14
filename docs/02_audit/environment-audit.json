@@ -63,7 +63,7 @@
       "version": "3.11.9 (tags/v3.11.9:de54cf5, Apr  2 2024, 10:12:12) [MSC v.1938 64 bit (AMD64)]",
       "venv_active": true,
       "sys_prefix": "D:\\ALAC_V\\.venv",
-      "base_prefix": "C:\\Users\\zcxve\\AppData\\Local\\Programs\\Python\\Python311",
+      "base_prefix": "%USERPROFILE%\\AppData\\Local\\Programs\\Python\\Python311",
       "packages": {
         "alacv": "0.1.0",
         "annotated-types": "0.8.0",

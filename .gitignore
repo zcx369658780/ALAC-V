@@ -8,6 +8,7 @@ __pycache__/
 .venv/
 .uv-cache/
 .hf-cache/
+.ssh_known_hosts
 
 # 数据：原始图与派生资产不入库（可由脚本重放生成）
 data/raw/*
