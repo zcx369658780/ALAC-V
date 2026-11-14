@@ -8,6 +8,7 @@ task: TASK-0002
 issue: https://github.com/zcx369658780/ALAC-V/issues/1
 baseline: 2bc71dfba3d6ccebcda44124a324f697ba2f0b1d
 branch: task/1-phase0-1-remediation
+pr: https://github.com/zcx369658780/ALAC-V/pull/2
 ---
 
 # TASK-0002 整改交付报告
@@ -15,7 +16,7 @@ branch: task/1-phase0-1-remediation
 **任务**：ALAC-0001 / Phase 0/1 独立验收整改
 **基线**：`2bc71dfba3d6ccebcda44124a324f697ba2f0b1d`
 **分支**：`task/1-phase0-1-remediation`
-**PR**：_待回填（创建后补 URL）_
+**PR**：[#2](https://github.com/zcx369658780/ALAC-V/pull/2)
 **状态**：已提交 PR，等待 ChatGPT 独立复核与 Owner 最终验收；**Phase 2 仍 BLOCKED**。
 
 ---
@@ -173,8 +174,8 @@ branch: task/1-phase0-1-remediation
 |---|---|
 | 基线 | `2bc71dfba3d6ccebcda44124a324f697ba2f0b1d` |
 | 分支 | `task/1-phase0-1-remediation` |
-| 交付提交 | 见分支 HEAD / PR 页面（本文档自引用限制，不在正文内嵌自身 SHA） |
-| PR | _待回填_ |
+| 交付提交 | `d6db736`（代码/测试）→ `af9bfe6`（证据/重算）→ `05feedf`（文档/ADR/报告） |
+| PR | https://github.com/zcx369658780/ALAC-V/pull/2 （`Refs #1`，不自动关闭） |
 | 合并 / 关闭 Issue | **未执行**，等待 Owner |
 
 ## 11. 结论与限制
