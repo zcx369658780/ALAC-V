@@ -135,7 +135,7 @@ def _c_full_canvas(cfg, store, image_id: str, img: Image.Image) -> Image.Image:
     base = cfg.path("paths.processed_dir").parent
     fov = [a for a in store.assets(image_id, "foveated")]
     if not fov:
-        return img.copy()
+        raise RuntimeError(f"{image_id}: C 变体缺少 foveated 资产，拒绝回退到原图（fail-closed）")
     canvas = _load(base / fov[0]["rel_path"]).resize(img.size, Image.Resampling.BICUBIC)
     rois = {int(r["roi_index"]): r for r in store.rois_of(image_id)}
     for a in store.assets(image_id, "roi_crop"):
@@ -172,13 +172,14 @@ def recover_gt_region(cfg, store, image_id: str, variant: str, gt_box: tuple[int
         return reconstruct_from_visible(img, region), region
     if variant == "B":
         assets = {a["level"]: a for a in store.assets(image_id, "pyramid")}
-        if 0 in assets:
-            im = _load(cfg.path("paths.processed_dir").parent / assets[0]["rel_path"])
-            return reconstruct_full_resolution(im, region), region
+        if 0 not in assets:
+            raise RuntimeError(f"{image_id}: B 变体缺少金字塔 L0 资产，拒绝回退到原图（fail-closed）")
+        im = _load(cfg.path("paths.processed_dir").parent / assets[0]["rel_path"])
+        return reconstruct_full_resolution(im, region), region
     if variant == "C":
         canvas = _c_full_canvas(cfg, store, image_id, img)
         return reconstruct_full_resolution(canvas, region), region
-    return reconstruct_full_resolution(img, region), region
+    raise ValueError(f"未知变体 {variant!r}：拒绝回退到原图（fail-closed）")
 
 
 def recover_variant(cfg, store, image_id: str, variant: str, box: tuple[int, int, int, int]):

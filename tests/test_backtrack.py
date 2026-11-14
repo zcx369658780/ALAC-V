@@ -228,3 +228,30 @@ def test_c_gt_region_composes_roi_crop_over_mosaic(tmp_path):
     outside = rec[:, split:]
     assert inside.mean() > 240, inside.mean()
     assert outside.mean() < 15, outside.mean()
+
+
+def test_fail_closed_when_b_lacks_l0(tmp_path):
+    (tmp_path / "raw").mkdir()
+    Image.fromarray(np.zeros((64, 64, 3), dtype=np.uint8)).save(tmp_path / "raw" / "img.png")
+    cfg = _StubCfg(tmp_path)
+    store = _StubStore({}, [])
+    with pytest.raises(RuntimeError, match="L0"):
+        recover_gt_region(cfg, store, "img", "B", (0, 0, 32, 32))
+
+
+def test_fail_closed_when_c_lacks_foveated(tmp_path):
+    (tmp_path / "raw").mkdir()
+    Image.fromarray(np.zeros((64, 64, 3), dtype=np.uint8)).save(tmp_path / "raw" / "img.png")
+    cfg = _StubCfg(tmp_path)
+    store = _StubStore({}, [])
+    with pytest.raises(RuntimeError, match="foveated"):
+        recover_gt_region(cfg, store, "img", "C", (0, 0, 32, 32))
+
+
+def test_fail_closed_on_unknown_variant(tmp_path):
+    (tmp_path / "raw").mkdir()
+    Image.fromarray(np.zeros((64, 64, 3), dtype=np.uint8)).save(tmp_path / "raw" / "img.png")
+    cfg = _StubCfg(tmp_path)
+    store = _StubStore({}, [])
+    with pytest.raises(ValueError):
+        recover_gt_region(cfg, store, "img", "Z", (0, 0, 32, 32))

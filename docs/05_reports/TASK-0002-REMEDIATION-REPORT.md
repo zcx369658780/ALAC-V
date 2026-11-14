@@ -86,7 +86,8 @@ pr: https://github.com/zcx369658780/ALAC-V/pull/2
 
 - 有效样本 24/24；**排除 0**；GT 区域平均可见覆盖率 **0.928**。
 - **H3 被拒绝**：C 在真实目标区域反而比 A 低 3.14 dB。原「C 优于 A」的结论来自评价区域错误
-  （使用了模型自己选中的 ROI）；GT 目标只有约 58% 与 ROI 重叠。
+  （使用了模型自己选中的 ROI）。机制：ROI_00 命中率 58.3%、任一已存裁片命中 66.7%、
+  两个裁片并集仅覆盖 GT 面积 47.7%，C 仍有约一半目标区域依赖 1/2 画布马赛克。
 - 副指标（attended ROI，探索性，不替代主指标）：A 29.44 / B 29.43 / C 29.35 dB。
 
 ### 坐标与评价口径修正（第二轮复核 R9/R10）
@@ -127,10 +128,10 @@ pr: https://github.com/zcx369658780/ALAC-V/pull/2
 完整测试输出（锚定到干净提交 `a257b09`，`git_dirty=false`）：`artifacts/evidence/test-runs/2026-11-14-task-0002-pytest.txt`
 
 ```
-============================= 80 passed in 20.57s =============================
+============================= 83 passed =============================
 ```
 
-（原有 56 项 + 新增 24 项；0 failure / 0 error / 0 skip。）
+（原有 56 项 + 新增 27 项；0 failure / 0 error / 0 skip。）
 
 ## 5. ADR-0008（WP3）
 
@@ -172,6 +173,15 @@ pr: https://github.com/zcx369658780/ALAC-V/pull/2
 | 新增文档 | `ADR-0008`、`EXP-0001-AMD-0001`、`TASK-0001-erratum-0001`、本报告 |
 | 更新文档 | `PHASE1-REPORT`、`EXP-0001`、`README`、`ACTIVE_STATE`、`risk-register`、`docs/README`、`PROJECT_SOURCE_INDEX`、`TASK-0002`、`data/manifests/*` |
 
+## 8.5 第三轮复核修复（本轮）
+
+| 复核项 | 处理 |
+|---|---|
+| 文档自相矛盾 | AMD §3 改为 GT bbox 主指标；本报告 §11 删除"三组持平"；PHASE1 §6.2 标注"原始未修正历史判定"；README 移除已修复的待办；ACTIVE_STATE 更新到第二轮结果 |
+| C 的 ROI 机制 | 区分 ROI_00 命中率（58.3%）、任一已存裁片命中率（66.7%）、并集覆盖 GT 面积（47.7%）；逐图 `roi_boxes` / `roi_union_coverage_of_gt` 写入 corrected JSON |
+| 缺失资产 fail-open | B 缺 L0、C 缺 foveated、未知 variant 均改为抛错（fail-closed），新增 3 项测试 |
+| 测试锚点 | 在最终代码提交上重跑 83 项并更新日志（HEAD / dirty=false / `<REPO>`） |
+
 ## 9. NOT RUN / 未完成事项
 
 | 项 | 原因 |
@@ -199,6 +209,7 @@ pr: https://github.com/zcx369658780/ALAC-V/pull/2
 ## 11. 结论与限制
 
 - 证据链、坐标口径、术语一致性、测量口径、隐私与路径问题均已按 Issue #1 处理。
-- **科学结论发生一处实质撤回**：A 变体的回溯劣势是测量缺陷，修正后三组持平。
+- **科学结论发生实质改变**：A 变体的回溯劣势是测量缺陷；按预注册 GT bbox 口径，**H3 被拒绝**——
+  C 的真实目标区域保真度比 A 低 3.14 dB（31.66 vs 28.53），并非三组持平。
 - 残余限制：1 次 run 的代码身份只能推断；样本仅合成数据；`peak_cpu_pct` 历史值不可用。
 - Phase 2 保持 **BLOCKED**，等待独立复核与 Owner 验收。

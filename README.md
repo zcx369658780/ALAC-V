@@ -3,7 +3,8 @@
 **Visual-first Autonomous Learning and Adaptive Cognition** —— 一种不依赖 LLM 作为核心推理引擎的视觉智能系统的工程基础。
 
 > **当前状态（2026-11-14）：** Phase 0/1 工程实现与整改已提交为 PR #2（`task/1-phase0-1-remediation`），
-> 正在等待独立复核与 Owner 验收；仍有待修复项。**Phase 2 保持 BLOCKED。**
+> 第二轮独立复核已通过核心修复（GT bbox、逐轴缩放、manifest 哈希、provenance），第三轮为收尾修订；
+> 等待最终复核与 Owner 验收。**Phase 2 保持 BLOCKED。**
 
 ## 当前实验基线（DSH 报告值，尚未独立复现）
 
@@ -18,8 +19,8 @@
 \* 回溯列为 TASK-0002 修正后、按预注册 **ground-truth bbox** 区域重算的 PSNR；原始值（26.76 / 29.19 / 29.10 dB）
 与修订说明见 `docs/04_experiments/EXP-0001-AMD-0001-backtrack-coordinates.md`。
 
-**重要说明：** 九次 run 的脱敏证据已随 PR 提交（`artifacts/evidence/EXP-0001/`），但独立复核仍发现
-待修复项（GT 评价区域、逐轴缩放、manifest 哈希规范等）。上述数字仍为 **DSH 报告值**，尚未被独立复现；
+**重要说明：** 九次 run 的脱敏证据、GT bbox 主指标、逐轴缩放修正、LF manifest 哈希规范均已随 PR 提交
+（`artifacts/evidence/EXP-0001/`）。上述数字仍为 **DSH 报告值**，尚未在 Owner 工作站独立复现；
 当前报告没有宣称整体效率提升。
 
 ## 它做什么
@@ -44,7 +45,7 @@
 | GPU | NVIDIA GeForce RTX 5070，12227 MiB，sm_120 |
 | 驱动 / CUDA | 616.92 / UMD 13.4 / toolkit 12.8 / PyTorch cu130 |
 
-单卡 12 GB 是本项目的硬约束。详见 `docs/02_audit/environment-audit.md`；OS 产品名/build 尚待直接系统证据复核。
+单卡 12 GB 是本项目的硬约束。详见 `docs/02_audit/environment-audit.md`；OS 产品名/版本取自注册表直接证据（`docs/02_audit/os-evidence.json`）。
 
 ## 快速开始
 

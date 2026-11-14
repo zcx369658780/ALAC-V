@@ -75,6 +75,28 @@ def build_cfg(run_dir: Path):
     return Config(data, root=ROOT), param_digest(data)
 
 
+def iou(a, b) -> float:
+    ax, ay, aw, ah = a
+    bx, by, bw, bh = b
+    ix = max(0, min(ax + aw, bx + bw) - max(ax, bx))
+    iy = max(0, min(ay + ah, by + bh) - max(ay, by))
+    inter = ix * iy
+    return inter / float(aw * ah + bw * bh - inter) if inter else 0.0
+
+
+def union_coverage(roi_boxes, gt_box) -> float:
+    gx, gy, gw, gh = gt_box
+    if gw <= 0 or gh <= 0:
+        return 0.0
+    mask = np.zeros((gh, gw), dtype=bool)
+    for bx, by, bw, bh in roi_boxes:
+        x0, y0 = max(bx, gx), max(by, gy)
+        x1, y1 = min(bx + bw, gx + gw), min(by + bh, gy + gh)
+        if x1 > x0 and y1 > y0:
+            mask[y0 - gy : y1 - gy, x0 - gx : x1 - gx] = True
+    return float(mask.sum()) / float(gw * gh)
+
+
 def find_runs() -> dict[tuple[str, int], Path]:
     out = {}
     for d in sorted(p for p in RUNS.iterdir() if p.is_dir() and "EXP-0001" in p.name):
@@ -124,7 +146,19 @@ def main() -> int:
                 r = select_rois(src_c, roi_frac=float(cfgs["C"].get("foveation.roi_frac", 0.25)), max_rois=1)[0]
                 att_box = (r.x, r.y, r.w, r.h)
 
-            row = {"rep": rep, "base_id": f["base_id"], "gt_box": gt_box, "attended_box": att_box}
+            roi_boxes = [(int(r["x"]), int(r["y"]), int(r["w"]), int(r["h"])) for r in rois]
+            row = {
+                "rep": rep,
+                "base_id": f["base_id"],
+                "gt_box": gt_box,
+                "attended_box": att_box,
+                "roi_boxes": roi_boxes,
+                "roi_hit_iou03": {
+                    "roi_00": bool(roi_boxes) and iou(roi_boxes[0], gt_box) >= 0.3,
+                    "any": any(iou(b, gt_box) >= 0.3 for b in roi_boxes),
+                },
+                "roi_union_coverage_of_gt": union_coverage(roi_boxes, gt_box),
+            }
             for label, box, stats in (("gt", gt_box, gt_stats), ("attended", att_box, att_stats)):
                 region = visible_region(box, src_c.size, int(cfgs["C"].get("model.input_size", 518)))
                 row[f"{label}_coverage"] = region.coverage
@@ -151,6 +185,13 @@ def main() -> int:
                     row[label][v] = {"psnr": p, "ssim": s}
             per_image.append(row)
 
+        roi_rows = [r for r in per_image if r["rep"] == rep]
+        roi_stats = {
+            "roi_00_hit_rate_iou03": float(np.mean([r["roi_hit_iou03"]["roi_00"] for r in roi_rows])),
+            "any_roi_hit_rate_iou03": float(np.mean([r["roi_hit_iou03"]["any"] for r in roi_rows])),
+            "mean_union_coverage_of_gt": float(np.mean([r["roi_union_coverage_of_gt"] for r in roi_rows])),
+            "n_images": len(roi_rows),
+        }
         for target, stats in (("gt_bbox", gt_stats), ("attended_roi", att_stats)):
             for v in "ABC":
                 st = stats[v]
@@ -164,6 +205,9 @@ def main() -> int:
                     "coverage_mean": float(np.mean(st["cov"])) if n else None,
                 }
                 (per_variant_gt if target == "gt_bbox" else per_variant_att)[v].append(rec)
+        if per_variant_gt["C"]:
+            per_variant_gt["C"][-1].update(roi_stats)
+
         for s in stores.values():
             s.close()
 
@@ -179,6 +223,14 @@ def main() -> int:
                 "ssim_mean_median": float(np.median([r["ssim_mean"] for r in rows])),
                 "reps": rows,
             }
+            if v == "C" and rows and "roi_00_hit_rate_iou03" in rows[0]:
+                out[v]["roi_mechanism"] = {
+                    "roi_00_hit_rate_iou03": float(np.median([r["roi_00_hit_rate_iou03"] for r in rows])),
+                    "any_roi_hit_rate_iou03": float(np.median([r["any_roi_hit_rate_iou03"] for r in rows])),
+                    "mean_union_coverage_of_gt": float(np.median([r["mean_union_coverage_of_gt"] for r in rows])),
+                    "note": "C 的回溯表示使用全部已存 ROI 裁片（编码特征源仅含 roi_00）；"
+                            "命中率与并集覆盖率分别报告，58.3% 只是 roi_00 的命中率。",
+                }
         return out
 
     gt_summary = summarize(per_variant_gt)
@@ -203,6 +255,14 @@ def main() -> int:
         "primary_metric": {"region": "gt_bbox", "summary": gt_summary},
         "secondary_metric": {"region": "attended_roi", "summary": att_summary},
         "delta_gt": {v: gt_summary[v]["psnr_mean_median"] - gt_summary["A"]["psnr_mean_median"] for v in "ABC"},
+        "c_roi_mechanism": {
+            "definition": "GT 区域回溯时，C 将**全部已存 ROI 裁片**贴回 foveated 马赛克（编码特征源仍只含 roi_00）。",
+            "roi_00_hit_rate_iou03": gt_summary["C"].get("roi_mechanism", {}).get("roi_00_hit_rate_iou03"),
+            "any_roi_hit_rate_iou03": gt_summary["C"].get("roi_mechanism", {}).get("any_roi_hit_rate_iou03"),
+            "mean_union_coverage_of_gt": gt_summary["C"].get("roi_mechanism", {}).get("mean_union_coverage_of_gt"),
+            "interpretation": "C 的全分辨率覆盖有限，仍有过半目标区域依赖 1/2 画布马赛克上采样；"
+                              "这与 GT 区域保真度下降一致，但 58.3% 不能单独作为完整因果证明。",
+        },
         "previous_roi_based_run": old_gt,
         "per_image": per_image,
         "provenance": {

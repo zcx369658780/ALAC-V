@@ -275,7 +275,7 @@ SQLite 7 张表：`models / images / assets / features / rois / runs / run_items
 |---|---|---|
 | H1 多尺度优于单尺度 | +4.2 pp，配对 bootstrap 95% CI **[0.0, +9.7] pp** | **未达标准**（方向支持但 CI 触 0） |
 | H2 C 不劣于 B | +1.4 pp，CI [−5.6, +8.3] | **支持** |
-| H3 C 回溯优于 A | +2.34 dB | **支持**（与 B 的 +2.43 dB 几乎相同） |
+| H3 C 回溯优于 A | +2.34 dB | **支持**：**原始未修正结果的历史判定**（修正后按 GT bbox 口径为 **拒绝**，C 低 3.14 dB；见 §6.5 与 [AMD-0001](../04_experiments/EXP-0001-AMD-0001-backtrack-coordinates.md)） |
 | H4 C 比 B 省存储 | 1.50×（更大） | **拒绝** |
 | H5 效率提升无能力损失 | 无满足项 | **不允许宣称效率提升** |
 

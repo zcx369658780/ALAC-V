@@ -38,7 +38,7 @@ The current engineering baseline is committed, but the first independent review 
 - Hardware reported by DSH: Intel Core Ultra 7 265K, 32 GB DDR5, RTX 5070 12 GB.
 - Phase 1 backbone: frozen DINOv2 ViT-S/14, HuggingFace revision recorded in model manifest, Apache-2.0.
 - Pipeline: content-addressed raw archive, multi-scale pyramid, foveated ROI, CLS/Patch FP16 features, SQLite + SafeTensors, cosine retrieval and ROI backtracking.
-- DSH reports 56 tests passing. This has not yet been independently rerun by ChatGPT.
+- DSH reports 83 tests passing (final-state run logged under `artifacts/evidence/test-runs/`). This has not yet been independently rerun by ChatGPT.
 - DS-0001 is a programmatically generated synthetic benchmark with 24 gallery scenes, 72 query variants, and 2 local wallpaper samples.
 - A/B/C results do not support a general efficiency-improvement claim; the report explicitly says so.
 
@@ -55,10 +55,20 @@ See `PHASE0_1_ACCEPTANCE.md` and Issue #1 for the complete list.
 
 ## Remediation status (TASK-0002, 2026-11-14)
 
+**Round 3 (final polish).** Second-round review accepted R9 GT bbox, R10 per-axis scale,
+R11 manifest hash and R12 provenance, and asked for small documentation/robustness fixes:
+- C ROI mechanism clarified: ROI_00 hit 58.3%, any stored crop 66.7%, union coverage 47.7%
+  (GT area covered by full-resolution crops); remaining ~52% relies on the 1/2 mosaic.
+- Backtracking is now **fail-closed**: missing L0 (B), missing foveated asset (C) or unknown
+  variant raises instead of silently returning the original image.
+- Contradictory statements in AMD §3, remediation report §11, PHASE1 §6.2, README and this file
+  are corrected; final tests are re-anchored to the final code commit.
+- PR #2 remains open; acceptance still reserved to the Owner; Phase 2 BLOCKED.
+
 | Review finding | Remediation | Status |
 |---|---|---|
 | R1 run-level evidence | `artifacts/evidence/EXP-0001/` (9 sanitized run bundles) | submitted |
-| R2 A-variant center crop | `src/alacv/backtrack.py`, AMD-0001, recomputed metrics | submitted; **H3 withdrawn** |
+| R2 A-variant center crop | `src/alacv/backtrack.py`, AMD-0001, recomputed metrics | submitted; **H3 rejected** (GT bbox: C −3.14 dB vs A) |
 | R3 Sobel naming | ADR-0008 (central difference), ADR-0007 supersede pointer | submitted |
 | R4 ICC claim | docs corrected to "mode conversion + ICC metadata only" | submitted |
 | R5 test pointer | `TASK-0001-erratum-0001.md` | submitted |
