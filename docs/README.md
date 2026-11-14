@@ -23,6 +23,7 @@ ALAC-V 是一个长周期、多阶段、由 GitHub Issue 任务单驱动的研�
 | `docs/06_ops/` | 运行手册：安装、下载、跑管线、排障 | 主工程 Agent |
 | `docs/07_risks/` | 风险登记册与已知问题 | 主工程 Agent |
 | `docs/08_governance/` | 当前状态、验收协议、Issue/PR 工作流、项目源索引、独立验收记录 | ChatGPT/Owner 主导，Agent 同步 |
+| `docs/research/` | Phase 2A 自主视觉学习文献调研与研究综述 | DSH 起草，ChatGPT/Owner 审核 |
 | `docs/submissions/` | 不可变的阶段交付提交记录 | 主工程 Agent |
 
 代码与数据的对应关系见 `docs/03_design/data-model.md`。
@@ -102,20 +103,30 @@ supersedes: null
 | 文档 | 说明 | 当前状态 |
 |---|---|---|
 | `00_charter/ALAC-V-charter.md` | 项目宪章 | 已接受 |
-| `01_tasks/TASK-0001-phase0-phase1.md` | Phase 0/1 原始任务单快照 | DSH 报告完成；待独立验收 |
-| `01_tasks/TASK-0002-phase0-1-remediation.md` | Phase 0/1 独立验收修复任务快照 | 提议；待 Owner 授权 |
-| `02_audit/environment-audit.md` | 环境审计报告 | DSH 报告已完成；部分系统标识待复核 |
+| `01_tasks/TASK-0001-phase0-phase1.md` | Phase 0/1 原始任务单快照 | 已完成并验收 |
+| `01_tasks/TASK-0002-phase0-1-remediation.md` | Phase 0/1 独立验收修复任务快照 | 已完成；PASS；PR #2 已合并 |
+| `02_audit/environment-audit.md` | 环境审计报告 | DSH 审计完成；OS 产品/版本另有注册表直接证据；未声称独立重跑审计 |
 | `02_audit/model-licenses.md` | 模型许可证登记 | 已记录 |
 | `03_design/architecture.md` | 系统架构 | 已接受（Phase 1） |
 | `03_design/data-model.md` | 数据模型与目录布局 | 已接受（Phase 1） |
-| `03_design/decisions/` | ADR 决策记录 | 7 项；ADR-0007 一致性待修复 |
-| `04_experiments/EXP-0001-abc-comparison.md` | A/B/C 预注册与结果 | DSH 报告完成；证据链待补齐 |
-| `05_reports/PHASE1-REPORT.md` | Phase 1 交付报告 | 待 Owner 最终验收 |
+| `03_design/decisions/` | ADR 决策记录 | ADR-0001 至 ADR-0008；Phase 1 设计已接受 |
+| `04_experiments/EXP-0001-abc-comparison.md` | A/B/C 预注册与结果 | 证据链已补齐；GT bbox 修订结果已验收；H3 拒绝 |
+| `05_reports/PHASE1-REPORT.md` | Phase 1 交付报告 | 已验收；H3 按 GT bbox 口径拒绝 |
 | `06_ops/runbook.md` | 运行手册 | 已接受（初版） |
 | `07_risks/risk-register.md` | 风险登记册 | 已接受（初版） |
 | `08_governance/ACTIVE_STATE.md` | 当前项目状态 | 当前入口 |
 | `08_governance/ACCEPTANCE_PROTOCOL.md` | 验收标准 | 生效 |
 | `08_governance/ISSUE_WORKFLOW.md` | GitHub 任务工作流 | 生效 |
 | `08_governance/PROJECT_SOURCE_INDEX.md` | 项目源索引 | 当前入口 |
-| `08_governance/PHASE0_1_ACCEPTANCE.md` | Phase 0/1 独立审查 | 修复中 |
+| `08_governance/PHASE0_1_ACCEPTANCE.md` | Phase 0/1 最终独立验收 | PASS；PR #2 merged；Issue #1 closed |
+| `01_tasks/TASK-0003-phase2a-autonomous-visual-learning-design.md` | Phase 2A 自主视觉学习研究设计任务 | Owner 已授权；仅设计/预注册 |
 | `submissions/PHASE_0_1_SUBMISSION.md` | 首次公开仓库交付记录 | 历史记录 |
+
+
+## 10. 当前阶段与开放任务
+
+- Phase 0/1：已通过独立验收；PR #2 已合并，Issue #1 已关闭。
+- Phase 2A：仅授权自主视觉学习文献调研、架构比较、无标签数据方案、资源估算和实验预注册。
+- 模型训练、权重下载、公开自然图像数据下载均未授权。
+- 当前开放任务：[ALAC-0002 / Issue #3](https://github.com/zcx369658780/ALAC-V/issues/3)。
+- Phase 2B 长期视觉记忆、Phase 2C 动态计算与 Phase 3 视频/实时流均需后续独立授权。

@@ -14,6 +14,7 @@ owner: Owner
 
 - Repository: https://github.com/zcx369658780/ALAC-V
 - Default branch: `main`
+- Current accepted Phase 0/1 merge commit: `367035318172ba1bbc0103b6231847750143d1d7`
 - Baseline at initial governance bootstrap: `10cb05d379c39043a17dc840643535fd150bce20`
 - Local implementation workspace reported by DSH: `D:\ALAC_V`
 
@@ -28,7 +29,8 @@ owner: Owner
 7. [ADR directory](../03_design/decisions/) — accepted design decisions.
 8. [EXP-0001](../04_experiments/EXP-0001-abc-comparison.md) — preregistration and reported results.
 9. [Phase 1 Report](../05_reports/PHASE1-REPORT.md) and [Submission Record](../submissions/PHASE_0_1_SUBMISSION.md).
-10. [Acceptance Review](PHASE0_1_ACCEPTANCE.md) and [Open remediation Issue](https://github.com/zcx369658780/ALAC-V/issues/1).
+10. [Final Phase 0/1 Acceptance](PHASE0_1_ACCEPTANCE.md) and [Closed remediation Issue](https://github.com/zcx369658780/ALAC-V/issues/1).
+11. [TASK-0003 — Phase 2A autonomous visual learning design](../01_tasks/TASK-0003-phase2a-autonomous-visual-learning-design.md) and [Open Issue #3](https://github.com/zcx369658780/ALAC-V/issues/3).
 
 ## 3. Repository document map
 
@@ -86,6 +88,12 @@ owner: Owner
 
 The public repository intentionally excludes raw private images/videos, local dataset files, model weights, full local run stores, caches, and credentials. Dataset manifests and aggregate experiment summaries are versioned. For formal acceptance, sanitized run-level evidence belongs in `artifacts/evidence/`.
 
-## 7. Uploaded Project Source pack
+## 7. Current project state
+
+- Phase 0/1: independently accepted; PR #2 merged; Issue #1 closed.
+- Phase 2A: research design and experiment pre-registration authorized under Issue #3; no model training or new dataset/weight download authorized.
+- Phase 2B/2C and Phase 3: blocked pending separate gates.
+
+## 8. Uploaded Project Source pack
 
 The companion ZIP should contain this index plus the project charter, current state, acceptance protocol, architecture, data model, task snapshot, ADRs, experiment record, audit, report, runbook, risk register, and submission record. Its timestamp/commit must be recorded when uploaded; always check GitHub for newer changes.

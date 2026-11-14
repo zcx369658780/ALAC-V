@@ -2,7 +2,7 @@
 id: STATE-0001
 title: ALAC-V Active State
 status: active
-date: 2026-11-14
+date: 2026-11-15
 owner: Owner
 ---
 
@@ -13,81 +13,65 @@ owner: Owner
 - Repository: https://github.com/zcx369658780/ALAC-V
 - Visibility: Public
 - Default branch: `main`
-- Baseline HEAD at governance bootstrap: `10cb05d379c39043a17dc840643535fd150bce20`
-- Baseline tree: `308e3403dbc52784a751a47766508e26a0690f81`
-- Governance setup commit before the active-state snapshot: `43ce7155e682fb7f5783503f4dae7f8885b8652e`
+- Phase 0/1 accepted merge commit: `367035318172ba1bbc0103b6231847750143d1d7`
 - The current `main` HEAD is authoritative and must be read from GitHub; this file intentionally does not self-reference its own commit SHA.
-- Initial delivery tag: `phase0-1` (reported by DSH; points to the initial delivery commit)
+- Initial delivery tag: `phase0-1`
 - Local DSH workspace reported: `D:\ALAC_V`
 
-## Current phase
+## Current phase and authorization
 
-**Phase 0: implementation reported complete. Phase 1: implementation reported complete; independent acceptance is CONDITIONAL / REMEDIATION REQUIRED. Phase 2: BLOCKED.**
+**Phase 0: complete. Phase 1: complete and independently accepted (PASS). Phase 2A: research design and experiment pre-registration authorized. Model training is NOT yet authorized. Phase 2B and Phase 2C are BLOCKED. Phase 3 (video/real-time streams) is BLOCKED.**
 
-The current engineering baseline is committed, but the first independent review identified evidence and metric-validity issues. Do not begin video, temporal learning, or Phase 2 work until the Owner accepts the remediation and issues a separate task order.
+The Owner approved PR #2 merge and Issue #1 closure on 2026-11-15. Phase 2 is now entered only through the separately authorized Phase 2A design task. No model training, backbone fine-tuning, natural-image dataset download, long-term memory implementation, dynamic compute controller, video, Event Camera or SNN work is authorized by the current task.
 
 ## Current open task
 
-- [ALAC-0001 — Phase 0/1 independent acceptance and evidence remediation](https://github.com/zcx369658780/ALAC-V/issues/1)
-- State: Open; **Owner authorized implementation on 2026-11-14**. DSH remediation submitted on branch
-  `task/1-phase0-1-remediation` (PR pending review). Acceptance remains reserved to the Owner; the Issue must
-  not be closed by the implementing agent.
+- [ALAC-0002 — Phase 2A autonomous visual learning research design](https://github.com/zcx369658780/ALAC-V/issues/3)
+- Task snapshot: `docs/01_tasks/TASK-0003-phase2a-autonomous-visual-learning-design.md`
+- State: Owner-authorized for literature review, architecture comparison, unlabeled-data design, experiment pre-registration and resource estimation only.
+- Stop condition: submit a PR and wait for independent review. Do not train models or download new weights/datasets.
 
-## Verified project facts from repository
+## Completed Phase 0/1 milestone
 
-- Hardware reported by DSH: Intel Core Ultra 7 265K, 32 GB DDR5, RTX 5070 12 GB.
-- Phase 1 backbone: frozen DINOv2 ViT-S/14, HuggingFace revision recorded in model manifest, Apache-2.0.
-- Pipeline: content-addressed raw archive, multi-scale pyramid, foveated ROI, CLS/Patch FP16 features, SQLite + SafeTensors, cosine retrieval and ROI backtracking.
-- DSH reports 83 tests passing (final-state run logged under `artifacts/evidence/test-runs/`). This has not yet been independently rerun by ChatGPT.
-- DS-0001 is a programmatically generated synthetic benchmark with 24 gallery scenes, 72 query variants, and 2 local wallpaper samples.
-- A/B/C results do not support a general efficiency-improvement claim; the report explicitly says so.
+- PR #2 merged: https://github.com/zcx369658780/ALAC-V/pull/2
+- Merge commit: `367035318172ba1bbc0103b6231847750143d1d7`
+- Issue #1: closed as completed: https://github.com/zcx369658780/ALAC-V/issues/1
+- TASK-0002 independent acceptance: PASS.
+- DSH-reported 83 tests passed in 8.04s, anchored to clean code commit `07a723c`; subsequent commits changed only documentation/evidence pointers. ChatGPT verified the code-tree comparison, not a local execution on the Owner's workstation.
+- Corrected GT bbox result: A/B/C PSNR 31.66 / 31.05 / 28.53 dB; H3 rejected (C −3.14 dB vs A).
+- C ROI mechanism: roi_00 hit 58.3%, any stored crop hit 66.7%, union coverage of GT area 47.7%.
+- Nine sanitized historical run bundles published. Eight runs are anchored to code commit; C_r2's original code commit remains unanchored and explicitly marked inferred.
 
-## Key review findings (first review, 2026-11-14 — historical)
+## Accepted Phase 1 technical baseline
 
-> These are the **first-round** findings that triggered TASK-0002. They are kept for history and are
-> **not** a description of the current tree. Current remediation status is in
-> [Remediation status](#remediation-status-task-0002-2026-11-14) below; each item is closed or
-> superseded as recorded there.
+- Frozen DINOv2 ViT-S/14, pinned revision and Apache-2.0 model license.
+- Immutable SHA-256 raw image archive.
+- Multi-scale image pyramid and Foveated ROI.
+- CLS/Patch FP16 features.
+- SQLite metadata + SafeTensors feature storage.
+- Cosine retrieval, ROI backtracking and fail-closed validation for required assets.
+- EXP-0001 A/B/C evidence and corrected GT bbox analysis.
 
-1. Public repository excludes `artifacts/runs/*`; only aggregate summaries are public. This does not meet the repository's own run-level evidence rule for formal independent audit.
-2. A-variant backtrack reconstruction in `scripts/run_experiments.py` appears not to apply the center-crop offset used by `fit_to_input()`; A backtrack PSNR/SSIM require correction and re-evaluation.
-3. ADR-0007 calls the ROI gradient method Sobel, while the implementation uses central finite differences. Code and ADR must be reconciled.
-4. RGB conversion records ICC metadata but does not currently apply an ICC profile transform to sRGB; documentation must state this accurately or implementation must be extended.
-5. TASK-0001 refers to `tests/test_pyramid.py`, while the current repository test is `tests/test_imaging.py::test_pyramid_sizes`.
-6. CPU peak percentage and OS product/build identification need source-level validation before reuse as formal claims.
+## Scientific limitations to preserve
 
-See `PHASE0_1_ACCEPTANCE.md` and Issue #1 for the complete original list; see the remediation table below for current status.
+1. DS-0001 is a small, programmatically generated synthetic benchmark; its results do not establish natural-image generalization.
+2. C_r2's original code commit cannot be anchored; retain this provenance limitation.
+3. No complete EXP-0001 rerun, EXP-0002 training experiment, ICC profile-to-sRGB transform, Sobel comparison, natural-image benchmark or independent workstation reproduction has been performed.
+4. Phase 1 does not demonstrate a general efficiency improvement; do not claim one.
 
-## Remediation status (TASK-0002, 2026-11-14)
+## Owner-approved research order
 
-**Round 3 (final polish).** Second-round review accepted R9 GT bbox, R10 per-axis scale,
-R11 manifest hash and R12 provenance, and asked for small documentation/robustness fixes:
-- C ROI mechanism clarified: ROI_00 hit 58.3%, any stored crop 66.7%, union coverage 47.7%
-  (GT area covered by full-resolution crops); remaining ~52% relies on the 1/2 mosaic.
-- Backtracking is now **fail-closed**: missing L0 (B), missing foveated asset (C) or unknown
-  variant raises instead of silently returning the original image.
-- Contradictory statements in AMD §3, remediation report §11, PHASE1 §6.2, README and this file
-  are corrected; final tests are re-anchored to the final code commit.
-- PR #2 remains open; acceptance still reserved to the Owner; Phase 2 BLOCKED.
-
-| Review finding | Remediation | Status |
-|---|---|---|
-| R1 run-level evidence | `artifacts/evidence/EXP-0001/` (9 sanitized run bundles) | submitted |
-| R2 A-variant center crop | `src/alacv/backtrack.py`, AMD-0001, recomputed metrics | submitted; **H3 rejected** (GT bbox: C −3.14 dB vs A) |
-| R3 Sobel naming | ADR-0008 (central difference), ADR-0007 supersede pointer | submitted |
-| R4 ICC claim | docs corrected to "mode conversion + ICC metadata only" | submitted |
-| R5 test pointer | `TASK-0001-erratum-0001.md` | submitted |
-| R6 CPU peak metric | `peak_cpu_pct` withdrawn; `peak_cpu_cores` introduced | submitted |
-| R7 OS identity | `docs/02_audit/os-evidence.json` (direct registry read) | submitted |
-| R8 manifest paths | generic `os-wallpaper-sample-NN` labels; old/new SHA recorded | submitted |
-
-Phase 2 remains **BLOCKED** until Owner acceptance of this remediation.
+1. **Phase 2A — Autonomous visual learning** (current task: research design and pre-registration only).
+2. **Phase 2B — Long-term, multi-level visual memory** (blocked until Phase 2A learning mechanism is validated).
+3. **Phase 2C — Dynamic compute allocation** (blocked until learned representations and memory interfaces are stable).
+4. **Phase 3 — Offline video and real-time visual streams** (blocked until Phase 2 gates are accepted).
 
 ## Owner decisions / workflow
 
 - GitHub Issues are the authoritative online task and acceptance records.
 - `docs/01_tasks/` stores versioned task snapshots and history.
-- DSH is the primary implementation agent.
+- DSH is the primary implementation/research agent.
 - ClawsGO is an independent reviewer and defaults to read-only.
-- No direct pushes to `main`; use task branches and PRs.
-- No Phase 2 without a separate Owner authorization.
+- Use task branches and PRs; do not push directly to `main`.
+- Only the explicitly scoped work in Issue #3 is currently authorized.
+- Model training, weight downloads, public natural-image datasets and later phases require separate Owner-approved task orders.

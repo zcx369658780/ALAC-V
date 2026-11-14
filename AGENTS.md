@@ -26,7 +26,7 @@ A report marked PASS by an executing agent is not Owner acceptance.
 - Files in `docs/01_tasks/` are versioned snapshots or historical records; they do not independently authorize work.
 - Do not start implementation merely because an Issue exists. The Issue must explicitly state that Owner authorization has been granted, or the Owner must authorize it in the current conversation.
 - Do not enter Phase 2 or later without a separate Owner-approved task order.
-- Current gate: Phase 0/1 independent acceptance remediation is pending; Phase 2 is BLOCKED.
+- Current gate: Phase 0/1 remediation is accepted and merged. Issue #3 authorizes Phase 2A research design/pre-registration only; model training is not authorized. Phase 2B/2C and Phase 3 remain BLOCKED.
 
 ## 4. Agent roles
 
@@ -43,7 +43,7 @@ Do not have DSH and ClawsGO concurrently modify the same branch or files.
 - For each authorized task, create a branch named `task/<issue-number>-<short-slug>`.
 - Commit in small, reviewable units. Link the PR to the Issue using `Refs #N`; do not use an auto-close keyword before Owner acceptance.
 - Do not push directly to `main`, force-push, rewrite published history, or close an Issue without Owner approval.
-- Before work: fetch `origin/main`, inspect `git status`, preserve uncommitted changes, and confirm the base SHA.
+- Before work: fetch the configured remote that points to this repository (do not assume its name is `origin`), inspect `git status`, preserve uncommitted changes, and confirm the base SHA.
 - After work: run tests, record the exact commands and outputs, push the branch, open a PR, and report commit SHA(s).
 
 ## 6. Evidence and scientific integrity
