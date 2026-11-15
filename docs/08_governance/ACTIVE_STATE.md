@@ -48,7 +48,7 @@ Revised again 2026-11-15 after the third review: mask count fixed at 821 patches
 reproducible block-sampling rule; primary checkpoint fixed to best validation Recall@1 with a
 deterministic tie-break; data-efficiency protocol completed (validation-only selection, frozen seed
 set, single test pass, descriptive-only status); cluster-level power analysis added, which showed that
-300 test scenes give only ~50% power at 3 pp, so DS-0002 test is raised to 900 scenes (~0.90 power).
+300 test scenes give only ~50% power at 3 pp, so DS-0002 test is raised to 900 scenes (~0.92 power for the **directional** test H1-D; the joint H1-D+H1-P criterion stays ~0.50 at a true 3 pp effect).
 Revised again 2026-11-15 after the fourth review: the power analysis now separates directional,
 practical-threshold and joint H1 events (at a true 3 pp effect the joint criterion is ~0.50 regardless
 of sample size), H1 is split into H1-D/H1-P/H1-S, bootstrap uses n=900, checkpoint selection and early
