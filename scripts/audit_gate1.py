@@ -105,6 +105,7 @@ def main() -> int:
                 with Image.open(p) as im:
                     im.verify()
                 with Image.open(p) as im:
+                    im.load()
                     dims.add(im.size)
                     if im.size != (v["width"], v["height"]):
                         bad.append({"view": v["view_id"], "issue": "size_mismatch"})
@@ -116,13 +117,17 @@ def main() -> int:
     for sha in actual_sha.values():
         dup[sha] = dup.get(sha, 0) + 1
     duplicates = {h: c for h, c in dup.items() if c > 1}
+    fs_count = sum(1 for _ in (DATA / "images").rglob("*.jpg"))
     report["checks"]["images"] = {
-        "files": len(actual_sha), "total_bytes": total_bytes, "dimensions": sorted(dims),
+        "files": len(actual_sha), "filesystem_count": fs_count,
+        "manifest_views": sum(len(manifests[s]["views"]) for s in SPLITS),
+        "index_views": sum(len(indexes[s]["views"]) for s in SPLITS), "total_bytes": total_bytes, "dimensions": sorted(dims),
         "sha_mismatch": len(bad), "bad_examples": bad[:10],
         "bytes_mismatch": len(size_mismatch), "duplicate_sha256": len(duplicates),
         "duplicate_examples": list(duplicates.items())[:5],
     }
-    report["checks"]["images_ok"] = (not bad) and (not size_mismatch) and (not duplicates) and dims == {(1024, 768)}
+    report["checks"]["images_ok"] = (not bad) and (not size_mismatch) and (not duplicates) and dims == {(1024, 768)} \
+        and fs_count == len(actual_sha) == sum(len(manifests[s]["views"]) for s in SPLITS)
 
     # 4) eval labels completeness + agreement with manifest
     issues = []
@@ -145,6 +150,48 @@ def main() -> int:
                     issues.append({"split": s, "scene": sc["scene_id"], "issue": f"unknown_view:{vid}"})
     report["checks"]["eval_labels"] = {"issues": issues[:10], "issue_count": len(issues)}
     report["checks"]["eval_labels_ok"] = not issues
+
+    # 4b) opaque identity & JPEG config
+    import re
+
+    from alacv.synth import render_scene as _render
+
+    salt = load(DATA / "eval" / "identity_salt.json")["salt"]
+    scene_pat = re.compile(r"(train|validation|test)_\d{5}")
+    identity_issues, jpeg_bad = [], []
+    for s in SPLITS:
+        for v in indexes[s]["views"]:
+            if scene_pat.search(v["view_id"]) or scene_pat.search(v["path"]):
+                identity_issues.append({"split": s, "view": v["view_id"], "issue": "scene_digits_exposed"})
+    index_text = "".join((DATA / "index" / f"{s}.json").read_text(encoding="utf-8") for s in SPLITS)
+    identity_issues += [{"issue": "salt_leaked"}] if salt in index_text else []
+    for s in SPLITS:
+        for v in manifests[s]["views"]:
+            q = int(v["augment"]["jpeg_quality"])
+            strong = (v["view_index"] > 0) if s == "train" else (v["view_index"] >= 1)
+            ok = (60 <= q <= 84) if strong else (q == 92)
+            if not ok:
+                jpeg_bad.append({"split": s, "view": v["view_id"], "quality": q, "strong": strong})
+    occ_bad = []
+    for s in SPLITS:
+        for idx in (0, 1, 2):
+            sc = _render(s, idx)
+            mask = sc.masks[0]
+            occ = np.zeros_like(mask)
+            for m in sc.masks[1:]:
+                occ |= m
+            for d in sc.distractors:
+                occ[d["y"]:d["y"] + d["h"], d["x"]:d["x"] + d["w"]] = True
+            expected = 0.0 if mask.sum() == 0 else 1 - (mask & ~occ).sum() / mask.sum()
+            if abs(expected - sc.factors["occlusion_fraction"]) > 5e-4:
+                occ_bad.append({"split": s, "scene": idx, "expected": expected, "got": sc.factors["occlusion_fraction"]})
+    report["checks"]["identity"] = {"issues": identity_issues[:10], "issue_count": len(identity_issues),
+                                    "salt_in_index": salt in index_text}
+    report["checks"]["identity_ok"] = not identity_issues
+    report["checks"]["jpeg_quality"] = {"bad": jpeg_bad[:10], "bad_count": len(jpeg_bad)}
+    report["checks"]["jpeg_ok"] = not jpeg_bad
+    report["checks"]["occlusion"] = {"bad": occ_bad[:10], "bad_count": len(occ_bad)}
+    report["checks"]["occlusion_ok"] = not occ_bad
 
     # 5) deterministic regeneration incl. strong augmentation
     from alacv.synth import augment, render_scene, sha256_image, view_rng
@@ -222,8 +269,11 @@ def main() -> int:
                     tensor_bad.append({"shard": sh["path"], "issue": "dtype"})
                 if data["cls"].shape != (sh["n"], 384) or data["patch"].shape != (sh["n"], 1369, 384):
                     tensor_bad.append({"shard": sh["path"], "issue": "shape"})
+            rows_total = sum(sh["n"] for sh in idx["shards"])
             cchecks["splits"][s] = {
                 "n_views": idx["n_views"], "n_shards": idx["n_shards"],
+                "n_shards_equal": idx["n_shards"] == len(idx["shards"]),
+                "rows_equal": rows_total == idx["n_views"],
                 "view_set_equal": sorted(got_ids) == sorted(expected_ids),
                 "n_views_equal": idx["n_views"] == len(expected_ids),
                 "manifest_sha256_match": idx["manifest_sha256"] == counts[s]["manifest_sha256"],
@@ -239,8 +289,9 @@ def main() -> int:
                 v["view_id"] for v in manifests[s]["views"]]
             sample_ids += list(rng.choice(ids, size=min(args.cache_sample // 3 + 1, len(ids)), replace=False))
         max_err = 0.0
+        split_of = {v["view_id"]: sp for sp in SPLITS for v in manifests[sp]["views"]}
         for vid in sample_ids:
-            s = vid.split("_")[0]
+            s = split_of[vid]
             reader = TeacherCacheReader(CACHE, s)
             c_cached, p_cached = reader.get(vid)
             v = next(x for x in manifests[s]["views"] if x["view_id"] == vid)
@@ -251,6 +302,7 @@ def main() -> int:
         cchecks["ok"] = (
             cchecks["model_matches"] and cchecks["revision_matches"] and cchecks["sample_alignment"]["ok"]
             and all(v["view_set_equal"] and v["n_views_equal"] and v["manifest_sha256_match"]
+                    and v["n_shards_equal"] and v["rows_equal"]
                     and not v["bad_shards"] and not v["tensor_issues"] for v in cchecks["splits"].values())
         )
         report["checks"]["teacher_cache"] = cchecks
@@ -306,6 +358,7 @@ def main() -> int:
         report["checks"]["counts_ok"] and report["checks"]["split_isolation_ok"]
         and report["checks"]["images_ok"] and report["checks"]["eval_labels_ok"]
         and report["checks"]["regeneration"]["ok"] and report["checks"]["loader_allowlist"]["ok"]
+        and report["checks"]["identity_ok"] and report["checks"]["jpeg_ok"] and report["checks"]["occlusion_ok"]
         and cache_ok
     )
     (OUT / "gate1-audit.json").write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
@@ -315,7 +368,8 @@ def main() -> int:
           f"- 数据集：`{report['dataset_id']}`",
           f"- 总判定：**{'PASS' if report['ok'] else 'FAIL'}**",
           "| 检查 | 结果 |", "|---|---|"]
-    for k in ("counts_ok", "split_isolation_ok", "images_ok", "eval_labels_ok", "regeneration", "loader_allowlist", "teacher_cache"):
+    for k in ("counts_ok", "split_isolation_ok", "images_ok", "eval_labels_ok", "identity_ok", "jpeg_ok",
+              "occlusion_ok", "regeneration", "loader_allowlist", "teacher_cache"):
         v = report["checks"].get(k)
         res = v.get("ok", "n/a") if isinstance(v, dict) else v
         md.append(f"| {k} | {res} |")

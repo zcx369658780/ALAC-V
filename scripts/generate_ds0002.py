@@ -50,26 +50,32 @@ def sha256_text(s: str) -> str:
     return hashlib.sha256(s.encode("utf-8")).hexdigest()
 
 
-def pair_key(scene_id: str) -> str:
-    return "g" + sha256_text("ds0002-pair:" + scene_id)[:12]
+def pair_key(scene_id: str, salt: str) -> str:
+    return "g" + sha256_text(f"{salt}|pair|{scene_id}")[:16]
+
+
+def view_id_for(split: str, index: int, view: int, salt: str) -> str:
+    return "v" + sha256_text(f"{salt}|{split}|{index}|{view}")[:16]
 
 
 def _gen_scene(task: tuple) -> tuple[dict, list[dict]]:
-    split, index, out_root_s, n_views, n_gallery, subsampling = task
+    split, index, out_root_s, n_views, n_gallery, subsampling, salt, q_gallery, q_strong = task
     out_root = Path(out_root_s)
     scene = render_scene(split, index)
-    sdir = out_root / "images" / split / f"{index:05d}"
+    vid0 = view_id_for(split, index, 0, salt)
+    sdir = out_root / "images" / vid0[:2]
     sdir.mkdir(parents=True, exist_ok=True)
     view_rows, gallery_views, query_views = [], [], []
     for v in range(n_views):
         rng = view_rng(split, index, v)
         strong = (v > 0) if split == "train" else (v >= n_gallery)
         role = "train" if split == "train" else ("gallery" if v < n_gallery else "query")
-        img, params = augment(scene.image, rng, strong=strong)
+        img, params = augment(scene.image, rng, strong=strong, q_gallery=q_gallery, q_strong=q_strong)
         quality = int(params["jpeg_quality"])
-        p = sdir / f"v{v}.jpg"
+        vid = view_id_for(split, index, v, salt)
+        p = out_root / "images" / vid[:2] / f"{vid}.jpg"
+        p.parent.mkdir(parents=True, exist_ok=True)
         img.save(p, format="JPEG", quality=quality, subsampling=subsampling)
-        vid = f"{split}_{index:05d}_v{v}"
         view_rows.append(
             {
                 "view_id": vid,
@@ -91,7 +97,7 @@ def _gen_scene(task: tuple) -> tuple[dict, list[dict]]:
         "scene_id": scene.scene_id,
         "base_seed": scene.base_seed,
         "split": split,
-        "pair_key": pair_key(scene.scene_id),
+        "pair_key": pair_key(scene.scene_id, salt),
         "targets": scene.targets,
         "distractors": scene.distractors,
         "factors": scene.factors,
@@ -121,6 +127,14 @@ def main() -> int:
         (out_root / sub).mkdir(parents=True, exist_ok=True)
 
     config_sha = sha256_text(json.dumps(cfg, sort_keys=True, ensure_ascii=False, separators=(",", ":")))
+    salt_file = out_root / "eval" / "identity_salt.json"
+    if salt_file.exists():
+        salt = json.loads(salt_file.read_text(encoding="utf-8"))["salt"]
+    else:
+        import secrets
+        salt = secrets.token_hex(8)
+        salt_file.write_text(json.dumps({"salt": salt, "note": "eval-only; never expose to training"},
+                                        indent=2), encoding="utf-8")
     generator_sha = sha256_file(Path(__file__).resolve())
     scene_code_sha = sha256_file(ROOT / "src" / "alacv" / "synth" / "scene.py")
     subsampling = int(cfg["image"]["jpeg_subsampling"])
@@ -133,8 +147,12 @@ def main() -> int:
         n_gallery = int(sc.get("gallery_views", 0))
         t0 = time.perf_counter()
         scenes, views = [], []
+        q_g = int(cfg["image"]["jpeg_quality_gallery"])
+        q_s = (int(cfg["image"]["jpeg_quality_train_strong_min"]),
+               int(cfg["image"]["jpeg_quality_train_strong_max"]))
         for i in range(n_scenes):
-            scene_row, view_rows = _gen_scene((split, i, str(out_root), n_views, n_gallery, subsampling))
+            scene_row, view_rows = _gen_scene(
+                (split, i, str(out_root), n_views, n_gallery, subsampling, salt, q_g, q_s))
             scenes.append(scene_row)
             views.extend(view_rows)
             if (i + 1) % 100 == 0 or i + 1 == n_scenes:
@@ -175,7 +193,7 @@ def main() -> int:
                     "view_id": v["view_id"],
                     "path": v["path"],
                     "augment": v["augment"],
-                    "pair_key": pair_key(v["scene_id"]),
+                    "pair_key": pair_key(v["scene_id"], salt),
                 }
                 for v in views
             ],

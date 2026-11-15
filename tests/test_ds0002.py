@@ -31,18 +31,19 @@ def test_shapes_vary_across_scenes():
     assert len(shapes) >= 2
 
 
-def test_occlusion_reflects_geometry():
+def test_occlusion_reflects_pixel_masks():
     for i in range(6):
         sc = render_scene("train", i)
-        t = sc.targets[0]
-        expected = 0.0
+        mask = sc.masks[0]
+        occluded = np.zeros_like(mask)
+        for m in sc.masks[1:]:
+            occluded |= m
         for d in sc.distractors:
-            x0, y0 = max(t["x"], d["x"]), max(t["y"], d["y"])
-            x1 = min(t["x"] + t["w"], d["x"] + d["w"])
-            y1 = min(t["y"] + t["h"], d["y"] + d["h"])
-            if x1 > x0 and y1 > y0:
-                expected = max(expected, (x1 - x0) * (y1 - y0) / (t["w"] * t["h"]))
-        assert sc.factors["occlusion_fraction"] == pytest.approx(expected, abs=1e-3)
+            occluded[d["y"]:d["y"] + d["h"], d["x"]:d["x"] + d["w"]] = True
+        expected = 0.0 if mask.sum() == 0 else 1 - (mask & ~occluded).sum() / mask.sum()
+        assert sc.factors["occlusion_fraction"] == pytest.approx(expected, abs=5e-4)
+        assert "mask" in sc.factors["occlusion_definition"]
+        assert sc.factors["occlusion"] == (expected >= 0.05)
 
 
 def test_split_seed_ranges_disjoint():

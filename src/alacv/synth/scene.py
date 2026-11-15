@@ -18,7 +18,7 @@ from dataclasses import dataclass, field
 import numpy as np
 from PIL import Image, ImageDraw, ImageEnhance
 
-GENERATOR_VERSION = "ds0002-v2"
+GENERATOR_VERSION = "ds0002-v3"
 PRNG = "numpy.random.Generator(PCG64)"
 WIDTH, HEIGHT = 1024, 768
 SPLIT_SEED_BASE = {"train": 0, "validation": 100_000, "test": 200_000}
@@ -122,6 +122,7 @@ class Scene:
     factors: dict = field(default_factory=dict)
     targets: list = field(default_factory=list)
     distractors: list = field(default_factory=list)
+    masks: list = field(default_factory=list)
 
 
 def _overlap_fraction(box, other) -> float:
@@ -135,14 +136,20 @@ def _overlap_fraction(box, other) -> float:
 
 
 def render_scene(split: str, index: int) -> Scene:
-    """确定性渲染一个 base scene（1024×768, v2）。"""
+    """确定性渲染一个 base scene（1024×768, v3）。
+
+    遮挡定义（P1-1）：
+    - 目标按顺序绘制，后画目标会遮住先画目标；
+    - 干扰块在目标之后绘制且**不透明**（alpha=1.0），是物理遮挡；
+    - `occlusion_fraction = 1 - 可见目标 mask 像素 / 目标原始 mask 像素`，逐像素计算。
+    """
     seed = base_seed(split, index)
     rng = np.random.default_rng(seed)
     canvas = _background(rng)
 
     n_targets = int(rng.integers(1, 4))
-    targets = []
-    for k in range(n_targets):
+    targets, masks = [], []
+    for _ in range(n_targets):
         shape = SHAPES[int(rng.integers(0, len(SHAPES)))]
         base = int(rng.integers(int(0.12 * min(WIDTH, HEIGHT)), int(0.30 * min(WIDTH, HEIGHT))))
         aspect = float(rng.uniform(0.65, 1.55))
@@ -151,56 +158,65 @@ def render_scene(split: str, index: int) -> Scene:
         family = int(rng.integers(0, 6))
         c1, c2 = _palette_colors(rng, family)
         tex = _texture(rng, kind, w, h, c1, c2)
-        mask = _shape_mask(shape, w, h)
+        mask_local = _shape_mask(shape, w, h)[..., 0] > 0.5
         x = int(rng.integers(10, WIDTH - w - 10))
         y = int(rng.integers(10, HEIGHT - h - 10))
+        m3 = mask_local[..., None].astype(np.float32)
         region = canvas[y:y + h, x:x + w]
-        canvas[y:y + h, x:x + w] = region * (1 - mask) + tex * mask
-        targets.append(
-            {
-                "x": x, "y": y, "w": w, "h": h,
-                "shape": shape, "texture_kind": kind, "palette_family": family,
-            }
-        )
+        canvas[y:y + h, x:x + w] = region * (1 - m3) + tex * m3
+        full = np.zeros((HEIGHT, WIDTH), dtype=bool)
+        full[y:y + h, x:x + w] = mask_local
+        targets.append({"x": x, "y": y, "w": w, "h": h, "shape": shape,
+                        "texture_kind": kind, "palette_family": family})
+        masks.append(full)
 
-    # 干扰块在目标之后绘制 → 可能真实遮挡目标
     n_distract = int(rng.integers(2, 5))
-    distractors = []
+    distractors, rects = [], []
     for _ in range(n_distract):
         bw, bh = int(rng.integers(90, 280)), int(rng.integers(90, 280))
         bx, by = int(rng.integers(0, WIDTH - bw)), int(rng.integers(0, HEIGHT - bh))
         c = np.clip(np.array([rng.uniform(60, 200) for _ in range(3)]), 0, 255)
-        alpha = float(rng.uniform(0.25, 0.55))
-        region = canvas[by:by + bh, bx:bx + bw]
-        canvas[by:by + bh, bx:bx + bw] = region * (1 - alpha) + c[None, None, :] * alpha
-        distractors.append({"x": bx, "y": by, "w": bw, "h": bh, "alpha": round(alpha, 4)})
+        canvas[by:by + bh, bx:bx + bw] = c[None, None, :]
+        r = np.zeros((HEIGHT, WIDTH), dtype=bool)
+        r[by:by + bh, bx:bx + bw] = True
+        rects.append(r)
+        distractors.append({"x": bx, "y": by, "w": bw, "h": bh, "alpha": 1.0})
 
-    primary = targets[0]
-    occ = max((_overlap_fraction(primary, d) for d in distractors), default=0.0)
+    occluded = np.zeros((HEIGHT, WIDTH), dtype=bool)
+    for m in masks[1:]:
+        occluded |= m
+    for r in rects:
+        occluded |= r
+    total = int(masks[0].sum())
+    occ_frac = 0.0 if total == 0 else 1.0 - float((masks[0] & ~occluded).sum()) / total
+
     lighting = float(rng.uniform(0.85, 1.15))
     canvas = np.clip(canvas * lighting, 0, 255)
     img = Image.fromarray(canvas.astype(np.uint8), mode="RGB")
 
-    cx, cy = primary["x"] + primary["w"] / 2, primary["y"] + primary["h"] / 2
+    prim = targets[0]
+    cx, cy = prim["x"] + prim["w"] / 2, prim["y"] + prim["h"] / 2
     octant = int((cy > HEIGHT / 2) * 4 + (cx > WIDTH / 2) * 2 + ((cx % 512) > 256))
-    scale_bucket = "small" if primary["w"] < 130 else ("medium" if primary["w"] < 190 else "large")
+    scale_bucket = "small" if prim["w"] < 130 else ("medium" if prim["w"] < 190 else "large")
     factors = {
-        "palette_family": primary["palette_family"],
-        "texture_kind": primary["texture_kind"],
-        "shape": primary["shape"],
+        "palette_family": prim["palette_family"],
+        "texture_kind": prim["texture_kind"],
+        "shape": prim["shape"],
         "position_octant": octant,
         "scale_bucket": scale_bucket,
         "target_count": n_targets,
-        "occlusion": bool(occ >= 0.05),
-        "occlusion_fraction": round(float(occ), 4),
+        "occlusion": bool(occ_frac >= 0.05),
+        "occlusion_fraction": round(float(occ_frac), 4),
+        "occlusion_definition": "1 - visible_target_mask_px / target_mask_px (opaque occluders)",
         "lighting": round(lighting, 4),
     }
     return Scene(image=img, scene_id=f"{split}_{index:05d}", base_seed=seed,
-                 factors=factors, targets=targets, distractors=distractors)
+                 factors=factors, targets=targets, distractors=distractors, masks=masks)
 
 
-def augment(img: Image.Image, rng: np.random.Generator, strong: bool) -> tuple[Image.Image, dict]:
-    """确定性的视图增强；返回图像与增强参数（训练可见）。"""
+def augment(img: Image.Image, rng: np.random.Generator, strong: bool,
+            q_gallery: int = 92, q_strong: tuple[int, int] = (60, 84)) -> tuple[Image.Image, dict]:
+    """确定性的视图增强；JPEG 质量由配置传入并记录。"""
     params: dict = {}
     if strong:
         scale = float(rng.uniform(0.80, 1.0))
@@ -208,14 +224,14 @@ def augment(img: Image.Image, rng: np.random.Generator, strong: bool) -> tuple[I
         brightness = float(rng.uniform(0.80, 1.20))
         contrast = float(rng.uniform(0.80, 1.20))
         saturation = float(rng.uniform(0.80, 1.20))
-        quality = int(rng.integers(60, 85))
+        quality = int(rng.integers(int(q_strong[0]), int(q_strong[1]) + 1))
     else:
         scale = float(rng.uniform(0.95, 1.0))
         angle = float(rng.uniform(-3, 3))
         brightness = float(rng.uniform(0.95, 1.05))
         contrast = float(rng.uniform(0.95, 1.05))
         saturation = float(rng.uniform(0.95, 1.05))
-        quality = 92
+        quality = int(q_gallery)
 
     if scale < 1.0:
         nw, nh = int(img.width * scale), int(img.height * scale)

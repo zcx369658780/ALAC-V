@@ -1,7 +1,7 @@
 # DS-0002 数据集生成配置（Gate 1 整改 v2）
 dataset:
-  id: ds-0002-synthetic-v2
-  generator_version: ds0002-v2
+  id: ds-0002-synthetic-v3
+  generator_version: ds0002-v3
   prng: numpy.random.Generator(PCG64)
   out_dir: data/ds0002
   width: 1024
