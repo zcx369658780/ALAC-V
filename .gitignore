@@ -21,6 +21,8 @@ data/index/*
 !data/index/.gitkeep
 data/datasets/*
 !data/datasets/.gitkeep
+data/ds0002/*
+!data/ds0002/.gitkeep
 
 # 运行产物：run 目录较大，保留本地；汇总与插图入库
 artifacts/runs/*

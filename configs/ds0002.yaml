@@ -1,0 +1,36 @@
+# DS-0002 数据集生成配置（Gate 1）
+dataset:
+  id: ds-0002-synthetic-v1
+  generator_version: ds0002-v1
+  prng: numpy.random.Generator(PCG64)
+  out_dir: data/ds0002
+  width: 1024
+  height: 768
+
+splits:
+  train:
+    scenes: 2000
+    views: 8
+    seed_base: 0
+    gallery_views: 0
+    query_views: 7
+  validation:
+    scenes: 300
+    views: 5
+    seed_base: 100000
+    gallery_views: 1
+    query_views: 4
+  test:
+    scenes: 900
+    views: 5
+    seed_base: 200000
+    gallery_views: 1
+    query_views: 4
+
+image:
+  jpeg_quality_gallery: 92
+  jpeg_quality_train: 90
+  jpeg_subsampling: 2
+
+images:
+  repo_relative: true
