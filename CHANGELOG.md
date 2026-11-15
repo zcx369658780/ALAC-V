@@ -1,12 +1,21 @@
 # CHANGELOG
 
+## 2026-11-15 — Phase 2A design accepted; Phase 2A.1 authorized
+
+- Owner approved D-2A-1 (Phase 2A.1 implementation) and D-2A-2 (DS-0002 generation).
+- Merged PR #5; accepted design merge commit: `ef39be01cf7c7bec2650f26af9e2bcefc667c526`.
+- Closed ALAC-0002 / Issue #3 as completed.
+- Opened ALAC-0003 / Issue #6 for DS-0002 generation, teacher feature cache, model implementation and EXP-0002.
+- Gate 1 DS-0002 generation and frozen teacher-cache creation are authorized using existing local pinned Phase 1 DINOv2 weights only.
+- Formal training remains gated on independent DS-0002 acceptance (Gate 2) and implementation review (Gate 3).
+- No new model-weight or natural-image dataset downloads. Phase 2B/2C and Phase 3 remain blocked.
+
 ## 2026-11-15 — Phase 0/1 accepted; Phase 2A design authorized
 
 - Owner approved and merged PR #2; merge commit: `367035318172ba1bbc0103b6231847750143d1d7`.
 - Closed ALAC-0001 / Issue #1 as completed after final independent acceptance PASS.
 - Recorded corrected GT bbox result: H3 rejected; C is 3.14 dB below A on the preregistered target-region fidelity metric.
 - Opened ALAC-0002 / Issue #3 for Phase 2A autonomous visual learning literature review, architecture comparison, data design and experiment pre-registration.
-- Phase 2A model training, backbone fine-tuning, new model-weight downloads and natural-image dataset downloads remain unauthorized.
 - Owner-approved sequence: Phase 2A autonomous visual learning → Phase 2B long-term visual memory → Phase 2C dynamic compute allocation → Phase 3 video/real-time streams.
 
 ## 2026-11-14 — Governance bootstrap

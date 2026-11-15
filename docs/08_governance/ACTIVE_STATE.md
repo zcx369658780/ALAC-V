@@ -14,85 +14,86 @@ owner: Owner
 - Visibility: Public
 - Default branch: `main`
 - Phase 0/1 accepted merge commit: `367035318172ba1bbc0103b6231847750143d1d7`
+- Phase 2A design accepted merge commit: `ef39be01cf7c7bec2650f26af9e2bcefc667c526`
 - The current `main` HEAD is authoritative and must be read from GitHub; this file intentionally does not self-reference its own commit SHA.
 - Initial delivery tag: `phase0-1`
 - Local DSH workspace reported: `D:\ALAC_V`
 
 ## Current phase and authorization
 
-**Phase 0: complete. Phase 1: complete and independently accepted (PASS). Phase 2A: research design and pre-registration submitted for review (not yet accepted). Model training is NOT authorized. Phase 2B and Phase 2C are BLOCKED. Phase 3 (video/real-time streams) is BLOCKED.**
+**Phase 0: complete. Phase 1: complete and independently accepted (PASS). Phase 2A design: independently accepted and merged. Phase 2A.1: Owner-authorized and active under ALAC-0003 / Issue #6. DS-0002 generation and frozen teacher-cache creation are authorized now, using only the already-pinned local Phase 1 DINOv2 weights. Formal model training is NOT yet authorized until Gate 2 (independent DS-0002 acceptance) and Gate 3 (implementation review) both pass. Phase 2B and Phase 2C are BLOCKED. Phase 3 (video/real-time streams) is BLOCKED.**
 
-The Owner approved PR #2 merge and Issue #1 closure on 2026-11-15. Phase 2 is now entered only through the separately authorized Phase 2A design task. No model training, backbone fine-tuning, natural-image dataset download, long-term memory implementation, dynamic compute controller, video, Event Camera or SNN work is authorized by the current task.
+Owner decisions on 2026-11-15:
+- D-2A-1: **ACCEPTED** — enter Phase 2A.1 implementation and conduct EXP-0002 subject to mandatory stage gates.
+- D-2A-2: **ACCEPTED** — generate DS-0002 and frozen DINOv2 teacher feature cache using the existing pinned local weights/revision only.
+- D-2A-3: **ACCEPTED** — Phase 2A conclusions are limited to the synthetic domain.
+- D-2A-4: **ACCEPTED** — A2 is the sole primary arm; B2/C2 are secondary comparisons.
 
 ## Current open task
 
-- [ALAC-0002 — Phase 2A autonomous visual learning research design](https://github.com/zcx369658780/ALAC-V/issues/3)
-- Task snapshot: `docs/01_tasks/TASK-0003-phase2a-autonomous-visual-learning-design.md`
-- State: deliverables submitted on branch `task/3-phase2a-autonomous-learning-design` (PR pending review); acceptance reserved to the Owner.
-- Stop condition: do not train models, download new weights/datasets, generate DS-0002, or enter Phase 2B/2C.
+- [ALAC-0003 — Phase 2A.1 DS-0002 generation, model implementation and EXP-0002](https://github.com/zcx369658780/ALAC-V/issues/6)
+- Task snapshot: `docs/01_tasks/TASK-0004-phase2a1-implementation-and-ds0002.md`
+- State: Owner-authorized. DSH may execute Gate 0 and Gate 1 only now.
+- Current gate: **Gate 1 — DS-0002 generation + frozen teacher cache**.
+- Next stop: submit complete data/cache evidence and wait for ChatGPT independent review and Owner Gate 2 acceptance.
+- No formal training before Gate 2 and Gate 3 PASS.
 
-## Phase 2A design artifacts (submitted 2026-11-15)
+## Accepted Phase 2A design baseline
 
+- Design PR #5 merged: `ef39be01cf7c7bec2650f26af9e2bcefc667c526`; design Issue #3 closed as completed.
 - Literature review: `docs/research/PHASE2A_AUTONOMOUS_LEARNING_LITERATURE.md`
-- Architecture design: `docs/03_design/PHASE2A_AUTONOMOUS_LEARNING_DESIGN.md`
-- EXP-0002 pre-registration draft: `docs/04_experiments/EXP-0002-autonomous-visual-learning-preregistration-draft.md`
-- License matrix: `docs/02_audit/PHASE2A_MODEL_LICENSE_MATRIX.md`
+- Architecture: `docs/03_design/PHASE2A_AUTONOMOUS_LEARNING_DESIGN.md`
+- EXP-0002 pre-registration: `docs/04_experiments/EXP-0002-autonomous-visual-learning-preregistration-draft.md`
+- Model license matrix: `docs/02_audit/PHASE2A_MODEL_LICENSE_MATRIX.md`
 - Owner decision summary: `docs/05_reports/PHASE2A_OWNER_DECISION_SUMMARY.md`
 
-Revised 2026-11-15 after the first independent review of PR #5 (P1-1..P1-5, plus the cached-feature
-leakage finding): unified 384-d CLS readout, mask-before-encode student path, 768-d B2 target,
-A2 as sole primary with Holm-controlled secondary comparisons, validation-only arm selection for the
-data-efficiency study, and corrected V-JEPA/V-JEPA 2 and BYOL license entries.
+Frozen design constraints:
+- Teacher: DINOv2 ViT-S/14, pinned Phase 1 revision, Apache-2.0, frozen.
+- Input: 518×518, 37×37 = 1,369 patches; all arms retrieve using 384-d L2-normalized CLS.
+- A2/C2 mask exactly 821 patches (59.97%); A2 uses four strictly non-overlapping contiguous blocks; C2 random 821 patches; mask pixels before student encoder forward.
+- A2 is sole primary; B2/C2 secondary; A1 predictor-only invariant control; F0 frozen baseline; R0 random adapter control.
+- Trainable parameters ≤10M; A2/C2 7.0M, B2 4.7M; no claim of equal parameter budget.
+- Seeds: 2026, 2027, 2028.
+- DS-0002 scenes: train/validation/test = 2,000/300/900, grouped by base-scene seed; train 8 views/scene, validation/test 5 views/scene.
+- Train-time data loader may access pixels, augmentation parameters and mask seeds only; scene IDs, bboxes, factor labels and evaluation labels are evaluation-only.
+- H1-D, H1-P, H1-S and all statistical limits are frozen in EXP-0002. Three seeds support feasibility reporting only, not robust cross-initialization claims.
+- Training budget ≤21 runs; estimated GPU time 21–35 h. Stop if a run exceeds 2 h or peak GPU memory exceeds 9 GB.
 
-Revised again 2026-11-15 after the third review: mask count fixed at 821 patches (59.97%) with a
-reproducible block-sampling rule; primary checkpoint fixed to best validation Recall@1 with a
-deterministic tie-break; data-efficiency protocol completed (validation-only selection, frozen seed
-set, single test pass, descriptive-only status); cluster-level power analysis added, which showed that
-300 test scenes give only ~50% power at 3 pp, so DS-0002 test is raised to 900 scenes (~0.92 power for the **directional** test H1-D; the joint H1-D+H1-P criterion stays ~0.50 at a true 3 pp effect).
-Revised again 2026-11-15 after the fourth review: the power analysis now separates directional,
-practical-threshold and joint H1 events (at a true 3 pp effect the joint criterion is ~0.50 regardless
-of sample size), H1 is split into H1-D/H1-P/H1-S, bootstrap uses n=900, checkpoint selection and early
-stopping are separated, and mask blocks are strictly non-overlapping.
-Re-review pending.
+## Mandatory Phase 2A.1 stage gates
 
-Key design constraints recorded: frozen DINOv2 teacher (Apache-2.0), ≤10M trainable parameters,
-synthetic-only data (DS-0002 design, not generated), group split by base scene, training never uses
-labels, Phase 2A.1 requires a separate task order.
+1. **Gate 0 — sync and freeze:** verify latest main, clean workspace, pinned EXP-0002 hash and local hardware/disk.
+2. **Gate 1 — data generation (authorized now):** generate 3,200 DS-0002 base scenes, expected views, manifests, evaluation sidecar, and teacher feature cache using existing local pinned DINOv2 only. No downloads.
+3. **Gate 2 — independent data acceptance:** verify split isolation, deterministic regeneration, file integrity, label separation, DataLoader allowlist, teacher-cache alignment/fingerprint and resource evidence. Stop for ChatGPT/Owner acceptance.
+4. **Gate 3 — model implementation (after Gate 2 PASS):** implement F0/A1/A2/B2/C2/R0, tests and configs. Stop for code/implementation review before training.
+5. **Gate 4 — training (after Gate 3 PASS):** run EXP-0002 within the pre-registered 21-run limit; no unregistered changes.
+6. **Gate 5 — final independent acceptance:** report per-run evidence, per-seed outcomes, H1 decisions, secondary comparisons, collapse and resource diagnostics.
 
 ## Completed Phase 0/1 milestone
 
 - PR #2 merged: https://github.com/zcx369658780/ALAC-V/pull/2
 - Merge commit: `367035318172ba1bbc0103b6231847750143d1d7`
-- Issue #1: closed as completed: https://github.com/zcx369658780/ALAC-V/issues/1
+- Issue #1: closed as completed.
 - TASK-0002 independent acceptance: PASS.
 - DSH-reported 83 tests passed in 8.04s, anchored to clean code commit `07a723c`; subsequent commits changed only documentation/evidence pointers. ChatGPT verified the code-tree comparison, not a local execution on the Owner's workstation.
 - Corrected GT bbox result: A/B/C PSNR 31.66 / 31.05 / 28.53 dB; H3 rejected (C −3.14 dB vs A).
 - C ROI mechanism: roi_00 hit 58.3%, any stored crop hit 66.7%, union coverage of GT area 47.7%.
 - Nine sanitized historical run bundles published. Eight runs are anchored to code commit; C_r2's original code commit remains unanchored and explicitly marked inferred.
 
-## Accepted Phase 1 technical baseline
-
-- Frozen DINOv2 ViT-S/14, pinned revision and Apache-2.0 model license.
-- Immutable SHA-256 raw image archive.
-- Multi-scale image pyramid and Foveated ROI.
-- CLS/Patch FP16 features.
-- SQLite metadata + SafeTensors feature storage.
-- Cosine retrieval, ROI backtracking and fail-closed validation for required assets.
-- EXP-0001 A/B/C evidence and corrected GT bbox analysis.
-
 ## Scientific limitations to preserve
 
 1. DS-0001 is a small, programmatically generated synthetic benchmark; its results do not establish natural-image generalization.
-2. C_r2's original code commit cannot be anchored; retain this provenance limitation.
-3. No complete EXP-0001 rerun, EXP-0002 training experiment, ICC profile-to-sRGB transform, Sobel comparison, natural-image benchmark or independent workstation reproduction has been performed.
-4. Phase 1 does not demonstrate a general efficiency improvement; do not claim one.
+2. Phase 2A.1 conclusions are limited to DS-0002 synthetic domain; do not generalize to natural images.
+3. C_r2's original code commit cannot be anchored; retain this provenance limitation.
+4. No complete EXP-0001 rerun, ICC profile-to-sRGB transform, Sobel comparison, natural-image benchmark or independent workstation reproduction has been performed.
+5. Phase 1 does not demonstrate a general efficiency improvement; do not claim one.
+6. The Phase 2A power simulation does not include empirical seed-to-seed variance; three seeds are feasibility scale only.
 
 ## Owner-approved research order
 
-1. **Phase 2A — Autonomous visual learning** (current task: research design and pre-registration only).
-2. **Phase 2B — Long-term, multi-level visual memory** (blocked until Phase 2A learning mechanism is validated).
-3. **Phase 2C — Dynamic compute allocation** (blocked until learned representations and memory interfaces are stable).
-4. **Phase 3 — Offline video and real-time visual streams** (blocked until Phase 2 gates are accepted).
+1. **Phase 2A — Autonomous visual learning:** design accepted; Phase 2A.1 implementation/EXP-0002 now active with gates.
+2. **Phase 2B — Long-term, multi-level visual memory:** blocked until Phase 2A learning mechanism is validated.
+3. **Phase 2C — Dynamic compute allocation:** blocked until learned representations and memory interfaces are stable.
+4. **Phase 3 — Offline video and real-time visual streams:** blocked until Phase 2 gates are accepted.
 
 ## Owner decisions / workflow
 
@@ -101,5 +102,6 @@ labels, Phase 2A.1 requires a separate task order.
 - DSH is the primary implementation/research agent.
 - ClawsGO is an independent reviewer and defaults to read-only.
 - Use task branches and PRs; do not push directly to `main`.
-- Only the explicitly scoped work in Issue #3 is currently authorized.
-- Model training, weight downloads, public natural-image datasets and later phases require separate Owner-approved task orders.
+- Current authorization is limited to ALAC-0003 / Issue #6 and its explicit stage gates.
+- **Authorized now:** Gate 0 and Gate 1 DS-0002 + teacher cache with existing local pinned DINOv2 weights.
+- **Not yet authorized:** formal training before independent Gate 2 and Gate 3 PASS; new weight downloads; natural-image data; Phase 2B/2C; Phase 3.

@@ -26,7 +26,7 @@ A report marked PASS by an executing agent is not Owner acceptance.
 - Files in `docs/01_tasks/` are versioned snapshots or historical records; they do not independently authorize work.
 - Do not start implementation merely because an Issue exists. The Issue must explicitly state that Owner authorization has been granted, or the Owner must authorize it in the current conversation.
 - Do not enter Phase 2 or later without a separate Owner-approved task order.
-- Current gate: Phase 0/1 remediation is accepted and merged. Issue #3 authorizes Phase 2A research design/pre-registration only; model training is not authorized. Phase 2B/2C and Phase 3 remain BLOCKED.
+- Current gate: Phase 0/1 and Phase 2A design are accepted and merged. Issue #6 / ALAC-0003 authorizes Phase 2A.1 under strict gates: Gate 1 DS-0002 generation and teacher-cache creation with existing local pinned DINOv2 weights is authorized now; Gate 2 independent data acceptance must pass before model implementation advances; Gate 3 implementation review must pass before any formal training. No new model weights or natural-image datasets may be downloaded. Phase 2B/2C and Phase 3 remain BLOCKED.
 
 ## 4. Agent roles
 

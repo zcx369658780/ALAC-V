@@ -2,8 +2,8 @@
 
 **Visual-first Autonomous Learning and Adaptive Cognition** —— 一种不依赖 LLM 作为核心推理引擎的视觉智能系统的工程基础。
 
-> **当前状态（2026-11-15）：** Phase 0/1 已通过独立验收；PR #2 已合并（`3670353`），Issue #1 已关闭。
-> Phase 2A 已获准开展自主视觉学习的文献调研、架构比较与实验预注册；**模型训练尚未授权**。Phase 2B/2C 与视频阶段仍保持 BLOCKED。
+> **当前状态（2026-11-15）：** Phase 0/1 已通过独立验收；PR #2 已合并（`3670353`），Issue #1 已关闭。Phase 2A 设计已通过验收并合并（PR #5，`ef39be0`），Issue #3 已关闭。
+> Phase 2A.1 已获 Owner 授权（Issue #6）：当前允许生成 DS-0002 和使用已有本地固定 DINOv2 权重生成教师缓存。**正式模型训练必须等待数据独立验收与模型实现审查通过。** Phase 2B/2C 与视频阶段仍 BLOCKED。
 
 ## 当前实验基线（DSH 报告值，尚未独立复现）
 
@@ -110,7 +110,7 @@ docs/
 - [GitHub Issue / PR 工作流](docs/08_governance/ISSUE_WORKFLOW.md)
 - [Phase 0/1 独立审查](docs/08_governance/PHASE0_1_ACCEPTANCE.md)
 - [全部文档索引](docs/README.md)
-- [当前开放任务 ALAC-0002：Phase 2A 自主视觉学习设计](https://github.com/zcx369658780/ALAC-V/issues/3)
+- [当前开放任务 ALAC-0003：Phase 2A.1 DS-0002 与 EXP-0002](https://github.com/zcx369658780/ALAC-V/issues/6)
 
 ## 设计原则
 
