@@ -1,0 +1,39 @@
+{
+  "dataset_id": "ds-0002-synthetic-v1",
+  "generator_version": "ds0002-v1",
+  "prng": "numpy.random.Generator(PCG64)",
+  "config_sha256": "86fe54f975197a68de12cc75badec548c44954aa428b1b92c018ec2c9cd0122c",
+  "generator_script_sha256": "7f08d937170bad6240742a1998af930b5ec9d5367896a14a0c5a65c1cd0c38a1",
+  "scene_code_sha256": "22739391119c77b6afcc826912fbe40c67136942bb86f48feb48da70a54c36a7",
+  "created_at_utc": "2026-11-15T09:22:55.239673+00:00",
+  "splits": {
+    "train": {
+      "n_scenes": 2000,
+      "n_views": 16000,
+      "seed_range": [
+        0,
+        1999
+      ],
+      "elapsed_s": 974.96
+    },
+    "validation": {
+      "n_scenes": 300,
+      "n_views": 1500,
+      "seed_range": [
+        100000,
+        100299
+      ],
+      "elapsed_s": 115.09
+    },
+    "test": {
+      "n_scenes": 900,
+      "n_views": 4500,
+      "seed_range": [
+        200000,
+        200899
+      ],
+      "elapsed_s": 324.89
+    }
+  },
+  "isolation": "split seed ranges are disjoint by construction; see audit"
+}
