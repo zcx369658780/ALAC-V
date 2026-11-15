@@ -29,6 +29,17 @@ Owner decisions on 2026-11-15:
 - D-2A-3: **ACCEPTED** — Phase 2A conclusions are limited to the synthetic domain.
 - D-2A-4: **ACCEPTED** — A2 is the sole primary arm; B2/C2 are secondary comparisons.
 
+## Phase 2A.1 Gate 1 status (2026-11-15)
+
+- Task: ALAC-0003 / TASK-0004 (Issue #6), branch `task/6-phase2a1-ds0002-generation`.
+- DS-0002 generated: 3,200 base scenes / 22,000 views (train 2,000/16,000; val 300/1,500; test 900/4,500).
+- Split isolation: zero overlap of base seeds, view IDs and image SHA-256 across splits.
+- Deterministic regeneration spot-check: 9/9 byte-identical.
+- Evaluation labels isolated in `data/ds0002/eval/`; DataLoader allowlist = `{view_id, image, augment}`.
+- Frozen DINOv2 teacher cache: 23 shards, 23.15 GB, FP16, 60/60 sampled views bit-identical to recomputation.
+- Evidence: `artifacts/evidence/DS-0002/`; report: `docs/05_reports/TASK-0004-GATE1-REPORT.md`.
+- Gate 2 independent acceptance **PENDING**; no model implementation or optimizer step has been run.
+
 ## Current open task
 
 - [ALAC-0003 — Phase 2A.1 DS-0002 generation, model implementation and EXP-0002](https://github.com/zcx369658780/ALAC-V/issues/6)
