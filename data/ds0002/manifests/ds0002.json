@@ -1,11 +1,11 @@
 {
-  "dataset_id": "ds-0002-synthetic-v2",
-  "generator_version": "ds0002-v2",
+  "dataset_id": "ds-0002-synthetic-v3",
+  "generator_version": "ds0002-v3",
   "prng": "numpy.random.Generator(PCG64)",
-  "config_sha256": "1bd8ca549c84b28f20eed2da1640ed58270c9f27a0664489900f2dec763049f1",
-  "generator_script_sha256": "ab0db849a793f55184426c3d8b87bf6706e5535a1db0b99d507abc23e8fafa3f",
-  "scene_code_sha256": "124b53982ba81c7b5f619d91187a3396e932aff7705e594326622cf34c74157f",
-  "created_at_utc": "2026-11-15T10:50:16.572451+00:00",
+  "config_sha256": "4945c95c866230b022d74c87e5642db4b7a5464e13ac6c86013570505ea80cb2",
+  "generator_script_sha256": "4dbaaee27f00e1777ada5fc1fab10a5a76da47f6f322a4c3bcf43f87f34bb876",
+  "scene_code_sha256": "6bf4fbdee66a72c3e1ec848419c25ea6c8e2e85f3928fed812a10820f117fa9f",
+  "created_at_utc": "2026-11-15T12:43:31.123342+00:00",
   "splits": {
     "train": {
       "n_scenes": 2000,
@@ -14,7 +14,7 @@
         0,
         1999
       ],
-      "elapsed_s": 1102.6
+      "elapsed_s": 1078.59
     },
     "validation": {
       "n_scenes": 300,
@@ -23,7 +23,7 @@
         100000,
         100299
       ],
-      "elapsed_s": 111.01
+      "elapsed_s": 99.82
     },
     "test": {
       "n_scenes": 900,
@@ -32,7 +32,7 @@
         200000,
         200899
       ],
-      "elapsed_s": 320.06
+      "elapsed_s": 308.58
     }
   },
   "isolation": "split seed ranges are disjoint by construction; see audit"

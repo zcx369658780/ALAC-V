@@ -1,7 +1,7 @@
 # DS-0002 Gate 1 审计（v2）
 
-- 生成时间：2026-11-15T11:05:39.087051+00:00
-- 数据集：`ds-0002-synthetic-v2`
+- 生成时间：2026-11-15T12:56:39.640496+00:00
+- 数据集：`ds-0002-synthetic-v3`
 - 总判定：**PASS**
 | 检查 | 结果 |
 |---|---|
@@ -9,6 +9,9 @@
 | split_isolation_ok | True |
 | images_ok | True |
 | eval_labels_ok | True |
+| identity_ok | True |
+| jpeg_ok | True |
+| occlusion_ok | True |
 | regeneration | True |
 | loader_allowlist | True |
 | teacher_cache | True |
