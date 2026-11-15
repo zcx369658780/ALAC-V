@@ -1,5 +1,6 @@
 {
-  "generated_at_utc": "2026-11-15T09:33:49.350503+00:00",
+  "generated_at_utc": "2026-11-15T11:05:39.087051+00:00",
+  "dataset_id": "ds-0002-synthetic-v2",
   "checks": {
     "counts": {
       "train": {
@@ -8,7 +9,8 @@
         "roles": {
           "train": 16000
         },
-        "manifest_sha256": "394747ccd7b1d172e85011df4d8ea263a5006b2338f57e8acadbb9efea3b1fd7"
+        "manifest_sha256": "781d20bfd0d425aecc10f8b442f6cda3fa96e46be1a435ca287a67b47b661fb5",
+        "index_sha256": "7bc3baeac5d017763d637f1bcb1b25f484395c9ce6f0ed76b346ec066811f06e"
       },
       "validation": {
         "scenes": 300,
@@ -17,7 +19,8 @@
           "gallery": 300,
           "query": 1200
         },
-        "manifest_sha256": "0407fc4ab7b422173b2f813e941b01826bbfff98337fb747f0332a9cbceedb0a"
+        "manifest_sha256": "91e7ec4f0cbc932619dcc20dc3a996d14da0f2a3e459f8cfa377c16030d64d1d",
+        "index_sha256": "b2860b1e712fe7aef7c56fc637bf918f3d4ef7374175180e75aab46d6c867fb7"
       },
       "test": {
         "scenes": 900,
@@ -26,16 +29,22 @@
           "gallery": 900,
           "query": 3600
         },
-        "manifest_sha256": "5dcb28262e93805e21e2e4babe9d6a60ddb9a6c1cedcc99bc958204073376573"
+        "manifest_sha256": "52517963cdc874deea8cb0e228a2a2e7cd92ad869f0e597812b29ec190c5ff86",
+        "index_sha256": "d82d199e986d01119de3ddfebc1efd7cebf13e4f4aa9bf01eee4d2bc50cadd57"
       }
     },
     "counts_ok": true,
     "split_isolation": {
-      "seeds_train_val": 0,
-      "seeds_train_test": 0,
-      "seeds_val_test": 0,
-      "view_ids": 0,
-      "image_sha256": 0,
+      "seeds": {
+        "train|validation": 0,
+        "test|train": 0,
+        "test|validation": 0
+      },
+      "view_ids": {
+        "train|validation": 0,
+        "test|train": 0,
+        "test|validation": 0
+      },
       "seed_ranges": {
         "train": [
           0,
@@ -54,16 +63,17 @@
     "split_isolation_ok": true,
     "images": {
       "files": 22000,
-      "total_bytes": 970362145,
+      "total_bytes": 955340256,
       "dimensions": [
         [
           1024,
           768
         ]
       ],
-      "bad": [],
-      "bad_count": 0,
-      "duplicate_hashes": 0,
+      "sha_mismatch": 0,
+      "bad_examples": [],
+      "bytes_mismatch": 0,
+      "duplicate_sha256": 0,
       "duplicate_examples": []
     },
     "images_ok": true,
@@ -77,81 +87,135 @@
         {
           "split": "train",
           "scene": 0,
+          "view": 0,
+          "strong": false,
           "sha_match": true,
-          "regen_sha": "4923c3f0371e19aadf044f04c779aff5530baea574642d277b91c7c1b59e438f",
-          "manifest_sha": "4923c3f0371e19aadf044f04c779aff5530baea574642d277b91c7c1b59e438f"
+          "actual_sha": "03cafc0f78b6ea382a1fe51cf2e396a814f795b915099dea4e0e4e0161310960",
+          "manifest_sha": "03cafc0f78b6ea382a1fe51cf2e396a814f795b915099dea4e0e4e0161310960",
+          "size_match": true
+        },
+        {
+          "split": "train",
+          "scene": 0,
+          "view": 1,
+          "strong": true,
+          "sha_match": true,
+          "actual_sha": "cb545806fcf0bc8883cc17171d0ea2ccb585817917eb81d9e1471d7a113ae506",
+          "manifest_sha": "cb545806fcf0bc8883cc17171d0ea2ccb585817917eb81d9e1471d7a113ae506",
+          "size_match": true
         },
         {
           "split": "train",
           "scene": 1000,
+          "view": 0,
+          "strong": false,
           "sha_match": true,
-          "regen_sha": "32bd3957d88401378d3cd9db6285a76cf69c5766324df7158ebc27e5e8175c9c",
-          "manifest_sha": "32bd3957d88401378d3cd9db6285a76cf69c5766324df7158ebc27e5e8175c9c"
+          "actual_sha": "38c1c25e380a5f6a1f150d66faac8eb6b5ebfc1ac37da14ee15bad88f14a2282",
+          "manifest_sha": "38c1c25e380a5f6a1f150d66faac8eb6b5ebfc1ac37da14ee15bad88f14a2282",
+          "size_match": true
         },
         {
           "split": "train",
-          "scene": 1999,
+          "scene": 1000,
+          "view": 1,
+          "strong": true,
           "sha_match": true,
-          "regen_sha": "cdf86d0670c57a32b80daff6addeddb4856f699197b497ef478799bcd2850fe3",
-          "manifest_sha": "cdf86d0670c57a32b80daff6addeddb4856f699197b497ef478799bcd2850fe3"
+          "actual_sha": "b10e128a4c6abec2b01eda93cd47a284d859b96bc0fd82d135f58360845db2b9",
+          "manifest_sha": "b10e128a4c6abec2b01eda93cd47a284d859b96bc0fd82d135f58360845db2b9",
+          "size_match": true
         },
         {
           "split": "validation",
           "scene": 0,
+          "view": 0,
+          "strong": false,
           "sha_match": true,
-          "regen_sha": "a9e68562bf030438e8f80ba6bb3f2b359970fb5fa5b63ac7a4ce1b25bb8e19ca",
-          "manifest_sha": "a9e68562bf030438e8f80ba6bb3f2b359970fb5fa5b63ac7a4ce1b25bb8e19ca"
+          "actual_sha": "760c77c9ca26f2cd4fadc4cc413b60d81aa7713bcd5202d8b9dc8e274cba6f1c",
+          "manifest_sha": "760c77c9ca26f2cd4fadc4cc413b60d81aa7713bcd5202d8b9dc8e274cba6f1c",
+          "size_match": true
+        },
+        {
+          "split": "validation",
+          "scene": 0,
+          "view": 1,
+          "strong": true,
+          "sha_match": true,
+          "actual_sha": "a2735d37b9ee683c7549aa146c155e94cfc22e0328481b80fbf795740a264ff8",
+          "manifest_sha": "a2735d37b9ee683c7549aa146c155e94cfc22e0328481b80fbf795740a264ff8",
+          "size_match": true
         },
         {
           "split": "validation",
           "scene": 150,
+          "view": 0,
+          "strong": false,
           "sha_match": true,
-          "regen_sha": "a1dd3f3c0e2d8de6cef139a94a1fdfd18057bdd1d9db2a7cacfc0ef5a1fe8ee6",
-          "manifest_sha": "a1dd3f3c0e2d8de6cef139a94a1fdfd18057bdd1d9db2a7cacfc0ef5a1fe8ee6"
+          "actual_sha": "8b6542e089fee015fadac823949041ac15b2f881f132e8f313a1b3df21fa4ff3",
+          "manifest_sha": "8b6542e089fee015fadac823949041ac15b2f881f132e8f313a1b3df21fa4ff3",
+          "size_match": true
         },
         {
           "split": "validation",
-          "scene": 299,
+          "scene": 150,
+          "view": 1,
+          "strong": true,
           "sha_match": true,
-          "regen_sha": "36e89ccb6a9c4d381d27a1c16fc3bc1ff8eb95870300ec468fc533eec8d43839",
-          "manifest_sha": "36e89ccb6a9c4d381d27a1c16fc3bc1ff8eb95870300ec468fc533eec8d43839"
+          "actual_sha": "1e84ef86f594037ff175311fb33de7c9bd02f385ab387c2289394f3195b6025f",
+          "manifest_sha": "1e84ef86f594037ff175311fb33de7c9bd02f385ab387c2289394f3195b6025f",
+          "size_match": true
         },
         {
           "split": "test",
           "scene": 0,
+          "view": 0,
+          "strong": false,
           "sha_match": true,
-          "regen_sha": "268df03cb9edded383345dc3f0566b81c272365e7be9e15e09525b650f014ccb",
-          "manifest_sha": "268df03cb9edded383345dc3f0566b81c272365e7be9e15e09525b650f014ccb"
+          "actual_sha": "70eea7469e922364b9ee4ebf7197fc13c1e5fd95a6ce7fa90a72f733996877b1",
+          "manifest_sha": "70eea7469e922364b9ee4ebf7197fc13c1e5fd95a6ce7fa90a72f733996877b1",
+          "size_match": true
+        },
+        {
+          "split": "test",
+          "scene": 0,
+          "view": 1,
+          "strong": true,
+          "sha_match": true,
+          "actual_sha": "09798927d8048becc47d26598f4265b1d87ff4c71fa507a9ab2ee62027cab629",
+          "manifest_sha": "09798927d8048becc47d26598f4265b1d87ff4c71fa507a9ab2ee62027cab629",
+          "size_match": true
         },
         {
           "split": "test",
           "scene": 450,
+          "view": 0,
+          "strong": false,
           "sha_match": true,
-          "regen_sha": "d7a5a4f3b8eaeb6848de70f3714ae461afee1c11dfda2a6faec5c0047d243a99",
-          "manifest_sha": "d7a5a4f3b8eaeb6848de70f3714ae461afee1c11dfda2a6faec5c0047d243a99"
+          "actual_sha": "1bc658881560515936378e71826c3751e4b43eda5dcdfa8a1d2d120c99df9c09",
+          "manifest_sha": "1bc658881560515936378e71826c3751e4b43eda5dcdfa8a1d2d120c99df9c09",
+          "size_match": true
         },
         {
           "split": "test",
-          "scene": 899,
+          "scene": 450,
+          "view": 1,
+          "strong": true,
           "sha_match": true,
-          "regen_sha": "b39990e0f8d723b4ab71720401720be5a6cc24bc0d986ec982c8f7154151b516",
-          "manifest_sha": "b39990e0f8d723b4ab71720401720be5a6cc24bc0d986ec982c8f7154151b516"
+          "actual_sha": "b6a6ccbcd158b763bc81de00742e64918c67589e815ad43311ccd71931253df4",
+          "manifest_sha": "b6a6ccbcd158b763bc81de00742e64918c67589e815ad43311ccd71931253df4",
+          "size_match": true
         }
       ],
       "ok": true
     },
     "loader_allowlist": {
-      "allowed": [
+      "index_violations": [],
+      "item_keys": [
         "augment",
         "image",
         "view_id"
       ],
-      "actual": [
-        "augment",
-        "image",
-        "view_id"
-      ],
-      "forbidden_present": [],
+      "item_ok": true,
+      "has_manifest_attr": false,
       "ok": true
     },
     "teacher_cache": {
@@ -161,41 +225,47 @@
         "train": {
           "n_views": 16000,
           "n_shards": 16,
+          "view_set_equal": true,
+          "n_views_equal": true,
           "manifest_sha256_match": true,
           "bad_shards": [],
-          "views_match_manifest": true
+          "tensor_issues": []
         },
         "validation": {
           "n_views": 1500,
           "n_shards": 2,
+          "view_set_equal": true,
+          "n_views_equal": true,
           "manifest_sha256_match": true,
           "bad_shards": [],
-          "views_match_manifest": true
+          "tensor_issues": []
         },
         "test": {
           "n_views": 4500,
           "n_shards": 5,
+          "view_set_equal": true,
+          "n_views_equal": true,
           "manifest_sha256_match": true,
           "bad_shards": [],
-          "views_match_manifest": true
+          "tensor_issues": []
         }
       },
       "sample_alignment": {
-        "n": 60,
+        "n": 33,
         "max_abs_err": 0.0,
         "ok": true
       },
       "ok": true
     },
     "resources": {
-      "disk_free_gb": 958.81,
+      "disk_free_gb": 958.75,
       "ram_total_gb": 31.48,
-      "python": "3.11.9",
       "platform": "Windows-10-10.0.26300-SP0",
+      "python": "3.11.9",
       "numpy": "2.4.6",
-      "elapsed_s": 116.05,
-      "dataset_bytes": 970362145,
+      "dataset_bytes": 955340256,
       "cache_bytes": 23147523680,
+      "elapsed_s": 324.82,
       "gpu": {
         "name": "NVIDIA GeForce RTX 5070",
         "vram_mb": 12199.4

@@ -1,12 +1,15 @@
 # DS-0002 Gate 1 证据包
 
-本目录只包含**可公开的紧凑证据**；图像、教师特征缓存与模型权重均保留在本地，不入库。
+本目录只包含**可公开的紧凑证据**（数据集 `ds-0002-synthetic-v2`）；图像、教师特征缓存与模型权重均保留在本地，不入库。
 
 | 文件 | 内容 |
 |---|---|
 | `gate1-audit.json` | 全部审计检查的结构化结果（计数、隔离、解码、重复、确定性抽样、白名单、缓存对齐、资源） |
 | `gate1-audit.md` | 审计摘要（人读版） |
-| `sha256-inventory.txt` | 22,000 个 view 的 `SHA-256  path` 全量清单 |
+| `sha256-inventory.txt` | 22,000 个 view 的 `SHA-256  path` 全量清单（由本地文件**重新计算**） |
+| `cache-index/index_{split}.json` | 教师缓存的脱敏索引元数据（shard SHA、view 映射、shape/dtype） |
+| `sample-grid.png` | 4×4 合成图像抽样拼图 |
+| `test-runs/gate1-pytest.txt` | 97 项测试的完整原始输出（HEAD/branch/dirty/环境） |
 
 ## 数据位置（本地，不入库）
 

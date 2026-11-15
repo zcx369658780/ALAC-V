@@ -32,11 +32,15 @@ Owner decisions on 2026-11-15:
 ## Phase 2A.1 Gate 1 status (2026-11-15)
 
 - Task: ALAC-0003 / TASK-0004 (Issue #6), branch `task/6-phase2a1-ds0002-generation`.
-- DS-0002 generated: 3,200 base scenes / 22,000 views (train 2,000/16,000; val 300/1,500; test 900/4,500).
+- DS-0002 **v2** generated: 3,200 base scenes / 22,000 views (train 2,000/16,000; val 300/1,500; test 900/4,500).
 - Split isolation: zero overlap of base seeds, view IDs and image SHA-256 across splits.
 - Deterministic regeneration spot-check: 9/9 byte-identical.
 - Evaluation labels isolated in `data/ds0002/eval/`; DataLoader allowlist = `{view_id, image, augment}`.
-- Frozen DINOv2 teacher cache: 23 shards, 23.15 GB, FP16, 60/60 sampled views bit-identical to recomputation.
+- Labels reflect real drawing parameters (texture, palette, shape, geometric occlusion); three target shapes.
+- Training loader reads only the projected index (`view_id/path/augment/pair_key`) and holds no label manifest.
+- All 22,000 image SHA-256 recomputed from disk: 0 mismatches, 0 byte mismatches, 0 duplicates.
+- Frozen DINOv2 teacher cache: 23 shards, 23.15 GB, FP16; full view-set equality, all shard tensors verified,
+  33/33 sampled views bit-identical to recomputation; sanitized cache index published.
 - Evidence: `artifacts/evidence/DS-0002/`; report: `docs/05_reports/TASK-0004-GATE1-REPORT.md`.
 - Gate 2 independent acceptance **PENDING**; no model implementation or optimizer step has been run.
 

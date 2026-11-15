@@ -1,176 +1,144 @@
 ---
 id: REPORT-0004
-title: TASK-0004 Gate 0/1 交付报告 — DS-0002 生成与冻结教师缓存
-status: 待审（Gate 2）
+title: TASK-0004 Gate 0/1 交付报告（DS-0002 v2 整改）
+status: 待审（Gate 2 第二轮）
 date: 2026-11-15
 owner: lead
 task: TASK-0004
 issue: https://github.com/zcx369658780/ALAC-V/issues/6
 ---
 
-# TASK-0004 Gate 0/1 交付报告
+# TASK-0004 Gate 0/1 交付报告（v2 整改）
 
-> **范围**：Gate 0（同步与冻结）+ Gate 1（DS-0002 生成 + 冻结 DINOv2 教师特征缓存）。
-> **未执行**：模型实现、任何 optimizer step、A1/A2/B2/C2 训练、新权重/自然图像下载。
-> 本报告是 DSH 自报，**不构成 Gate 2 验收**；等待 ChatGPT 独立复核与 Owner 批准。
+> 本版对应 PR #8 第二轮整改：P1-1 标签真实性、P1-2 训练/标签隔离、P1-3 全量 SHA 重算、
+> P1-4 缓存完整性，以及 P2-1/2/3。**数据已全部重新生成（v2），v1 数据不再使用。**
+> 未执行模型实现或任何 optimizer step；等待 Gate 2 独立验收。
 
 ## 0. 结论摘要
 
 | 项 | 结果 |
 |---|---|
-| Gate 0 基线 | `aaa5a75e3ffb44096c22fcf81b21413d2828ef17`（与 GitHub `main` 一致） |
-| 场景 / 视图 | **3,200 scenes / 22,000 views**（train 2,000/16,000；val 300/1,500；test 900/4,500） |
-| 图像 | 970,362,145 B（**0.97 GB**），全部 1024×768 RGB，解码失败 0，重复 0 |
-| 分组隔离 | train/val/test 的 base seed、view_id、图像 SHA-256 交集均为 **0** |
-| 确定性 | 9/9 抽样重生成字节一致 |
-| 评估标签 | 3 个 split 的 sidecar 完整；bbox 合法；gallery/query 计数正确 |
-| DataLoader 白名单 | 实际返回键 = `{view_id, image, augment}`，禁用字段 0 |
-| 教师缓存 | 23 shards、22,000 views、**23.15 GB**、FP16、`[1369,384]`；60 个抽样 view 的 `max_abs_err = 0.0` |
-| 模型身份 | revision `ed25f3a3…`、权重 SHA-256 `ae1e99fc…`（与 Phase 1 一致，未下载） |
-| 审计总判定 | **PASS（DSH 自检）** |
+| 数据集 | `ds-0002-synthetic-v2`（生成器 `ds0002-v2`） |
+| 场景 / 视图 | 3,200 / 22,000（train 2,000/16,000；val 300/1,500；test 900/4,500） |
+| 图像 | 955,340,256 B（0.96 GB），1024×768 RGB；**全量重算 SHA：0 失配、0 字节失配、0 重复** |
+| 分组隔离 | base seed / view_id 跨 split 交集均为 0 |
+| 确定性 | 12/12 抽样一致（含 **6 个 strong augmentation** 视图） |
+| 标签真实性 | 纹理/调色板/形状/遮挡均来自**实际绘图参数与几何** |
+| 训练隔离 | Dataset 只读投影索引；无 `manifest` 属性；索引禁用字段 0 |
+| 教师缓存 | 23 shards / 23.15 GB；**view 集合完全一致**；tensor keys/shape/dtype/计数全部校验；33 抽样 `max_abs_err=0.0` |
+| 审计 | **PASS**（`gate1-audit.json`，失败即 exit 1） |
+| 测试 | 97 项通过（完整日志见 `artifacts/evidence/DS-0002/test-runs/gate1-pytest.txt`） |
 
-## 1. Gate 0：基线与冻结
+## 1. P1-1：标签与图像内容一致性
 
-- 同步 `alacv/main` → `aaa5a75e3ffb44096c22fcf81b21413d2828ef17`；工作区干净，无未提交修改。
-- 分支：`task/6-phase2a1-ds0002-generation`（基于上述 main）。
-- 冻结文件：`docs/01_tasks/TASK-0004-gate0-freeze.json`
-  - 设计 SHA-256 `e88abadab34670209747832904cca8ae57ff2e626ac401c4f6dcdde12c2980de`
-  - 预注册 SHA-256 `76b20389f25c768c4d22931004f10e695d08946baa397aa26ff73dddacfa8cd2`
-  - seeds `{2026,2027,2028}`、mask 821、参数上限 10M、最大 21 runs 等均固化。
-- 环境：磁盘可用 981.4 GB（开始前）、RAM 31.48 GB、RTX 5070 12,227 MiB。
-- 模型：本地权重 SHA-256 与 `data/manifests/model-dinov2_vits14.json` 完全一致；未联网。
+v1 的缺陷：纹理/调色板标签与实际绘制参数是两次独立抽样；`occlusion` 是随机布尔值且干扰块先于目标绘制。
+v2 修复（`src/alacv/synth/scene.py`）：
 
-## 2. DS-0002 规格与生成
+| 标签 | v2 生成方式 |
+|---|---|
+| `texture_kind` | 先抽样，传入 `_texture(kind, ...)` 绘制，再原值写入标签 |
+| `palette_family` | 先抽样，`_palette_colors(family)` 生成实际颜色，再原值写入 |
+| `shape` | `rect / ellipse / triangle` 三选一，用真实 mask 合成，标签即该形状 |
+| `occlusion` | 先画目标、后画干扰块；`occlusion_fraction = max(干扰块与主目标重叠面积 / 目标面积)`；`occlusion = fraction ≥ 0.05` |
+| 宽高比 | `aspect ∈ [0.65, 1.55]`，记录真实 `w,h` |
 
-### 2.1 计数（实测）
+数据集版本升级为 **v2**，全部 22,000 张图像、manifest、index、labels、教师缓存均已重新生成；
+v1 文件已从本地删除，不进入 EXP-0002。
 
-| Split | Scenes | Views | gallery | query | Seed 范围 | 生成耗时 |
-|---|---:|---:|---:|---:|---|---:|
-| train | 2,000 | 16,000 | — | — | 0–1,999 | 975 s |
-| validation | 300 | 1,500 | 300 | 1,200 | 100,000–100,299 | 115 s |
-| test | 900 | 4,500 | 900 | 3,600 | 200,000–200,899 | 325 s |
-| **合计** | **3,200** | **22,000** | 1,200 | 4,800 | 互斥 | 1,415 s |
+## 2. P1-2：训练与评估标签真正隔离
 
-- 分辨率 1024×768；每场景 1–3 个纹理目标 + 2–4 个干扰块，含位置/尺度/遮挡/纹理/调色板/光照变化。
-- 增强：裁剪缩放、旋转 ±10°、亮度/对比度/饱和度、JPEG 重压缩（训练视图 q60–85；gallery q92）。
-- 图像总量 0.97 GB（低于预估 2.8 GB：强增强视图的重压缩显著减小文件）。
+- 新增投影训练索引 `data/ds0002/index/{split}.json`，每 view 仅含
+  `view_id / path / augment / pair_key`；`pair_key = "g"+sha256("ds0002-pair:"+scene_id)[:12]`，
+  不可逆且不暴露 scene_id。
+- `Ds0002Dataset` 只加载该索引；**不存在 `manifest` 属性**，也不持有 targets/factors/scene_id。
+- B2 同场景配对由 `PairBatchSampler` 在采样层使用 `pair_key` 完成，模型输入仍只有图像。
+- 负向测试：
+  - `test_loader_rejects_index_with_label_fields`：索引含 `scene_id` 直接报错；
+  - `test_loader_holds_no_label_manifest`：断言无 manifest 属性；
+  - `test_loader_never_opens_eval_labels`：monkeypatch `open`，任何 `labels_*` 读取即失败。
 
-### 2.2 生成器与指纹
+审计结果：`index_violations = 0`，`item_keys = {augment, image, view_id}`，`has_manifest_attr = False`。
+
+## 3. P1-3：22,000 张图像全量重算 SHA-256
+
+审计不再信任 manifest：
+
+- 逐文件重新计算 SHA-256，与 manifest 比对：**0 失配**；
+- 逐文件 `stat().st_size` 与 manifest `bytes` 比对：**0 失配**；
+- 用**实际 SHA** 做重复检测：**0 重复**；
+- `sha256-inventory.txt` 由实际文件哈希重新生成（22,000 行）；
+- 全量 `Image.verify()` + 二次解码：0 失败；尺寸集合 `{(1024,768)}`；模式全 RGB。
+
+## 4. P1-4：教师缓存完整性与索引公开
+
+- **完整 view 集合比对**（非仅数量）：三个 split 的 cache view 列表与 manifest 逐一相等（`view_set_equal=True`）。
+- **每个 shard**：SafeTensors keys 必须为 `{cls, patch}`；dtype 必须 `float16`；
+  shape 必须 `(n,384)` 与 `(n,1369,384)`；`n` 与索引一致；SHA-256 逐个校验。
+- 重复 view_id → Reader 初始化即抛错；缺失 view → `KeyError`；SHA 失配 → `RuntimeError`；
+  Reader **默认 `verify_sha=True`**，并采用最多 2 个 shard 的 LRU 缓存（P2 内存建议）。
+- 公开脱敏索引元数据：`artifacts/evidence/DS-0002/cache-index/index_{split}.json`
+  （含每 shard 的 SHA-256、view 映射、tensor shape/dtype、数量、模型 revision 与权重指纹）。
+- 缺缓存时审计 `ok=False`（fail-closed），不会出现 "NOT RUN 但 PASS"。
+
+## 5. P2 修正
+
+| 编号 | 处理 |
+|---|---|
+| P2-1 | 确定性抽样覆盖 **strong augmentation**：每 split 2 场景 × (view 0, view 1)，共 12 个样本，其中 6 个 strong |
+| P2-2 | 配置与实现对齐：`width/height/seed_base` 与生成器常量校验，不一致直接退出；`jpeg_quality` 保留在 `augment` 中并用于实际保存 |
+| P2-3 | 完整 pytest 日志（HEAD / branch / dirty / 环境）提交到 `artifacts/evidence/DS-0002/test-runs/gate1-pytest.txt`（97 passed） |
+| 内存建议 | Reader 已改为有界 LRU（默认 2 shards），避免训练时驻留全部 16 个 train shards |
+
+## 6. 计数与指纹
 
 | 项 | 值 |
 |---|---|
-| 生成器 | `scripts/generate_ds0002.py`，`ds0002-v1` |
-| 场景代码 | `src/alacv/synth/scene.py` SHA-256 `22739391…c36a7` |
-| 生成脚本 | SHA-256 `7f08d937…38a1` |
-| 配置 | `configs/ds0002.yaml`，规范化 SHA-256 `86fe54f9…122c` |
-| PRNG | `numpy.random.Generator(PCG64)` |
-| 种子派生 | `base_seed = split_base + index`；`view_seed = base_seed*1000 + view` |
-| 确定性 | 9/9 抽样（每 split 3 个场景）重渲染 + 重增强后字节完全一致 |
+| dataset_id | `ds-0002-synthetic-v2` |
+| 配置 SHA-256 | `1bd8ca549c84b28f20eed2da1640ed58270c9f27a0664489900f2dec763049f1` |
+| 生成脚本 SHA-256 | `ab0db849a793f55184426c3d8b87bf6706e5535a1db0b99d507abc23e8fafa3f` |
+| 场景代码 SHA-256 | `124b53982ba81c7b5f619d91187a3396e932aff7705e594326622cf34c74157f` |
+| train manifest | `781d20bfd0d425aecc10f8b442f6cda3fa96e46be1a435ca287a67b47b661fb5` |
+| validation manifest | `91e7ec4f0cbc932619dcc20dc3a996d14da0f2a3e459f8cfa377c16030d64d1d` |
+| test manifest | `52517963cdc874deea8cb0e228a2a2e7cd92ad869f0e597812b29ec190c5ff86` |
+| 模型 | revision `ed25f3a31f01632728cabb09d1542f84ab7b0056`；权重 `ae1e99fc…14be1`，Apache-2.0 |
+| 缓存 | 23 shards，23,147,523,680 B，22,000 views，FP16 |
 
-### 2.3 Manifest 与评估标签
-
-- `data/ds0002/manifests/{train,validation,test}.json`：逐 view 的 `view_id / scene_id / base_seed /
-  role / path / sha256 / bytes / width / height / augment`。
-- `data/ds0002/manifests/ds0002.json`：全局计数、seed 范围、生成器/配置指纹。
-- `data/ds0002/eval/labels_{split}.json`：scene 级 targets、factors、gallery/query view 列表；
-  文件头明确标注 **evaluation-only**。
-- Manifest SHA-256：train `394747cc…b1fd7`；validation `0407fc4a…b0a`；test `5dcb2826…6573`。
-
-### 2.4 隔离证明
-
-审计直接计算集合交集：
-
-| 交集 | 数量 |
-|---|---:|
-| train ∩ validation base seeds | 0 |
-| train ∩ test base seeds | 0 |
-| validation ∩ test base seeds | 0 |
-| 跨 split view_id | 0 |
-| 跨 split 图像 SHA-256 | 0 |
-
-seed 分段由构造保证（0–1999 / 100000–100299 / 200000–200899），同一 base scene 的所有视图只属于
-一个 split。
-
-### 2.5 完整性与重复
-
-- 22,000 张全部通过 `Image.open().verify()` + 二次解码；尺寸集合 `{(1024,768)}`；模式全 RGB。
-- 解码失败 0；尺寸不符 0；重复 SHA-256 **0**。
-
-## 3. 教师特征缓存
-
-| 项 | 值 |
-|---|---|
-| 模型 | DINOv2 ViT-S/14，revision `ed25f3a31f01632728cabb09d1542f84ab7b0056` |
-| 权重 | `model.safetensors`，SHA-256 `ae1e99fcefd534ed978cdeb8326f08030c96e28b7a81ffcbc98a857c84d14be1` |
-| 许可 | Apache-2.0；未下载、未微调 |
-| 格式 | SafeTensors，`cls float16[384]` + `patch float16[1369,384]`，每 shard 1,000 views |
-| 分片 | train 16、validation 2、test 5，共 **23 shards / 23.15 GB** |
-| 对齐 | 60 个抽样 view 重新编码，`max_abs_err = 0.0`（FP16 逐位一致） |
-| 索引 | `index_{split}.json` 记录 view_ids 顺序、shard SHA-256、模型与 manifest 指纹 |
-| 完整性 | 23/23 shard SHA-256 校验通过；缺失/重复 view 0 |
-| 构建耗时 | 622 s（含 22,000 次冻结前向与 23 GB 落盘） |
-
-缓存读取实现 `src/alacv/teacher_cache.py` 为 **fail-closed**：缺 index、缺 shard、SHA 不符、
-形状/dtype 不符、view 不存在均抛错。
-
-## 4. DataLoader 字段白名单审计
-
-`src/alacv/ds0002.py::Ds0002Dataset` 的 `__getitem__` 返回键被限制为：
-
-```
-{"view_id", "image", "augment"}
-```
-
-审计结果：实际键 = 允许键，禁用字段（`scene_id / base_seed / targets / factors / role`）出现 0 次。
-同场景配对（B2 需要）由 `PairBatchSampler` 在**采样层**完成，不把 scene_id 传入模型输入。
-评估标签只由 `load_eval_labels()` 读取，训练代码禁止调用（测试覆盖）。
-
-## 5. 资源使用
+## 7. 资源
 
 | 项 | 实测 |
 |---|---|
-| 磁盘（审计时可用） | 958.81 GB（数据集 + 缓存共约 24.1 GB） |
-| RAM | 总量 31.48 GB；缓存构建峰值进程 RSS 约 1.5 GB |
-| GPU | RTX 5070，12,199.4 MiB；缓存构建时占用约 2.0 GB、利用率约 34% |
-| 生成总耗时 | 1,415 s（3 个 split 串行） |
-| 缓存构建 | 622 s |
+| 生成 | train 1,103 s；validation 111 s；test 320 s（单进程） |
+| 缓存构建 | 610 s |
+| 审计 | 325 s（含 22,000 次 SHA 重算与全量解码） |
+| 磁盘可用 | 958.75 GB（数据 + 缓存约 24.1 GB） |
+| RAM / GPU | 31.48 GB / RTX 5070 12,199.4 MiB（构建时约 2 GB、34%） |
 
-## 6. 隐私与许可证
+## 8. 可视抽样
 
-- 数据为程序化生成，**无第三方素材**；数据集以 CC0 处理。
-- 未下载任何新权重/自然图像；未使用用户私人图像；未调用外部服务。
-- 提交内容不含图像、特征缓存、模型权重、密钥或用户绝对路径；`data/ds0002/*` 已在 `.gitignore`。
-- 仓库扫描：用户名/`C:\Users` 0 命中（见审计与 PR 说明）。
+`artifacts/evidence/DS-0002/sample-grid.png`：4×4 合成图像拼图，覆盖三种形状、不同纹理、
+遮挡与场景组合，供独立复核直观检查。
 
-## 7. 全量 SHA-256 inventory
+## 9. 已知限制
 
-`artifacts/evidence/DS-0002/sha256-inventory.txt`：22,000 行 `sha256  path`，与三个 manifest 一一对应。
+1. 合成域结论不可外推自然图像（D-2A-3 已接受）。
+2. 位置/尺度等因子标签用于评估探针，不进入训练；`pair_key` 不可逆但训练采样器仍可利用同场景关系（B2 方法所需）。
+3. `occlusion_fraction` 为矩形重叠面积近似（目标形状非矩形时略高估），标签定义已如实写入 sidecar。
+4. 生成单进程约 25 分钟（沙箱禁止 multiprocessing 管道），不影响确定性。
 
-## 8. 已知限制
+## 10. NOT RUN
 
-1. 合成域结论不可外推自然图像（D-2A-3 已接受该边界）。
-2. 强增强视图的 JPEG 质量随视图变化（q60–85），这是预注册的增强设计，不是压缩伪影缺陷；
-   gallery 使用 q92。
-3. 训练/验证/测试的 `role` 在 manifest 中可见（审计需要），但 DataLoader 不返回该字段。
-4. 生成是单进程完成的（沙箱限制 multiprocessing 管道），总耗时约 24 分钟；不影响确定性。
+模型实现、A1/A2/B2/C2/F0/R0、任何 optimizer step、EXP-0002 训练、新权重/自然图像下载、
+Phase 2B/2C/3 —— 均未执行。
 
-## 9. NOT RUN
-
-- 模型实现（`src/alacv/ssl/`）、A1/A2/B2/C2/F0/R0 代码：**未开始**；
-- 任何 optimizer step / 训练 / 微调：**未执行**；
-- 新模型权重或自然图像下载：**未执行**；
-- EXP-0002 训练运行：**未执行**（Gate 4 未授权）；
-- Phase 2B / 2C / 3：**BLOCKED**。
-
-## 10. 复现命令
+## 11. 复现
 
 ```powershell
-python scripts/generate_ds0002.py --config configs/ds0002.yaml --workers 1
+python scripts/generate_ds0002.py --config configs/ds0002.yaml
 python scripts/build_teacher_cache.py --shard-size 1000 --batch 8
-python scripts/audit_gate1.py --cache-sample 20
+python scripts/audit_gate1.py --cache-sample 30
+python -m pytest -q
 ```
 
-## 11. 停止声明
+## 12. 停止声明
 
-Gate 1 已完成并停止。未进入模型实现、未执行任何 optimizer step、未开始 A1/A2/B2/C2 训练。
-等待 ChatGPT 独立复核与 Owner 对 Gate 2 的批准。
+Gate 1 v2 已完成并停止。等待 ChatGPT 独立复核与 Owner Gate 2 批准；在此之前不进入模型实现与训练。
