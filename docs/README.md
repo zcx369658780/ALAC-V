@@ -121,12 +121,17 @@ supersedes: null
 | `08_governance/PHASE0_1_ACCEPTANCE.md` | Phase 0/1 最终独立验收 | PASS；PR #2 merged；Issue #1 closed |
 | `01_tasks/TASK-0003-phase2a-autonomous-visual-learning-design.md` | Phase 2A 自主视觉学习研究设计任务 | Owner 已授权；仅设计/预注册 |
 | `submissions/PHASE_0_1_SUBMISSION.md` | 首次公开仓库交付记录 | 历史记录 |
+| `research/PHASE2A_AUTONOMOUS_LEARNING_LITERATURE.md` | Phase 2A 文献调研（arXiv/仓库/许可核验） | 草案；待 ChatGPT/Owner 审阅 |
+| `03_design/PHASE2A_AUTONOMOUS_LEARNING_DESIGN.md` | Phase 2A 架构设计与资源方案 | 草案；待审 |
+| `04_experiments/EXP-0002-autonomous-visual-learning-preregistration-draft.md` | EXP-0002 预注册草案 | 草案；未授权运行 |
+| `02_audit/PHASE2A_MODEL_LICENSE_MATRIX.md` | Phase 2A 代码/权重许可矩阵 | 草案；已核验来源 |
+| `05_reports/PHASE2A_OWNER_DECISION_SUMMARY.md` | Phase 2A Owner 决策摘要 | 草案；待审 |
 
 
 ## 10. 当前阶段与开放任务
 
 - Phase 0/1：已通过独立验收；PR #2 已合并，Issue #1 已关闭。
-- Phase 2A：仅授权自主视觉学习文献调研、架构比较、无标签数据方案、资源估算和实验预注册。
+- Phase 2A：设计、文献、许可矩阵与 EXP-0002 预注册草案已提交（PR 待审）；训练仍未授权。
 - 模型训练、权重下载、公开自然图像数据下载均未授权。
 - 当前开放任务：[ALAC-0002 / Issue #3](https://github.com/zcx369658780/ALAC-V/issues/3)。
 - Phase 2B 长期视觉记忆、Phase 2C 动态计算与 Phase 3 视频/实时流均需后续独立授权。

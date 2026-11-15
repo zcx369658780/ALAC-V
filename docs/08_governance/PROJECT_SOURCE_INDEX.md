@@ -44,6 +44,7 @@ owner: Owner
 | Environment | `docs/02_audit/` | Hardware, runtime, dependency and model license audits |
 | Design | `docs/03_design/` | Architecture, data model and ADRs |
 | Experiments | `docs/04_experiments/` | Preregistration, metrics and interpretation |
+| Research | `docs/research/` | Literature review and external-evidence notes |
 | Reports | `docs/05_reports/` | Phase reports |
 | Operations | `docs/06_ops/` | Setup, runbook and troubleshooting |
 | Risks | `docs/07_risks/` | Risk register |
@@ -72,6 +73,14 @@ owner: Owner
 | `scripts/run_experiments.py` | EXP-0001 experiment execution and run artifact generation |
 | `scripts/bootstrap_ci.py` | Local CI/bootstrap helper |
 | `tests/` | Regression and unit tests |
+
+## 4b. Phase 2A design documents (submitted for review)
+
+- `docs/research/PHASE2A_AUTONOMOUS_LEARNING_LITERATURE.md`
+- `docs/03_design/PHASE2A_AUTONOMOUS_LEARNING_DESIGN.md`
+- `docs/04_experiments/EXP-0002-autonomous-visual-learning-preregistration-draft.md`
+- `docs/02_audit/PHASE2A_MODEL_LICENSE_MATRIX.md`
+- `docs/05_reports/PHASE2A_OWNER_DECISION_SUMMARY.md`
 
 ## 5. Key accepted design records
 

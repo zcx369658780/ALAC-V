@@ -20,7 +20,7 @@ owner: Owner
 
 ## Current phase and authorization
 
-**Phase 0: complete. Phase 1: complete and independently accepted (PASS). Phase 2A: research design and experiment pre-registration authorized. Model training is NOT yet authorized. Phase 2B and Phase 2C are BLOCKED. Phase 3 (video/real-time streams) is BLOCKED.**
+**Phase 0: complete. Phase 1: complete and independently accepted (PASS). Phase 2A: research design and pre-registration submitted for review (not yet accepted). Model training is NOT authorized. Phase 2B and Phase 2C are BLOCKED. Phase 3 (video/real-time streams) is BLOCKED.**
 
 The Owner approved PR #2 merge and Issue #1 closure on 2026-11-15. Phase 2 is now entered only through the separately authorized Phase 2A design task. No model training, backbone fine-tuning, natural-image dataset download, long-term memory implementation, dynamic compute controller, video, Event Camera or SNN work is authorized by the current task.
 
@@ -28,8 +28,36 @@ The Owner approved PR #2 merge and Issue #1 closure on 2026-11-15. Phase 2 is no
 
 - [ALAC-0002 — Phase 2A autonomous visual learning research design](https://github.com/zcx369658780/ALAC-V/issues/3)
 - Task snapshot: `docs/01_tasks/TASK-0003-phase2a-autonomous-visual-learning-design.md`
-- State: Owner-authorized for literature review, architecture comparison, unlabeled-data design, experiment pre-registration and resource estimation only.
-- Stop condition: submit a PR and wait for independent review. Do not train models or download new weights/datasets.
+- State: deliverables submitted on branch `task/3-phase2a-autonomous-learning-design` (PR pending review); acceptance reserved to the Owner.
+- Stop condition: do not train models, download new weights/datasets, generate DS-0002, or enter Phase 2B/2C.
+
+## Phase 2A design artifacts (submitted 2026-11-15)
+
+- Literature review: `docs/research/PHASE2A_AUTONOMOUS_LEARNING_LITERATURE.md`
+- Architecture design: `docs/03_design/PHASE2A_AUTONOMOUS_LEARNING_DESIGN.md`
+- EXP-0002 pre-registration draft: `docs/04_experiments/EXP-0002-autonomous-visual-learning-preregistration-draft.md`
+- License matrix: `docs/02_audit/PHASE2A_MODEL_LICENSE_MATRIX.md`
+- Owner decision summary: `docs/05_reports/PHASE2A_OWNER_DECISION_SUMMARY.md`
+
+Revised 2026-11-15 after the first independent review of PR #5 (P1-1..P1-5, plus the cached-feature
+leakage finding): unified 384-d CLS readout, mask-before-encode student path, 768-d B2 target,
+A2 as sole primary with Holm-controlled secondary comparisons, validation-only arm selection for the
+data-efficiency study, and corrected V-JEPA/V-JEPA 2 and BYOL license entries.
+
+Revised again 2026-11-15 after the third review: mask count fixed at 821 patches (59.97%) with a
+reproducible block-sampling rule; primary checkpoint fixed to best validation Recall@1 with a
+deterministic tie-break; data-efficiency protocol completed (validation-only selection, frozen seed
+set, single test pass, descriptive-only status); cluster-level power analysis added, which showed that
+300 test scenes give only ~50% power at 3 pp, so DS-0002 test is raised to 900 scenes (~0.92 power for the **directional** test H1-D; the joint H1-D+H1-P criterion stays ~0.50 at a true 3 pp effect).
+Revised again 2026-11-15 after the fourth review: the power analysis now separates directional,
+practical-threshold and joint H1 events (at a true 3 pp effect the joint criterion is ~0.50 regardless
+of sample size), H1 is split into H1-D/H1-P/H1-S, bootstrap uses n=900, checkpoint selection and early
+stopping are separated, and mask blocks are strictly non-overlapping.
+Re-review pending.
+
+Key design constraints recorded: frozen DINOv2 teacher (Apache-2.0), ≤10M trainable parameters,
+synthetic-only data (DS-0002 design, not generated), group split by base scene, training never uses
+labels, Phase 2A.1 requires a separate task order.
 
 ## Completed Phase 0/1 milestone
 
