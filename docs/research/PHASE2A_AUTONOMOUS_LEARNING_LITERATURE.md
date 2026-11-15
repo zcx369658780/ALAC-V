@@ -179,13 +179,14 @@ JEPA 作为世界模型的核心：在**表征空间**预测缺失/未来的表�
 
 | 方法 | 年份/arXiv | 核心目标 | Teacher | Decoder | 负样本 | 典型规模 | 代表训练资源† | 官方代码许可 | 权重许可 |
 |---|---|---|---|---|---|---|---|---|---|
-| DINO | 2021 / 2104.14294 | 跨视图自蒸馏（centering+sharpening） | EMA | 否 | 否 | ViT-S/B | 8×V100 级，ImageNet 数天 | Apache-2.0 | Apache-2.0 |
+| DINO | 2021 / 2104.14294 | 跨视图自蒸馏（centering+sharpening） | EMA | 否 | 否 | ViT-S/B | 8×V100 级，ImageNet 数天 | Apache-2.0 | 未逐 checkpoint 核验 |
 | DINOv2 | 2023 / 2304.07193 | 自蒸馏 + 掩码 token + 大规模数据管线 | EMA | 否 | 否 | ViT-S/B/L/g | 多卡 A100，数十万步 | Apache-2.0 | Apache-2.0 |
-| iBOT | 2021 / 2111.07832 | DINO + 掩码 token 预测（在线 tokenizer） | EMA | 否 | 否 | ViT-S/B | ImageNet 多卡 | Apache-2.0 | Apache-2.0 |
-| BYOL | 2020 / 2006.07733 | 在线网络预测 EMA 目标 | EMA | 否 | 否（BN 不对称） | ResNet-50 | 8–64 卡级 | 未核验 | 未核验 |
+| iBOT | 2021 / 2111.07832 | DINO + 掩码 token 预测（在线 tokenizer） | EMA | 否 | 否 | ViT-S/B | ImageNet 多卡 | Apache-2.0 | 未逐 checkpoint 核验 |
+| BYOL | 2020 / 2006.07733 | 在线网络预测 EMA 目标 | EMA | 否 | 否（BN 不对称） | ResNet-50 | 8–64 卡级 | Apache-2.0（`deepmind-research/byol/`） | 未核验 |
 | SimSiam | 2020 / 2011.10566 | 孪生 + stop-grad + predictor | 无（共享权重） | 否 | 否 | ResNet-50 | 8 卡级 | CC-BY-NC-4.0 | 未提供 |
 | I-JEPA | 2023 / 2301.08243 | 潜空间块预测 | EMA | 否 | 否 | ViT-B/H | 16–32×A100 级 | CC-BY-NC-4.0 | CC-BY-NC-4.0 |
-| V-JEPA | 2024 / 2404.08471 | 时空管潜空间预测 | EMA | 否 | 否 | ViT-L/H | 多卡 A100 级 | CC-BY-NC-4.0 | 见 HF（V-JEPA 2 为 MIT） |
+| V-JEPA（原始） | 2024 / 2404.08471 | 时空管潜空间预测 | EMA | 否 | 否 | ViT-L/H | 多卡 A100 级 | CC-BY-NC-4.0（`facebookresearch/jepa`） | 未核验 |
+| V-JEPA 2 | 2025 / 2506.09985 | 视频预训练 + 规划 | EMA | 否 | 否 | ViT-L/g | 十亿级参数、百万小时级 | **MIT + 少数文件 Apache-2.0**（`facebookresearch/vjepa2`） | MIT（`facebook/vjepa2-vitl-fpc64-256`） |
 | MAE | 2021 / 2111.06377 | 像素重建（75% 掩码） | 无 | 是 | 否 | ViT-B/L/H | 32×A100 级 | CC-BY-NC-4.0 | Apache-2.0（vit-mae-base） |
 | data2vec | 2022 / 2202.03555 | 掩码位置预测教师潜表征 | EMA | 否 | 否 | ViT-B/L | 多卡级 | 未核验（fairseq） | 未核验 |
 | VICReg | 2021 / 2105.04906 | 不变性 + 方差/协方差正则 | 无 | 否 | 否 | ResNet-50 | 8 卡级 | MIT | — |
