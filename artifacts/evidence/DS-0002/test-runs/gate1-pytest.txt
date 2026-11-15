@@ -1,7 +1,7 @@
 command: .venv\Scripts\python.exe -m pytest -v
-executed_at_utc: 2026-11-15T11:12:09.8180080Z
+executed_at_utc: 2026-11-15T13:03:54.3337628Z
 cwd: <REPO>
-git_head: 429a2109ee7c62eaa32721422c4cc1b56b8efc10
+git_head: b5c292c3f7f8e2ede296561a06d2db2ec43db163
 git_branch: task/6-phase2a1-ds0002-generation
 git_dirty: false
 environment: python=3.11.9 2.14.1+cu130 2.4.6 13.0.0
@@ -27,5 +27,5 @@ tests\test_retrieval.py ....                                             [ 87%]
 tests\test_store.py .......                                              [ 94%]
 tests\test_teacher_cache.py .....                                        [100%]
 
-============================= 97 passed in 8.57s ==============================
+============================= 97 passed in 9.24s ==============================
 
