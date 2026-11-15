@@ -37,7 +37,7 @@ Owner decisions on 2026-11-15:
 - Deterministic regeneration spot-check: 9/9 byte-identical.
 - Evaluation labels isolated in `data/ds0002/eval/`; DataLoader allowlist = `{view_id, image, augment}`.
 - Labels reflect real drawing parameters (texture, palette, shape); occlusion is measured on the true target mask with opaque occluders (later targets and distractors); three target shapes.
-- Training loader reads only the projected index (`view_id/path/augment/pair_key`), holds no label manifest, and views use opaque IDs/paths with no scene digits; the eval-side salt is not exposed.
+- Training loader reads only the projected index (`view_id/path/augment/pair_key`), holds no label manifest, and views use opaque IDs/paths with no scene digits; the eval-side salt and mapping live only under eval/ (never read by training) and are not claimed to be cryptographic anonymity.
 - All 22,000 image SHA-256 recomputed from disk: 0 mismatches, 0 byte mismatches, 0 duplicates; filesystem/manifest/index counts all 22,000.
 - Frozen DINOv2 teacher cache: 23 shards, 23.15 GB, FP16; full view-set equality, all shard tensors and counts verified,
   33/33 sampled views bit-identical to recomputation; sanitized cache index published.

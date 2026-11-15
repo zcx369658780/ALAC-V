@@ -57,11 +57,11 @@ O = 1 - \frac{\text{可见目标 mask 像素数}}{\text{目标原始 mask 像素
 
 - **opaque view_id**：`v<sha256(salt|split|index|view)[:16]>`，不含任何场景编号。
 - **opaque path**：`images/<view_id[:2]>/<view_id>.jpg`，路径同样不含编号。
-- **salt**：随机 16 hex，仅保存在 `data/ds0002/eval/identity_salt.json`（eval-only），
+- **salt**：随机 16 hex，保存在 `data/ds0002/eval/identity_salt.json`（eval-only 目录），
   **不写入训练索引**；审计验证 `salt_in_index = False`。
 - **pair_key**：`g<sha256(salt|pair|scene_id)[:16]>`，仅供采样器分组；训练索引与模型输入均不含 scene_id。
-- 诚实说明：该映射对"不持有 salt 的读者"是 opaque，但**不是密码学不可逆**——持有 salt 与生成器即可枚举；
-  文档与索引注释不再声称"不可逆匿名化"。
+- 诚实说明：对**只读取训练索引**的代码，view 身份是 opaque；但 eval 侧的 salt 与 labels 一起公开在仓库中，
+  任何读者都能据此重放映射。因此这不是密码学匿名化，也不被这样描述。
 - 审计逐条检查：索引中 view_id/path 不匹配 `(train|validation|test)_\d{5}`，`identity.issue_count = 0`。
 
 ## 3. P1-3：22,000 张图像全量重算（并补齐文件系统闭环）
@@ -121,7 +121,8 @@ O = 1 - \frac{\text{可见目标 mask 像素数}}{\text{目标原始 mask 像素
 ## 9. 已知限制
 
 1. 合成域结论不可外推自然图像（D-2A-3 已接受）。
-2. opaque ID 由 eval 侧 salt 派生：对训练索引是 opaque；持有 salt 者可重建映射（已如实说明，不称加密）。
+2. opaque ID 由 eval 侧 salt 派生：训练索引本身不含 scene 编号，但 eval 侧 salt/labels 公开，
+   读者可据此重放映射；这是"训练侧隔离"而非密码学匿名。
 3. 遮挡只建模"不透明遮挡物"；半透明覆盖不作为物理遮挡，若未来需要应另立标签。
 4. 生成单进程约 25 分钟（沙箱禁止 multiprocessing 管道），不影响确定性。
 
