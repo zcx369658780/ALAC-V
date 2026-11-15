@@ -53,7 +53,7 @@ issue: https://github.com/zcx369658780/ALAC-V/issues/3
 
 1. **教师冻结**：唯一权重 `facebook/dinov2-small`（Apache-2.0）。所有目标由教师特征产生，
    学生只学"如何组织这些特征"，避免 12GB 上的联合训练与坍塌风险。
-2. **参数预算封顶**：可训练参数 ≤ 10M（≈ 主干的 45%），且**三条臂参数预算相同**。
+2. **参数预算封顶**：可训练参数 ≤ 10M（≈ 主干的 45%）。三臂实际为 7.0M / 4.7M / 7.0M，**不声称同预算**；方法比较必须同时报告参数量与单位参数收益。
 3. **公平臂**：同一数据、同一增强、同一 mask 预算、同一训练步数、同一评估集。
 4. **无标签训练**：训练期只读图像与增强参数；合成器的 scene id / bbox / 因子标签**仅在评估**使用。
 5. **fail-closed**：缺教师特征、缺 mask 元数据、缺 checkpoint 时直接报错，不静默降级。
@@ -61,74 +61,111 @@ issue: https://github.com/zcx369658780/ALAC-V/issues/3
 
 ## 4. 三种候选机制
 
-记教师为 \(f_\theta\)（冻结），adapter 为 \(g_\phi\)，predictor 为 \(h_\psi\)。
-对图像 \(x\)，取 patch 特征 \(Z=f_\theta(x)\in\mathbb{R}^{1369\times384}\)，CLS 为 \(c\in\mathbb{R}^{384}\)。
-所有目标在 **L2 归一化后的潜空间**计算（与 I-JEPA/data2vec 的实践一致 [PAPER]）。
+记教师为 \(f_\theta\)（冻结，DINOv2 ViT-S/14），adapter 为 \(g_\phi\)，predictor 为 \(h_\psi\)。
+对图像 \(x\)，教师输出 CLS \(c\in\mathbb{R}^{384}\) 与 patch 特征 \(Z\in\mathbb{R}^{1369\times384}\)。
 
-### 4.1 方案 A — JEPA 式潜空间预测
+### 4.0 全臂统一的检索 readout（P1-1）
 
-**目标**：给定一个视图的可见 patch，预测另一个视图（或同图被遮挡块）的教师表征。
+**所有实验臂（F0/A1/A2/B2/C2/R0）的检索特征一律为 384 维 CLS**，L2 归一化后取余弦：
 
 \[
-\mathcal{L}_A=\frac{1}{|M|}\sum_{i\in M}\left\|h_\psi\big(g_\phi(Z^{ctx}),\,p_i\big)-\mathrm{sg}\big(Z'^{tgt}_i\big)\right\|_2^2
+R(x)=\frac{\mathrm{CLS}(x)}{\lVert \mathrm{CLS}(x)\rVert}\in\mathbb{R}^{384}
 \]
 
-- \(Z^{ctx}\)：context 视图的可见 patch 特征；\(p_i\)：目标块的位置嵌入；
-- \(Z'^{tgt}\)：目标视图在同一位置的教师特征（stop-gradient）；
-- \(M\)：目标块集合（block-wise，4 块，每块约 15–20% 面积）。
+- F0 / A1：\(\mathrm{CLS}(x)=c\)（教师 CLS，二者必须逐位相同）；
+- A2 / B2 / C2：\(\mathrm{CLS}(x)=g_\phi(\cdot)\) 输出的 CLS 位置；
+- R0：随机初始化 adapter 的 CLS 位置。
+- 实现约定：adapter 的输入序列为 `[教师 CLS token; patch tokens]`，输出同序，因此第 0 个 token 即检索用 CLS。
+- Patch 特征只用于**训练目标与诊断**，不参与检索，避免不同臂使用不同 readout 造成不可比。
+
+### 4.1 方案 A — JEPA 式块预测（同一图像、同一坐标系）
+
+**主实验采用同一张图像、同一坐标系**：先做图像级增强得到 \(x\)，在 \(x\) 的 37×37 网格上
+采样 4 个连续目标块 \(\{B_k\}\)（每块约 15–20% 面积），其余 patch 为 context。
+**不跨视图**，因此不存在"不同 crop 后 patch 索引不对应"的问题（P1-2）。
+
+**关键实现约束（防止目标泄漏）**：掩码必须施加在**像素/输入层**，先于 DINOv2 的上下文编码。
+教师目标来自**未掩码**图像的缓存特征；学生输入是**掩码后的图像**，重新做一次冻结前向。
+
+\[
+\mathcal{L}_A=\frac{1}{|M|}\sum_{i\in M}\left\|h_\psi\big(g_\phi(f_\theta(\tilde{x}))\big)_i-\mathrm{sg}\big(Z_i\big)\right\|_2^2
+\]
+
+- \(\tilde{x}\)：目标块像素被替换为数据集均值（归一化后为 0）的图像；
+- \(M\)：被遮挡的 patch 索引集合；\(Z_i\)：**完整图像**教师特征中对应位置（stop-gradient）；
+- 位置编码：patch 的 2D 位置嵌入在 adapter 与 predictor 中均保留，确保学生知道"预测哪里"。
+- **adapter 输入**：仅可见位置的 patch 特征（+2D 位置编码），**不含目标块**；
+- **predictor 输入/输出**：adapter 输出 + 4 个可学习块查询（每块一个，带块中心位置编码），
+  输出目标块内每个 token 的 384 维预测；损失只在 \(M\) 上计算。
 
 **两种设定（必须分开报告）**：
 
-| 设定 | 冻结 | 可训练 | 表征是否改变 |
+| 设定 | 冻结 | 可训练 | 检索表征 |
 |---|---|---|---|
-| **A1 predictor-only** | \(f_\theta\) 和 \(g_\phi=\mathrm{Id}\) | 仅 \(h_\psi\) | **否**（评估仍用 \(f_\theta\)） |
-| **A2 adapter+predictor** | \(f_\theta\) | \(g_\phi\)（2 个 transformer block）+ \(h_\psi\)（2 个 block） | **是**（评估用 \(g_\phi(f_\theta(x))\)） |
+| **A1 predictor-only** | \(f_\theta\) 且 adapter=\(\mathrm{Id}\) | 仅 \(h_\psi\) | \(c\)（与 F0 **逐位相同**） |
+| **A2 adapter+predictor** | \(f_\theta\) | \(g_\phi\)（2 block，3.5M）+ \(h_\psi\)（2 block，3.5M） | \(g_\phi\) 的 CLS |
 
-**A1 的意义**：它是"预测器学习 ≠ 表征学习"的对照。若 A1 的检索指标与 F0 完全相同（应当如此），
-而 A2 提升，则提升可归因于 adapter；若 A2 与 A1 都无提升，则说明在冻结特征上做预测目标
-不改变可用表示——这两种结果都必须如实报告。
+**A1 的意义**：预测器学习 ≠ 表征学习。A1 的检索特征按定义与 F0 相同，因此 Recall/排序必须
+完全一致；这是实现不变量（见 §5），不是"预期结果"。
 
-**坍塌控制**：教师冻结（目标不退化）+ stop-gradient + 归一化潜空间；监控有效秩。
+### 4.2 方案 B — 跨视图自蒸馏（仅全局目标，不涉及 patch 对齐）
 
-### 4.2 方案 B — 跨视图自蒸馏
-
-**目标**：同一场景两个增强视图，学生从视图 1 预测教师对视图 2 的表征。
+**目标**：同一场景两个增强视图 \(x_1,x_2\)；学生从 \(x_1\) 的 CLS 预测教师对 \(x_2\) 的全局表征。
 
 \[
-\mathcal{L}_B=-\frac{1}{N}\sum_{j=1}^{N}\frac{\big\langle q_j,\ \mathrm{sg}(t_j)\big\rangle}{\|q_j\|\,\|t_j\|},\qquad
-q=h_\psi\big(g_\phi(Z_1)\big),\ t=f_\theta(x_2)
+\mathcal{L}_B=-\frac{\big\langle q,\ \mathrm{sg}(t)\big\rangle}{\lVert q\rVert\,\lVert t\rVert},
+\qquad
+q=h_\psi\big(\mathrm{CLS}[g_\phi(Z_1)]\big)\in\mathbb{R}^{768},
+\qquad
+t=\big[\,c_2\ ;\ \bar{Z}_2\,\big]\in\mathbb{R}^{768}
 \]
 
-- \(t_j\)：教师视图 2 的 CLS + 若干 patch 的池化表征（本设计用 CLS + patch 均值拼接，768 维）；
-- 无负样本、无 EMA（教师本身冻结）；
-- 增强：随机裁剪/缩放、旋转 ±10°、亮度/对比度/饱和度、JPEG 重压缩。
+- \(\mathrm{CLS}[g_\phi(Z_1)]\)：adapter 在视图 1 全部 patch token 上输出后取 CLS 位置（384 维）；
+- \(c_2\)：教师对 \(x_2\) 的 CLS（384 维）；\(\bar{Z}_2\)：教师 patch 特征的均值（384 维）；
+- **target 768 维，predictor 输出必须为 768 维**（P1-1）：MLP `768→768→768`，约 1.18M 参数；
+- 无负样本、无 EMA（教师冻结）；增强：随机裁剪/缩放、旋转 ±10°、亮度/对比度/饱和、JPEG；
+- 检索仍用 adapter 的 **CLS 384 维**（§4.0），与 target 的 768 维解耦。
 
-**坍塌控制**：冻结教师 + predictor 不对称 + 归一化；若监控到有效秩下降 > 30%，启用
-VICReg 式方差项（作为预注册的**条件启用**，不是默认）。
+**坍塌控制（预注册的条件规则）**：若某次评估的有效秩低于 F0 的 60% 并连续 2 个 epoch 成立，
+则在下一 epoch 启用 VICReg 方差项 \(\lambda=25\)（VICReg 原文默认量级 [PAPER]），
+记录启用 epoch，产物单独标记为 **B2+VR**；不得把加了正则的 run 与纯 B2 合并报告。
 
-### 4.3 方案 C — 掩码潜表征预测
+### 4.3 方案 C — 随机掩码潜表征预测（同一图像）
 
-**目标**：遮挡 60% patch，用可见部分预测被遮挡位置的教师表征（data2vec 式 [PAPER]）。
+**目标**：随机遮挡 60% patch，用可见部分预测被遮挡位置的教师表征（data2vec 式 [PAPER]）。
 
 \[
-\mathcal{L}_C=\frac{1}{|M|}\sum_{i\in M}\left\|h_\psi\big(g_\phi(Z^{vis})\big)_i-\mathrm{sg}\big(Z_i\big)\right\|_2^2
+\mathcal{L}_C=\frac{1}{|M|}\sum_{i\in M}\left\|h_\psi\big(g_\phi(f_\theta(\tilde{x}))\big)_i-\mathrm{sg}\big(Z_i\big)\right\|_2^2
 \]
 
-- 与 A 的区别：**同一视图**内做掩码，目标来自同一图像的教师特征，不依赖跨视图增强；
-- 与 MAE 的区别：**预测潜表征而不是像素**，不需要 decoder [PAPER]；
-- 掩码：随机 patch 掩码 60%，另设 30% / 75% 两个敏感性档（仅消融，不进入主臂）。
+**与 MAE 的区别**：预测潜表征，不需要 decoder [PAPER]。**与 A2 的区别**：掩码是随机散点
+（60%），不是连续块；其余管线相同。
+
+**实现细节（P1-2 / Codex P1）**：
+
+| 组件 | 定义 |
+|---|---|
+| 掩码位置 | 像素层：被选中 patch 的像素替换为数据集均值；**先掩码、后编码**，杜绝上下文泄漏 |
+| 学生输入 | \(f_\theta(\tilde{x})\) 中**可见位置**的 patch 特征（不含掩码位置特征）；与共享 mask token 拼接后送入 adapter |
+| mask token | 每个被遮挡位置一个**共享的可学习向量** \(m\in\mathbb{R}^{384}\) |
+| 位置编码 | 可见 token 与 mask token 都加 2D 位置嵌入，学生知道绝对位置 |
+| predictor | 对 adapter 输出 `[可见 token; mask token]` 做 2 层 self-attention，取 mask token 位置输出（384 维） |
+| 教师 | **完整图像** \(x\) 的缓存 patch 特征；只取 \(M\) 位置做目标 |
+| 损失位置 | 仅 \(M\) 上计算，\(|M|=0.6\times1369\approx821\) |
 
 ### 4.4 三条臂的对齐
 
-| 项 | A2 | B | C |
+| 项 | A2 | B2 | C2 |
 |---|---|---|---|
-| 可训练参数 | adapter 3.5M + predictor 3.5M | adapter 3.5M + predictor 0.45M（MLP） | adapter 3.5M + predictor 3.5M |
-| 目标数量/步 | 4 个目标块 × 64 token | 768 维向量 | 60% × 1369 ≈ 821 token |
-| 教师前向 | 训练前预计算并缓存 | 同 | 同（同图一次） |
-| 增强依赖 | 中（跨视图可选） | 强 | 弱（只需 mask） |
+| 可训练参数 | adapter 3.5M + predictor 3.5M = **7.0M** | adapter 3.5M + predictor 1.18M = **4.7M** | adapter 3.5M + predictor 3.5M = **7.0M** |
+| 检索 readout | CLS 384 | CLS 384 | CLS 384 |
+| 掩码 | 4 个连续块 | 无 | 随机 60% |
+| 学生前向 | 掩码图像（在线） | 完整视图 1（在线） | 掩码图像（在线） |
+| 教师目标 | 完整图块的缓存 patch | 完整视图 2 的缓存 CLS⊕mean | 完整图的缓存 patch（仅 M） |
+| 增强依赖 | 弱（图像级增强后同图） | 强（跨视图） | 弱 |
 
-**[INFER]** 为了参数预算公平，B 的 predictor 更小（只处理池化向量）；这本身是 B 的结构优势，
-预注册中允许，但必须报告参数差异。
+**[INFER]** 三臂参数并不相等（7.0M vs 4.7M），只满足"≤10M 上限"。H3 的方法排序必须同时报告
+参数量与**单位参数收益**（ΔRecall@1 per 1M trainable params），不得把差异全部归因于目标函数。
 
 ## 5. Predictor-only 与 Adapter+Predictor 的形式化对比
 
@@ -205,13 +242,14 @@ VICReg 式方差项（作为预注册的**条件启用**，不是默认）。
 
 | 项 | 估算 | 依据 |
 |---|---|---|
-| 教师前向 | 5.2 ms/图；16k 图 ≈ 83 s | Phase 1 实测 [REAL] |
+| 教师前向（缓存，只算一次） | 5.2 ms/图；16k 图 ≈ 83 s | Phase 1 实测 [REAL] |
+| 学生前向（每步在线，掩码图像） | 32 图 × 5.2 ms ≈ 0.17 s/step；10,240 步 ≈ 29 min/run | 实测 + 估算 |
 | 教师特征缓存 | 1.05 MB/视图 → 16.8 GB | 计算 |
 | Adapter+predictor 参数 | 3.5M + 3.5M ≈ 7M | 12d² × blocks |
 | 训练显存（batch 32，缓存特征） | 约 2–4 GB | 激活 32×1369×384×4B ≈ 67 MB/张量 × 层数 |
 | 单步时间（估） | 30–60 ms | 7M 参数 × 1369 token × batch 32 |
-| 每 epoch（16k 视图，512 步） | 约 0.3–0.5 min（纯训练） | 估算 |
-| 20 epoch × 12 runs（4 训练臂 × 3 seed） | 约 2–3 h GPU | 估算 |
+| 每 epoch（16k 视图 / batch 32 = 500 步） | 约 3–5 min（含学生在线前向） | 估算 |
+| 20 epoch × 12 runs（4 训练臂 × 3 seed） | 约 6–10 h GPU（含验证；不含评测与数据生成） | 估算 |
 | 数据生成 | 16k 图，约 10–20 min | 估算 |
 | 推理延迟 | 5.2 ms + adapter（< 1 ms） | 实测 + 估算 |
 
