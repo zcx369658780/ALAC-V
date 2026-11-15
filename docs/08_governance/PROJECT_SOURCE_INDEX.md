@@ -15,6 +15,7 @@ owner: Owner
 - Repository: https://github.com/zcx369658780/ALAC-V
 - Default branch: `main`
 - Current accepted Phase 0/1 merge commit: `367035318172ba1bbc0103b6231847750143d1d7`
+- Current accepted Phase 2A design merge commit: `ef39be01cf7c7bec2650f26af9e2bcefc667c526`
 - Baseline at initial governance bootstrap: `10cb05d379c39043a17dc840643535fd150bce20`
 - Local implementation workspace reported by DSH: `D:\ALAC_V`
 
@@ -30,7 +31,8 @@ owner: Owner
 8. [EXP-0001](../04_experiments/EXP-0001-abc-comparison.md) — preregistration and reported results.
 9. [Phase 1 Report](../05_reports/PHASE1-REPORT.md) and [Submission Record](../submissions/PHASE_0_1_SUBMISSION.md).
 10. [Final Phase 0/1 Acceptance](PHASE0_1_ACCEPTANCE.md) and [Closed remediation Issue](https://github.com/zcx369658780/ALAC-V/issues/1).
-11. [TASK-0003 — Phase 2A autonomous visual learning design](../01_tasks/TASK-0003-phase2a-autonomous-visual-learning-design.md) and [Open Issue #3](https://github.com/zcx369658780/ALAC-V/issues/3).
+11. [TASK-0003 — Phase 2A autonomous visual learning design](../01_tasks/TASK-0003-phase2a-autonomous-visual-learning-design.md) and [Closed Issue #3](https://github.com/zcx369658780/ALAC-V/issues/3).
+12. [TASK-0004 — Phase 2A.1 implementation and DS-0002](../01_tasks/TASK-0004-phase2a1-implementation-and-ds0002.md) and [Open Issue #6](https://github.com/zcx369658780/ALAC-V/issues/6).
 
 ## 3. Repository document map
 
@@ -74,7 +76,7 @@ owner: Owner
 | `scripts/bootstrap_ci.py` | Local CI/bootstrap helper |
 | `tests/` | Regression and unit tests |
 
-## 4b. Phase 2A design documents (submitted for review)
+## 4b. Phase 2A design documents (accepted and merged)
 
 - `docs/research/PHASE2A_AUTONOMOUS_LEARNING_LITERATURE.md`
 - `docs/03_design/PHASE2A_AUTONOMOUS_LEARNING_DESIGN.md`
@@ -100,8 +102,10 @@ The public repository intentionally excludes raw private images/videos, local da
 ## 7. Current project state
 
 - Phase 0/1: independently accepted; PR #2 merged; Issue #1 closed.
-- Phase 2A: research design and experiment pre-registration authorized under Issue #3; no model training or new dataset/weight download authorized.
-- Phase 2B/2C and Phase 3: blocked pending separate gates.
+- Phase 2A design: independently accepted; PR #5 merged at `ef39be0`; Issue #3 closed.
+- Phase 2A.1: Owner-authorized under Issue #6. Gate 1 DS-0002 generation and teacher-cache creation are authorized using existing local pinned DINOv2 weights only.
+- Formal model training is gated on independent DS-0002 acceptance (Gate 2) and implementation review (Gate 3).
+- Phase 2B/2C and Phase 3 remain blocked.
 
 ## 8. Uploaded Project Source pack
 

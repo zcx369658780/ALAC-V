@@ -73,5 +73,6 @@ The executing agent reports exact commands, test output, run IDs, config/data/mo
 
 - Phase 0/1 initial delivery: TASK-0001.
 - Phase 0/1 remediation: TASK-0002; [ALAC-0001 / Issue #1](https://github.com/zcx369658780/ALAC-V/issues/1) is closed as completed after PR #2 merged at `367035318172ba1bbc0103b6231847750143d1d7`.
-- Current task: [ALAC-0002 / Issue #3 — Phase 2A autonomous visual learning design](https://github.com/zcx369658780/ALAC-V/issues/3), snapshot `TASK-0003`.
-- Current authorization is limited to literature review, design comparison, data plan, resource estimation and experiment pre-registration. Model training, weight/data downloads and Phase 2B/2C/3 work are not authorized.
+- Phase 2A design: [ALAC-0002 / Issue #3](https://github.com/zcx369658780/ALAC-V/issues/3), snapshot `TASK-0003`; PR #5 merged at `ef39be0`, Issue #3 closed.
+- Current task: [ALAC-0003 / Issue #6 — Phase 2A.1 DS-0002 generation, model implementation and EXP-0002](https://github.com/zcx369658780/ALAC-V/issues/6), snapshot `TASK-0004`.
+- Owner authorized Gate 0 and Gate 1 now: DS-0002 generation and frozen teacher cache using existing local pinned DINOv2 weights only. Gate 2 data acceptance is mandatory before Gate 3 model implementation advances; Gate 3 review is mandatory before Gate 4 training. No new weight/natural-image downloads; Phase 2B/2C/3 remain blocked.
