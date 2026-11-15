@@ -42,7 +42,14 @@ The Owner approved PR #2 merge and Issue #1 closure on 2026-11-15. Phase 2 is no
 Revised 2026-11-15 after the first independent review of PR #5 (P1-1..P1-5, plus the cached-feature
 leakage finding): unified 384-d CLS readout, mask-before-encode student path, 768-d B2 target,
 A2 as sole primary with Holm-controlled secondary comparisons, validation-only arm selection for the
-data-efficiency study, and corrected V-JEPA/V-JEPA 2 and BYOL license entries. Re-review pending.
+data-efficiency study, and corrected V-JEPA/V-JEPA 2 and BYOL license entries.
+
+Revised again 2026-11-15 after the third review: mask count fixed at 821 patches (59.97%) with a
+reproducible block-sampling rule; primary checkpoint fixed to best validation Recall@1 with a
+deterministic tie-break; data-efficiency protocol completed (validation-only selection, frozen seed
+set, single test pass, descriptive-only status); cluster-level power analysis added, which showed that
+300 test scenes give only ~50% power at 3 pp, so DS-0002 test is raised to 900 scenes (~0.90 power).
+Re-review pending.
 
 Key design constraints recorded: frozen DINOv2 teacher (Apache-2.0), ≤10M trainable parameters,
 synthetic-only data (DS-0002 design, not generated), group split by base scene, training never uses
