@@ -120,7 +120,9 @@ supersedes: null
 | `08_governance/PROJECT_SOURCE_INDEX.md` | 项目源索引 | 当前入口 |
 | `08_governance/PHASE0_1_ACCEPTANCE.md` | Phase 0/1 最终独立验收 | PASS；PR #2 merged；Issue #1 closed |
 | `01_tasks/TASK-0003-phase2a-autonomous-visual-learning-design.md` | Phase 2A 自主视觉学习研究设计任务 | 已完成；PR #5 merged；Issue #3 closed | 
-| `01_tasks/TASK-0004-phase2a1-implementation-and-ds0002.md` | Phase 2A.1 DS-0002、模型实现与 EXP-0002 任务快照 | Owner 已授权；Gate 1 数据生成进行中 |
+| `01_tasks/TASK-0004-phase2a1-implementation-and-ds0002.md` | Phase 2A.1 DS-0002、模型实现与 EXP-0002 任务快照 | Owner 已授权；Gate 1 已完成，待 Gate 2 |
+| `05_reports/TASK-0004-GATE1-REPORT.md` | Gate 0/1：DS-0002 与教师缓存交付报告 | 待 Gate 2 独立验收 |
+| `artifacts/evidence/DS-0002/` | Gate 1 审计、SHA-256 全量清单 | 已生成 |
 | `submissions/PHASE_0_1_SUBMISSION.md` | 首次公开仓库交付记录 | 历史记录 |
 | `research/PHASE2A_AUTONOMOUS_LEARNING_LITERATURE.md` | Phase 2A 文献调研（arXiv/仓库/许可核验） | 已接受；PR #5 merged |
 | `03_design/PHASE2A_AUTONOMOUS_LEARNING_DESIGN.md` | Phase 2A 架构设计与资源方案 | 已接受；PR #5 merged |
