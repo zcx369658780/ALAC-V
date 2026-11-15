@@ -155,12 +155,26 @@ H3 的方法比较必须同时报告参数量与单位参数收益（ΔRecall@1 
 4. 因此预注册把 H1 拆为三个端点（见 §6），**Phase 2A 定性为可行性研究**：
    联合判定通过只说明"观察到 ≥3 pp 且方向为正"，不构成"已证明真实效应 ≥3 pp"。
 
+**Query 层面的配对相关性（敏感性）**：真实实验中同一批 3,600 个 query 同时交给 F0 与 A2，
+两模型的同一 query 结果天然相关，而上面的主表按独立抽样计算（保守）。补充模拟中让一部分
+query 共享同一随机数（配对比例 0–1）：
+
+| 真实效应 | 配对比例 | P(CI>0) | P(联合) | P(CI>3pp) |
+|---|---|---|---|---|
+| 3 pp | 0 / 0.3 / 0.6 / 0.9 / 1.0 | 0.91 / 0.98 / 1.00 / 1.00 / 1.00 | 0.51 / 0.49 / 0.49 / 0.52 / 0.52 | 0.02 |
+| 4 pp | 0 / 0.3 / 0.6 / 0.9 / 1.0 | 0.99 / 1.00 / 1.00 / 1.00 / 1.00 | 0.87 / 0.91 / 0.95 / 0.99 / 1.00 | 0.18–0.88 |
+
+结论：query 配对会提高方向性与强结论的功效，但**不会改变"真值 = 阈值"时联合判定约 0.5** 的事实；
+主表继续采用无配对的保守值，配对版本作为稳健性检查。
+
 ### 8.2 统计方案
 
 - 3 seeds：**逐 seed 报告**全部主指标，并给 mean ± std；3 seeds 是小规模可行性实验，**不声称跨随机初始化的稳健性**；
 - **层级 bootstrap**：先对 3 个 seed 做配对（同一 seed 内 A2 与 F0 共享场景），
   再在 seed 内对 test scene 重采样（n=900），两层各 10,000 次，取 95% 百分位 CI；
-  不把 3×300 当作 900 个独立样本；
+  **不把 3×900 = 2,700 条 seed-scene 记录当成 2,700 个独立场景**；
+- **逐 seed 报告**每个主指标的效应与 CI，另给 mean ± SD；3 个 seed 是可行性规模，
+  不据此声称跨随机初始化的稳健性；
 - 次要比较用 Holm 校正后的 CI；
 - 效应量：ΔRecall@1（pp）、ΔAUC、Δ余弦；
 - 不做事后分层挑选；预注册的子组只有"未见 seed"。
@@ -226,7 +240,7 @@ import numpy as np
 def logit(p): return np.log(p / (1 - p))
 
 def calibrate_delta(target_pp, sigma, base=0.80, n=400_000, seed=7):
-    """让混合后的平均提升恰好等于 target_pp（不是只在 d=0 校准）。"""
+    """让混合后的平均提升恰好等于 target_pp。"""
     rng = np.random.default_rng(seed); d = rng.normal(0, sigma, n)
     p0 = 1 / (1 + np.exp(-(logit(base) + d))); lo, hi = 0.0, 4.0
     for _ in range(60):
@@ -236,20 +250,34 @@ def calibrate_delta(target_pp, sigma, base=0.80, n=400_000, seed=7):
         else: hi = mid
     return (lo + hi) / 2
 
-def joint_power(n, true_pp, sigma, thr_pp=0.03, reps=4000, base=0.80, q=4, seed=11):
-    """返回 P(CI 下界>0), P(点估计>=thr), P(两者同时)。"""
+def power(n, true_pp, sigma=1.0, pair=0.0, reps=4000, base=0.80, q=4, seed=11):
+    """返回 (P(CI>0), P(point>=3pp), P(CI>0 且 point>=3pp), P(CI>3pp))。
+
+    pair = query 级配对比例：0 = 两模型独立抽样（保守）；1 = 完全共享随机数。
+    """
     delta = calibrate_delta(true_pp, sigma); rng = np.random.default_rng(seed)
-    pos = thr = both = 0
+    pos = thr = both = strong = 0
     for _ in range(reps):
         d = rng.normal(0, sigma, n)
-        p0 = 1 / (1 + np.exp(-(logit(base) + d)))
-        p1 = 1 / (1 + np.exp(-(logit(base) + d + delta)))
-        h0 = (rng.random((n, q)) < p0[:, None]).mean(1)
-        h1 = (rng.random((n, q)) < p1[:, None]).mean(1)
-        diff = h1 - h0; m = diff.mean(); se = diff.std(ddof=1) / np.sqrt(n)
-        a = (m - 1.96 * se) > 0; b = m >= thr_pp
-        pos += a; thr += b; both += (a and b)
-    return pos / reps, thr / reps, both / reps
+        p0 = (1 / (1 + np.exp(-(logit(base) + d))))[:, None]
+        p1 = (1 / (1 + np.exp(-(logit(base) + d + delta))))[:, None]
+        u = rng.random((n, q)); w0 = rng.random((n, q)); w1 = rng.random((n, q))
+        coupled = rng.random((n, q)) < pair
+        h0 = np.where(coupled, u < p0, w0 < p0)
+        h1 = np.where(coupled, u < p1, w1 < p1)
+        diff = h1.mean(1) - h0.mean(1); m = diff.mean(); se = diff.std(ddof=1) / np.sqrt(n)
+        a = (m - 1.96 * se) > 0; b = m >= 0.03; c = (m - 1.96 * se) > 0.03
+        pos += a; thr += b; both += (a and b); strong += c
+    return pos / reps, thr / reps, both / reps, strong / reps
 ```
 
-复现示例：`joint_power(900, 0.03, 1.0)` 应给出约 `(0.92, 0.50, 0.50)`。
+复现示例：
+
+| 调用 | 期望（约） |
+|---|---|
+| `power(900, 0.03, 1.0, 0.0)` | `(0.91, 0.51, 0.51, 0.02)` |
+| `power(900, 0.04, 1.0, 0.0)` | `(0.99, 0.87, 0.87, 0.18)` |
+| `power(900, 0.06, 1.0, 0.0)` | `(1.00, 1.00, 1.00, 0.92)` |
+| `power(900, 0.03, 1.0, 1.0)` | `(1.00, 0.52, 0.52, 0.02)` |
+
+最后一行即 query 完全配对的情形：方向性功效升到 1.00，但"真值 = 阈值"的联合判定仍在 0.5 附近。
