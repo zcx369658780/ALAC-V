@@ -1,0 +1,55 @@
+{
+  "task": "TASK-0004",
+  "issue": 6,
+  "gate": 0,
+  "frozen_at_utc": "2026-11-15T08:58:19.345576+00:00",
+  "base_commit": "aaa5a75e3ffb44096c22fcf81b21413d2828ef17",
+  "design": {
+    "path": "docs/03_design/PHASE2A_AUTONOMOUS_LEARNING_DESIGN.md",
+    "sha256": "e88abadab34670209747832904cca8ae57ff2e626ac401c4f6dcdde12c2980de"
+  },
+  "preregistration": {
+    "path": "docs/04_experiments/EXP-0002-autonomous-visual-learning-preregistration-draft.md",
+    "sha256": "76b20389f25c768c4d22931004f10e695d08946baa397aa26ff73dddacfa8cd2"
+  },
+  "frozen_defaults": {
+    "seeds": [
+      2026,
+      2027,
+      2028
+    ],
+    "trainable_param_cap": 10000000,
+    "mask_patches": 821,
+    "input_size": 518,
+    "patch_grid": 37,
+    "max_training_runs": 21,
+    "primary_arm": "A2",
+    "h1_practical_threshold_pp": 3.0,
+    "checkpoint_rule": "best validation Recall@1; tie: val prediction loss; then earlier epoch",
+    "early_stopping": "validation prediction loss, patience 3"
+  },
+  "splits": {
+    "train": [
+      2000,
+      8
+    ],
+    "validation": [
+      300,
+      5
+    ],
+    "test": [
+      900,
+      5
+    ]
+  },
+  "model": {
+    "model_id": "facebook/dinov2-small",
+    "revision": "ed25f3a31f01632728cabb09d1542f84ab7b0056",
+    "weights_sha256": "ae1e99fcefd534ed978cdeb8326f08030c96e28b7a81ffcbc98a857c84d14be1",
+    "license": "Apache-2.0"
+  },
+  "environment": {
+    "python": "3.11.9",
+    "platform": "Windows-10-10.0.26300-SP0"
+  }
+}

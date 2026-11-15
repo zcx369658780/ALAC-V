@@ -1,0 +1,301 @@
+{
+  "generated_at_utc": "2026-11-15T12:56:39.640496+00:00",
+  "dataset_id": "ds-0002-synthetic-v3",
+  "checks": {
+    "counts": {
+      "train": {
+        "scenes": 2000,
+        "views": 16000,
+        "roles": {
+          "train": 16000
+        },
+        "manifest_sha256": "6083576f23c439b85ad2bc8a519df06951bb648da104bef709f51033c5528df2",
+        "index_sha256": "c94c87170d9ed555a572b9da9c299f1de3f9503d0ffc3943624a397189e40403"
+      },
+      "validation": {
+        "scenes": 300,
+        "views": 1500,
+        "roles": {
+          "gallery": 300,
+          "query": 1200
+        },
+        "manifest_sha256": "9a266fc8387a7670a403b701766c02968123fb15ed7694a9e4ecd4055d98d44a",
+        "index_sha256": "bc73968e6c81b1e6ced7d41010c20eafad47785821e06389b8a04ab57ffd3ae2"
+      },
+      "test": {
+        "scenes": 900,
+        "views": 4500,
+        "roles": {
+          "gallery": 900,
+          "query": 3600
+        },
+        "manifest_sha256": "5f640ce70c24e4e3b0960bcf78eb573936e8f165d5b4cba0fc40debe4d9b3d2e",
+        "index_sha256": "e7181f83e676f34f716d99c2e3e90a5e110a67be3551757decb8655cb9bcab28"
+      }
+    },
+    "counts_ok": true,
+    "split_isolation": {
+      "seeds": {
+        "train|validation": 0,
+        "test|train": 0,
+        "test|validation": 0
+      },
+      "view_ids": {
+        "train|validation": 0,
+        "test|train": 0,
+        "test|validation": 0
+      },
+      "seed_ranges": {
+        "train": [
+          0,
+          1999
+        ],
+        "validation": [
+          100000,
+          100299
+        ],
+        "test": [
+          200000,
+          200899
+        ]
+      }
+    },
+    "split_isolation_ok": true,
+    "images": {
+      "files": 22000,
+      "filesystem_count": 22000,
+      "manifest_views": 22000,
+      "index_views": 22000,
+      "total_bytes": 938689519,
+      "dimensions": [
+        [
+          1024,
+          768
+        ]
+      ],
+      "sha_mismatch": 0,
+      "bad_examples": [],
+      "bytes_mismatch": 0,
+      "duplicate_sha256": 0,
+      "duplicate_examples": []
+    },
+    "images_ok": true,
+    "eval_labels": {
+      "issues": [],
+      "issue_count": 0
+    },
+    "eval_labels_ok": true,
+    "identity": {
+      "issues": [],
+      "issue_count": 0,
+      "salt_in_index": false
+    },
+    "identity_ok": true,
+    "jpeg_quality": {
+      "bad": [],
+      "bad_count": 0
+    },
+    "jpeg_ok": true,
+    "occlusion": {
+      "bad": [],
+      "bad_count": 0
+    },
+    "occlusion_ok": true,
+    "regeneration": {
+      "samples": [
+        {
+          "split": "train",
+          "scene": 0,
+          "view": 0,
+          "strong": false,
+          "sha_match": true,
+          "actual_sha": "71e2c5f5af8e37ba8f4d44c2051fdc24a84e4b452fb536b5834524c9ab19b4a4",
+          "manifest_sha": "71e2c5f5af8e37ba8f4d44c2051fdc24a84e4b452fb536b5834524c9ab19b4a4",
+          "size_match": true
+        },
+        {
+          "split": "train",
+          "scene": 0,
+          "view": 1,
+          "strong": true,
+          "sha_match": true,
+          "actual_sha": "64e40a5b11bcbe8739ace7d82dc321bb143741b898608516ff9b0cae2f4a5cd7",
+          "manifest_sha": "64e40a5b11bcbe8739ace7d82dc321bb143741b898608516ff9b0cae2f4a5cd7",
+          "size_match": true
+        },
+        {
+          "split": "train",
+          "scene": 1000,
+          "view": 0,
+          "strong": false,
+          "sha_match": true,
+          "actual_sha": "1d4bc8daf6f380a9e6a4ed6a62852c2a7a9840e30b53729f8fd614459fc885cd",
+          "manifest_sha": "1d4bc8daf6f380a9e6a4ed6a62852c2a7a9840e30b53729f8fd614459fc885cd",
+          "size_match": true
+        },
+        {
+          "split": "train",
+          "scene": 1000,
+          "view": 1,
+          "strong": true,
+          "sha_match": true,
+          "actual_sha": "47932c97e83d2642f1635a4d084e6bf6b8cbbeccebd577f2f9c201c185d224b8",
+          "manifest_sha": "47932c97e83d2642f1635a4d084e6bf6b8cbbeccebd577f2f9c201c185d224b8",
+          "size_match": true
+        },
+        {
+          "split": "validation",
+          "scene": 0,
+          "view": 0,
+          "strong": false,
+          "sha_match": true,
+          "actual_sha": "db38a306d01ca10f847867b79ae5ffbe3060746d09fb0d2b096d3274acc67438",
+          "manifest_sha": "db38a306d01ca10f847867b79ae5ffbe3060746d09fb0d2b096d3274acc67438",
+          "size_match": true
+        },
+        {
+          "split": "validation",
+          "scene": 0,
+          "view": 1,
+          "strong": true,
+          "sha_match": true,
+          "actual_sha": "b2980af60edfc026a466c5a2aec8f59ceedb7289ce966e32774713a34d013cc5",
+          "manifest_sha": "b2980af60edfc026a466c5a2aec8f59ceedb7289ce966e32774713a34d013cc5",
+          "size_match": true
+        },
+        {
+          "split": "validation",
+          "scene": 150,
+          "view": 0,
+          "strong": false,
+          "sha_match": true,
+          "actual_sha": "cbafc70c2878bd68e6de86f6e8ca0b0e0f3e15d6e08197a506f13ddef8d1d883",
+          "manifest_sha": "cbafc70c2878bd68e6de86f6e8ca0b0e0f3e15d6e08197a506f13ddef8d1d883",
+          "size_match": true
+        },
+        {
+          "split": "validation",
+          "scene": 150,
+          "view": 1,
+          "strong": true,
+          "sha_match": true,
+          "actual_sha": "d025c607392b3e87b1cf12f8fc221278ca4311a960d043f8339fe90e9f4df338",
+          "manifest_sha": "d025c607392b3e87b1cf12f8fc221278ca4311a960d043f8339fe90e9f4df338",
+          "size_match": true
+        },
+        {
+          "split": "test",
+          "scene": 0,
+          "view": 0,
+          "strong": false,
+          "sha_match": true,
+          "actual_sha": "cba751c3f50b073bc549c3d7347f3ba0232067d3532098b90b9d3a1674c52223",
+          "manifest_sha": "cba751c3f50b073bc549c3d7347f3ba0232067d3532098b90b9d3a1674c52223",
+          "size_match": true
+        },
+        {
+          "split": "test",
+          "scene": 0,
+          "view": 1,
+          "strong": true,
+          "sha_match": true,
+          "actual_sha": "8c918dca041e31512d90a5adca4fce0f6e623563f7bb009d69df45b20c0dbfc2",
+          "manifest_sha": "8c918dca041e31512d90a5adca4fce0f6e623563f7bb009d69df45b20c0dbfc2",
+          "size_match": true
+        },
+        {
+          "split": "test",
+          "scene": 450,
+          "view": 0,
+          "strong": false,
+          "sha_match": true,
+          "actual_sha": "db72b41054599d7345b0d8d18223378e45a5d30f39ad601a3f1f5b4942ee2863",
+          "manifest_sha": "db72b41054599d7345b0d8d18223378e45a5d30f39ad601a3f1f5b4942ee2863",
+          "size_match": true
+        },
+        {
+          "split": "test",
+          "scene": 450,
+          "view": 1,
+          "strong": true,
+          "sha_match": true,
+          "actual_sha": "af9f0990b23c02119a3e0139797e5d643058c8adbe6f6c5d13cb39df88eb9b01",
+          "manifest_sha": "af9f0990b23c02119a3e0139797e5d643058c8adbe6f6c5d13cb39df88eb9b01",
+          "size_match": true
+        }
+      ],
+      "ok": true
+    },
+    "loader_allowlist": {
+      "index_violations": [],
+      "item_keys": [
+        "augment",
+        "image",
+        "view_id"
+      ],
+      "item_ok": true,
+      "has_manifest_attr": false,
+      "ok": true
+    },
+    "teacher_cache": {
+      "model_matches": true,
+      "revision_matches": true,
+      "splits": {
+        "train": {
+          "n_views": 16000,
+          "n_shards": 16,
+          "n_shards_equal": true,
+          "rows_equal": true,
+          "view_set_equal": true,
+          "n_views_equal": true,
+          "manifest_sha256_match": true,
+          "bad_shards": [],
+          "tensor_issues": []
+        },
+        "validation": {
+          "n_views": 1500,
+          "n_shards": 2,
+          "n_shards_equal": true,
+          "rows_equal": true,
+          "view_set_equal": true,
+          "n_views_equal": true,
+          "manifest_sha256_match": true,
+          "bad_shards": [],
+          "tensor_issues": []
+        },
+        "test": {
+          "n_views": 4500,
+          "n_shards": 5,
+          "n_shards_equal": true,
+          "rows_equal": true,
+          "view_set_equal": true,
+          "n_views_equal": true,
+          "manifest_sha256_match": true,
+          "bad_shards": [],
+          "tensor_issues": []
+        }
+      },
+      "sample_alignment": {
+        "n": 33,
+        "max_abs_err": 0.0,
+        "ok": true
+      },
+      "ok": true
+    },
+    "resources": {
+      "disk_free_gb": 958.53,
+      "ram_total_gb": 31.48,
+      "platform": "Windows-10-10.0.26300-SP0",
+      "python": "3.11.9",
+      "numpy": "2.4.6",
+      "dataset_bytes": 938689519,
+      "cache_bytes": 23147523680,
+      "elapsed_s": 374.7,
+      "gpu": {
+        "name": "NVIDIA GeForce RTX 5070",
+        "vram_mb": 12199.4
+      }
+    }
+  },
+  "ok": true
+}
