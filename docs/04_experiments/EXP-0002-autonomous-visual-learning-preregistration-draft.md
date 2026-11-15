@@ -71,7 +71,7 @@ H3 的方法比较必须同时报告参数量与单位参数收益（ΔRecall@1 
 | VICReg 条件规则 | 有效秩 < F0 的 60% 连续 2 epoch → 下一 epoch 起加方差项 λ=25；记录启用 epoch，产物标记为 `B2+VR` 并单独报告 |
 | 步数 | 20 epoch × 500 step（16,000 视图 / batch 32）= 10,000 step |
 | 随机种子 | **3 个**：2026, 2027, 2028 |
-| checkpoint | 每 2 epoch；最终 + 最佳（按 val 预测损失，早停耐心 3） |
+| checkpoint | 每 2 epoch 保存；另存最终 epoch；**H1 只用 validation Recall@1 最优者**（破平：val prediction loss → 更早 epoch）。early stopping 独立按 validation prediction loss（patience 3）判定 |
 | 早停 | val loss 连续 3 次不降则停 |
 
 ## 5. 评价指标
@@ -91,7 +91,9 @@ H3 的方法比较必须同时报告参数量与单位参数收益（ΔRecall@1 
 
 | 编号 | 假设 | 判定 |
 |---|---|---|
-| **H1（唯一主假设）** | **A2** 相对 F0 的 Recall@1 提升 ≥ **3 pp** | **判定分两级**：<br>① 实践阈值：点估计 Δ ≥ 3 pp **且** 95% CI 下界 > 0 → 「达到实践阈值且方向为正」；<br>② 强结论：95% CI 下界 **> 3 pp** 才允许声称"统计上证明提升至少 3 pp"；<br>两者都不满足 → 不支持 |
+| **H1-D**（primary，有功效） | A2 方向为正 | 95% CI 下界 > 0；900 场景、真实 3 pp 时功效 ≈ **0.92** |
+| **H1-P**（practical，筛选） | A2 观察效应 ≥ 3 pp | 点估计 Δ ≥ 3 pp；真实效应恰为 3 pp 时 P ≈ **0.50**，且**不随场景数增加**（见 §8.1） |
+| **H1-S**（strong，探索） | 证明真实效应 ≥ 3 pp | 95% CI 下界 > 3 pp；需真实效应约 **6 pp**（900 场景时功效 ≈ 0.92） |
 | **H2（不变量）** | A1 与 F0 的检索结果**完全相同** | 描述子 SHA-256 相同、Kendall τ=1、ΔRecall=0；任一不满足即判评估管线缺陷 |
 | **H3（次要）** | B2、C2 各自相对 F0 的效应 | 作为 secondary family，用 **Holm 校正**（m=2）控制 FWER；未校正显著的只写"探索性观察" |
 | **H3b（探索）** | A2 vs B2、A2 vs C2 的差异 | 预注册两个对比（不选"最优 vs 次优"），Holm 校正；CI 不含 0 才报告差异 |
@@ -106,7 +108,8 @@ H3 的方法比较必须同时报告参数量与单位参数收益（ΔRecall@1 
 
 满足任一条件即判定**本阶段未成功**，必须在报告首段写明：
 
-1. **A2 未达到 H1**（B2/C2 的次要结果不改变主判定）；
+1. **A2 未同时满足 H1-D 与 H1-P**（方向不显著，或观察效应 <3 pp）；B2/C2 的次要结果不改变主判定；
+   但必须同时声明：未达到 3 pp **不等于**证明 A2 无效应（见 §8.1 的功效边界）；
 2. 任一报告臂的 val→test 落差 >5 pp（合成器过拟合）；
 3. 任一臂有效秩 < F0 的 50%（坍塌）；
 4. 评估集/标签泄漏被证实；
@@ -122,28 +125,41 @@ H3 的方法比较必须同时报告参数量与单位参数收益（ΔRecall@1 
 ### 8.1 配对场景级 Power / MDE 敏感性分析（不训练，仅模拟）
 
 **方法**：以 test scene 为 cluster，每场景 4 个查询；场景难度 \(d\sim N(0,\sigma^2)\)，
-查询命中概率 \(p=\mathrm{sigmoid}(\mathrm{logit}(0.80)+d+\delta)\)，\(\delta\) 由目标概率提升 Δpp 反解；
-配对差按场景求均值，用 cluster-robust SE（\(sd/\sqrt{n}\)）构造 95% CI；每格 1,500 次模拟。
-\sigma ∈ {0.5, 1.0, 1.5} 覆盖不同的场景内相关强度。
+查询命中概率 \(p=\mathrm{sigmoid}(\mathrm{logit}(0.80)+d+\delta)\)。\(\delta\) 用 400,000 次
+场景抽样**校准**，使混合后的总体平均提升恰好等于目标 Δpp（不是只在 \(d=0\) 处校准）。
+配对差按场景求均值，用 cluster-robust SE（\(sd/\sqrt{n}\)）构造 95% CI；每格 4,000 次模拟；
+\sigma ∈ {0.5, 1.0, 1.5}。
 
-| 测试场景数 | 2 pp | 3 pp | 4 pp | 5 pp | 80% 功效的 MDE |
-|---|---|---|---|---|---|
-| 300 | 0.23–0.26 | 0.46–0.50 | 0.71–0.74 | 0.89–0.91 | **≈ 4.3–4.5 pp** |
-| 900 | 0.56–0.59 | **0.90–0.92** | 0.99–1.00 | 1.00 | **≈ 2.6–2.7 pp** |
+**三个事件必须分开报告**（P1）：
 
-**结论**：300 个测试场景对 H1 的 3 pp 阈值只有约 **50%** 功效，属于可行性级别；
-**900 个测试场景**可把 3 pp 的检出功效提到 **≈ 0.90**，因此本预注册采用 test = 900。
-该模拟未计入 3 个 seed 的额外方差，实际功效略低于表中值；因此 H1 的 3 pp 结果仍按
-"实践阈值"而非"确认性统计证明"表述（见 §6）。若 Owner 选择保留 300 场景，则 Phase 2A 必须
-整体降级为**小规模可行性研究**，不得声称具备确认性统计功效。
+- \(E_{dir}\)：95% CI 下界 > 0（方向性）
+- \(E_{thr}\)：点估计 ≥ 3 pp（实践阈值）
+- \(E_{joint}=E_{dir}\land E_{thr}\)：H1 实际采用的联合判定
 
-复现：本小节的模拟逻辑见附录 A（纯 numpy，无需训练）。
+| 场景数 | 真实效应 | P(E_dir) | P(E_thr) | **P(E_joint)** |
+|---|---|---|---|---|
+| 300 | 3 pp | 0.47–0.50 | 0.51 | **0.47–0.49** |
+| 300 | 4 pp | 0.73–0.75 | 0.75–0.76 | 0.72–0.74 |
+| 900 | 3 pp | 0.91–0.93 | 0.49–0.50 | **0.49–0.50** |
+| 900 | 3.5 pp | 0.97–0.98 | 0.71–0.72 | 0.71–0.72 |
+| 900 | 4 pp | 0.99–1.00 | 0.87–0.88 | 0.87–0.88 |
+| 900 | 5 pp | 1.00 | 0.99 | 0.99 |
 
-## 8.2 统计方案
+**关键结论**：
+
+1. 当真实效应**恰好等于阈值**（3 pp）时，\(P(E_{thr})\approx 0.5\) **与样本量无关**——
+   因为"点估计 ≥ 阈值"在真值等于阈值时本质是抛硬币。因此 900 场景**不能**把 H1 联合判定
+   的功效提高到 90%；它提高的是**方向性检验**的功效（3 pp 时约 0.92）。
+2. 900 场景下，联合判定达到 80% 需要真实效应约 **3.8–4.0 pp**；达到 95% 约需 4.5 pp。
+3. 若要求强结论 \(CI_{lower}>3\,\mathrm{pp}\)，需要真实效应约 **6 pp**（900 场景下约 0.92）。
+4. 因此预注册把 H1 拆为三个端点（见 §6），**Phase 2A 定性为可行性研究**：
+   联合判定通过只说明"观察到 ≥3 pp 且方向为正"，不构成"已证明真实效应 ≥3 pp"。
+
+### 8.2 统计方案
 
 - 3 seeds：**逐 seed 报告**全部主指标，并给 mean ± std；3 seeds 是小规模可行性实验，**不声称跨随机初始化的稳健性**；
 - **层级 bootstrap**：先对 3 个 seed 做配对（同一 seed 内 A2 与 F0 共享场景），
-  再在 seed 内对 test scene 重采样（n=300），两层各 10,000 次，取 95% 百分位 CI；
+  再在 seed 内对 test scene 重采样（n=900），两层各 10,000 次，取 95% 百分位 CI；
   不把 3×300 当作 900 个独立样本；
 - 次要比较用 Holm 校正后的 CI；
 - 效应量：ΔRecall@1（pp）、ΔAUC、Δ余弦；
@@ -206,16 +222,34 @@ F0 作为不随数据变化的水平线。
 
 ```python
 import numpy as np
-def power(n, dpp, sigma, base=0.80, q=4, reps=1500, seed=1):
-    rng = np.random.default_rng(seed); b = np.log(base/(1-base))
-    delta = np.log(min(base+dpp, .98)/(1-min(base+dpp, .98))) - b
-    hit = 0
+
+def logit(p): return np.log(p / (1 - p))
+
+def calibrate_delta(target_pp, sigma, base=0.80, n=400_000, seed=7):
+    """让混合后的平均提升恰好等于 target_pp（不是只在 d=0 校准）。"""
+    rng = np.random.default_rng(seed); d = rng.normal(0, sigma, n)
+    p0 = 1 / (1 + np.exp(-(logit(base) + d))); lo, hi = 0.0, 4.0
+    for _ in range(60):
+        mid = (lo + hi) / 2
+        p1 = 1 / (1 + np.exp(-(logit(base) + d + mid)))
+        if (p1 - p0).mean() < target_pp: lo = mid
+        else: hi = mid
+    return (lo + hi) / 2
+
+def joint_power(n, true_pp, sigma, thr_pp=0.03, reps=4000, base=0.80, q=4, seed=11):
+    """返回 P(CI 下界>0), P(点估计>=thr), P(两者同时)。"""
+    delta = calibrate_delta(true_pp, sigma); rng = np.random.default_rng(seed)
+    pos = thr = both = 0
     for _ in range(reps):
         d = rng.normal(0, sigma, n)
-        p0 = 1/(1+np.exp(-(b+d))); p1 = 1/(1+np.exp(-(b+d+delta)))
+        p0 = 1 / (1 + np.exp(-(logit(base) + d)))
+        p1 = 1 / (1 + np.exp(-(logit(base) + d + delta)))
         h0 = (rng.random((n, q)) < p0[:, None]).mean(1)
         h1 = (rng.random((n, q)) < p1[:, None]).mean(1)
-        diff = h1-h0; se = diff.std(ddof=1)/np.sqrt(n)
-        hit += bool(se > 0 and diff.mean()/se > 1.96)
-    return hit/reps
+        diff = h1 - h0; m = diff.mean(); se = diff.std(ddof=1) / np.sqrt(n)
+        a = (m - 1.96 * se) > 0; b = m >= thr_pp
+        pos += a; thr += b; both += (a and b)
+    return pos / reps, thr / reps, both / reps
 ```
+
+复现示例：`joint_power(900, 0.03, 1.0)` 应给出约 `(0.92, 0.50, 0.50)`。
