@@ -1,9 +1,10 @@
-"""生成 DS-0002（Gate 1）：确定性场景、分组切分、manifest 与评估标签 sidecar。
+"""DS-0002 v2 生成（Gate 1 整改）：确定性场景、分组切分、训练索引与评估标签分离。
 
-支持多进程（每个场景独立、确定性），以便在 20 线程 CPU 上快速生成 3,200 个场景。
-
-用法：
-    python scripts/generate_ds0002.py --config configs/ds0002.yaml [--workers 12]
+产物：
+  data/ds0002/images/...                       图像（本地，gitignored）
+  data/ds0002/manifests/{split}.json           审计用完整 manifest（含场景标签）
+  data/ds0002/index/{split}.json               训练索引（仅 view_id/path/augment/pair_key）
+  data/ds0002/eval/labels_{split}.json         评估标签 sidecar
 """
 
 from __future__ import annotations
@@ -15,7 +16,6 @@ import json
 import platform
 import sys
 import time
-from concurrent.futures import ProcessPoolExecutor, as_completed
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -28,6 +28,7 @@ import yaml  # noqa: E402
 from alacv.synth import (  # noqa: E402
     GENERATOR_VERSION,
     PRNG,
+    SPLIT_SEED_BASE,
     WIDTH,
     HEIGHT,
     augment,
@@ -49,6 +50,10 @@ def sha256_text(s: str) -> str:
     return hashlib.sha256(s.encode("utf-8")).hexdigest()
 
 
+def pair_key(scene_id: str) -> str:
+    return "g" + sha256_text("ds0002-pair:" + scene_id)[:12]
+
+
 def _gen_scene(task: tuple) -> tuple[dict, list[dict]]:
     split, index, out_root_s, n_views, n_gallery, subsampling = task
     out_root = Path(out_root_s)
@@ -58,16 +63,12 @@ def _gen_scene(task: tuple) -> tuple[dict, list[dict]]:
     view_rows, gallery_views, query_views = [], [], []
     for v in range(n_views):
         rng = view_rng(split, index, v)
-        if split == "train":
-            strong, role = v > 0, "train"
-        else:
-            strong = v >= n_gallery
-            role = "gallery" if v < n_gallery else "query"
+        strong = (v > 0) if split == "train" else (v >= n_gallery)
+        role = "train" if split == "train" else ("gallery" if v < n_gallery else "query")
         img, params = augment(scene.image, rng, strong=strong)
-        quality = int(params.pop("jpeg_quality", 90))
+        quality = int(params["jpeg_quality"])
         p = sdir / f"v{v}.jpg"
         img.save(p, format="JPEG", quality=quality, subsampling=subsampling)
-        sha = sha256_file(p)
         vid = f"{split}_{index:05d}_v{v}"
         view_rows.append(
             {
@@ -78,7 +79,7 @@ def _gen_scene(task: tuple) -> tuple[dict, list[dict]]:
                 "view_index": v,
                 "role": role,
                 "path": p.relative_to(out_root).as_posix(),
-                "sha256": sha,
+                "sha256": sha256_file(p),
                 "bytes": p.stat().st_size,
                 "width": img.width,
                 "height": img.height,
@@ -90,7 +91,9 @@ def _gen_scene(task: tuple) -> tuple[dict, list[dict]]:
         "scene_id": scene.scene_id,
         "base_seed": scene.base_seed,
         "split": split,
+        "pair_key": pair_key(scene.scene_id),
         "targets": scene.targets,
+        "distractors": scene.distractors,
         "factors": scene.factors,
         "gallery_views": gallery_views,
         "query_views": query_views,
@@ -103,15 +106,19 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--config", default="configs/ds0002.yaml")
     ap.add_argument("--splits", default="train,validation,test")
-    ap.add_argument("--workers", type=int, default=12)
-    ap.add_argument("--only-scenes", type=int, default=None, help="冒烟")
+    ap.add_argument("--only-scenes", type=int, default=None)
     args = ap.parse_args()
 
     cfg = yaml.safe_load((ROOT / args.config).read_text(encoding="utf-8"))
+    if int(cfg["dataset"]["width"]) != WIDTH or int(cfg["dataset"]["height"]) != HEIGHT:
+        raise SystemExit("配置宽高与生成器常量不一致")
+    for s, sc in cfg["splits"].items():
+        if int(sc["seed_base"]) != SPLIT_SEED_BASE[s]:
+            raise SystemExit(f"{s} 的 seed_base 与生成器分段不一致")
+
     out_root = ROOT / cfg["dataset"]["out_dir"]
-    out_root.mkdir(parents=True, exist_ok=True)
-    (out_root / "manifests").mkdir(exist_ok=True)
-    (out_root / "eval").mkdir(exist_ok=True)
+    for sub in ("manifests", "index", "eval"):
+        (out_root / sub).mkdir(parents=True, exist_ok=True)
 
     config_sha = sha256_text(json.dumps(cfg, sort_keys=True, ensure_ascii=False, separators=(",", ":")))
     generator_sha = sha256_file(Path(__file__).resolve())
@@ -125,27 +132,14 @@ def main() -> int:
         n_views = int(sc["views"])
         n_gallery = int(sc.get("gallery_views", 0))
         t0 = time.perf_counter()
-        tasks = [(split, i, str(out_root), n_views, n_gallery, subsampling) for i in range(n_scenes)]
         scenes, views = [], []
-        if args.workers <= 1:
-            for done, t in enumerate(tasks, 1):
-                srow, vrows = _gen_scene(t)
-                scenes.append(srow); views.extend(vrows)
-                if done % 100 == 0 or done == n_scenes:
-                    print(f"[{split}] {done}/{n_scenes} scenes ({time.perf_counter()-t0:.0f}s)", flush=True)
-        else:
-            with ProcessPoolExecutor(max_workers=args.workers) as ex:
-                futs = {ex.submit(_gen_scene, t): t[1] for t in tasks}
-                done = 0
-                for fut in as_completed(futs):
-                    srow, vrows = fut.result()
-                    scenes.append(srow)
-                    views.extend(vrows)
-                    done += 1
-                    if done % 100 == 0 or done == n_scenes:
-                        print(f"[{split}] {done}/{n_scenes} scenes ({time.perf_counter()-t0:.0f}s)", flush=True)
-        scenes.sort(key=lambda s: s["base_seed"])
-        views.sort(key=lambda v: v["view_id"])
+        for i in range(n_scenes):
+            scene_row, view_rows = _gen_scene((split, i, str(out_root), n_views, n_gallery, subsampling))
+            scenes.append(scene_row)
+            views.extend(view_rows)
+            if (i + 1) % 100 == 0 or i + 1 == n_scenes:
+                print(f"[{split}] {i+1}/{n_scenes} scenes ({time.perf_counter()-t0:.0f}s)", flush=True)
+
         manifest = {
             "dataset_id": cfg["dataset"]["id"],
             "split": split,
@@ -170,15 +164,37 @@ def main() -> int:
         (out_root / "manifests" / f"{split}.json").write_text(
             json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8"
         )
+
+        # 训练索引：只投影允许字段；pair_key 为不可逆的匿名分组键
+        index = {
+            "dataset_id": cfg["dataset"]["id"],
+            "split": split,
+            "n_views": len(views),
+            "views": [
+                {
+                    "view_id": v["view_id"],
+                    "path": v["path"],
+                    "augment": v["augment"],
+                    "pair_key": pair_key(v["scene_id"]),
+                }
+                for v in views
+            ],
+        }
+        (out_root / "index" / f"{split}.json").write_text(
+            json.dumps(index, ensure_ascii=False, indent=2), encoding="utf-8"
+        )
+
         labels = {
             "dataset_id": cfg["dataset"]["id"],
             "split": split,
-            "note": "evaluation-only sidecar; must never be read by training code",
+            "note": "evaluation-only sidecar; training code must not read this file",
             "scenes": [
                 {
                     "scene_id": s["scene_id"],
+                    "pair_key": s["pair_key"],
                     "base_seed": s["base_seed"],
                     "targets": s["targets"],
+                    "distractors": s["distractors"],
                     "factors": s["factors"],
                     "gallery_views": s["gallery_views"],
                     "query_views": s["query_views"],

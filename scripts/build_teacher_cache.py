@@ -60,8 +60,8 @@ def main() -> int:
     }
 
     CACHE.mkdir(parents=True, exist_ok=True)
-    summary = {"cache_version": "ds0002-teacher-v1", "created_at_utc": dt.datetime.now(dt.timezone.utc).isoformat(),
-               "model": cache_meta, "splits": {}, "command": "scripts/build_teacher_cache.py",
+    summary = {"cache_version": "ds0002-teacher-v2", "created_at_utc": dt.datetime.now(dt.timezone.utc).isoformat(),
+               "dataset_id": "ds-0002-synthetic-v2", "model": cache_meta, "splits": {}, "command": "scripts/build_teacher_cache.py",
                "python": platform.python_version(), "numpy": np.__version__,
                "torch": __import__("torch").__version__}
     t_all = time.perf_counter()

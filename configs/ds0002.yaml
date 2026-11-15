@@ -1,7 +1,7 @@
-# DS-0002 数据集生成配置（Gate 1）
+# DS-0002 数据集生成配置（Gate 1 整改 v2）
 dataset:
-  id: ds-0002-synthetic-v1
-  generator_version: ds0002-v1
+  id: ds-0002-synthetic-v2
+  generator_version: ds0002-v2
   prng: numpy.random.Generator(PCG64)
   out_dir: data/ds0002
   width: 1024
@@ -29,8 +29,6 @@ splits:
 
 image:
   jpeg_quality_gallery: 92
-  jpeg_quality_train: 90
+  jpeg_quality_train_strong_min: 60
+  jpeg_quality_train_strong_max: 84
   jpeg_subsampling: 2
-
-images:
-  repo_relative: true

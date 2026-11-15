@@ -1,21 +1,23 @@
-"""DS-0002 冻结 DINOv2 教师特征缓存（Gate 1）。
+"""DS-0002 冻结 DINOv2 教师特征缓存（Gate 1 整改）。
 
-格式：每个 split 分成若干 shard，每个 shard 是一个 SafeTensors 文件：
+格式：每个 split 分 shard，每个 shard 为 SafeTensors：
   cls   : float16 [N, 384]
   patch : float16 [N, 1369, 384]
-索引 JSON 记录 view_ids 顺序、shard SHA-256、模型指纹与数据 manifest SHA-256。
-读取端 fail-closed：缺 shard、数量不符、dtype/形状不符、索引缺失都会报错。
+索引 JSON 记录完整 view_ids 顺序、shard SHA-256、模型指纹、manifest SHA-256。
+
+读取端默认 **fail-closed**：verify_sha=True，重复/缺失 view 抛错，shard 采用有界 LRU 缓存。
 """
 
 from __future__ import annotations
 
 import hashlib
 import json
+from collections import OrderedDict
 from pathlib import Path
 
 import numpy as np
 
-CACHE_VERSION = "ds0002-teacher-v1"
+CACHE_VERSION = "ds0002-teacher-v2"
 PATCH_TOKENS = 1369
 CLS_DIM = 384
 
@@ -73,6 +75,8 @@ class TeacherCacheWriter:
                 "sha256": sha256_file(path),
                 "n": len(self._views),
                 "bytes": path.stat().st_size,
+                "tensor_spec": {"cls": [len(self._views), CLS_DIM], "patch": [len(self._views), PATCH_TOKENS, CLS_DIM],
+                                "dtype": "float16"},
                 "views": list(self._views),
             }
         )
@@ -100,31 +104,47 @@ class TeacherCacheWriter:
 
 
 class TeacherCacheReader:
-    def __init__(self, root: Path, split: str, verify_sha: bool = False):
+    def __init__(self, root: Path, split: str, verify_sha: bool = True, max_cached_shards: int = 2):
         self.root = Path(root)
         self.index = json.loads((self.root / f"index_{split}.json").read_text(encoding="utf-8"))
         self.split = split
-        self._shards = {}
+        self._cache: OrderedDict[int, dict] = OrderedDict()
+        self._max = max(1, int(max_cached_shards))
         if verify_sha:
             for s in self.index["shards"]:
                 if sha256_file(self.root / s["path"]) != s["sha256"]:
                     raise RuntimeError(f"shard 校验失败: {s['path']}")
-        self.view_to_pos = {}
+        self.view_to_pos: dict[str, tuple[int, int]] = {}
         for si, s in enumerate(self.index["shards"]):
             for row, vid in enumerate(s["views"]):
+                if vid in self.view_to_pos:
+                    raise RuntimeError(f"缓存索引存在重复 view_id: {vid}")
                 self.view_to_pos[vid] = (si, row)
+        if len(self.view_to_pos) != self.index["n_views"]:
+            raise RuntimeError("缓存索引 n_views 与 view 映射数量不一致")
+
+    def _load(self, si: int) -> dict:
+        if si in self._cache:
+            self._cache.move_to_end(si)
+            return self._cache[si]
+        from safetensors.numpy import load_file
+
+        data = load_file(str(self.root / self.index["shards"][si]["path"]))
+        if set(data) != {"cls", "patch"}:
+            raise RuntimeError(f"shard keys 不符: {sorted(data)}")
+        if data["cls"].dtype != np.float16 or data["patch"].dtype != np.float16:
+            raise RuntimeError("shard dtype 不是 float16")
+        n = self.index["shards"][si]["n"]
+        if data["cls"].shape != (n, CLS_DIM) or data["patch"].shape != (n, PATCH_TOKENS, CLS_DIM):
+            raise RuntimeError("shard tensor shape 与索引不一致")
+        self._cache[si] = data
+        if len(self._cache) > self._max:
+            self._cache.popitem(last=False)
+        return data
 
     def get(self, view_id: str) -> tuple[np.ndarray, np.ndarray]:
         if view_id not in self.view_to_pos:
             raise KeyError(f"view 不在缓存索引中: {view_id}")
         si, row = self.view_to_pos[view_id]
-        if si not in self._shards:
-            from safetensors.numpy import load_file
-
-            self._shards[si] = load_file(str(self.root / self.index["shards"][si]["path"]))
-        data = self._shards[si]
-        cls = data["cls"][row]
-        patch = data["patch"][row]
-        if cls.shape != (CLS_DIM,) or patch.shape != (PATCH_TOKENS, CLS_DIM):
-            raise RuntimeError(f"缓存形状不符: {view_id}")
-        return cls, patch
+        data = self._load(si)
+        return data["cls"][row], data["patch"][row]
