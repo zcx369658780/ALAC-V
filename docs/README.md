@@ -122,11 +122,11 @@ supersedes: null
 | `01_tasks/TASK-0003-phase2a-autonomous-visual-learning-design.md` | Phase 2A 自主视觉学习研究设计任务 | 已完成；PR #5 merged；Issue #3 closed | 
 | `01_tasks/TASK-0004-phase2a1-implementation-and-ds0002.md` | Phase 2A.1 DS-0002、模型实现与 EXP-0002 任务快照 | Owner 已授权；Gate 1 数据生成进行中 |
 | `submissions/PHASE_0_1_SUBMISSION.md` | 首次公开仓库交付记录 | 历史记录 |
-| `research/PHASE2A_AUTONOMOUS_LEARNING_LITERATURE.md` | Phase 2A 文献调研（arXiv/仓库/许可核验） | 草案；待 ChatGPT/Owner 审阅 |
-| `03_design/PHASE2A_AUTONOMOUS_LEARNING_DESIGN.md` | Phase 2A 架构设计与资源方案 | 草案；待审 |
-| `04_experiments/EXP-0002-autonomous-visual-learning-preregistration-draft.md` | EXP-0002 预注册草案 | 草案；未授权运行 |
-| `02_audit/PHASE2A_MODEL_LICENSE_MATRIX.md` | Phase 2A 代码/权重许可矩阵 | 草案；已核验来源 |
-| `05_reports/PHASE2A_OWNER_DECISION_SUMMARY.md` | Phase 2A Owner 决策摘要 | 草案；待审 |
+| `research/PHASE2A_AUTONOMOUS_LEARNING_LITERATURE.md` | Phase 2A 文献调研（arXiv/仓库/许可核验） | 已接受；PR #5 merged |
+| `03_design/PHASE2A_AUTONOMOUS_LEARNING_DESIGN.md` | Phase 2A 架构设计与资源方案 | 已接受；PR #5 merged |
+| `04_experiments/EXP-0002-autonomous-visual-learning-preregistration-draft.md` | EXP-0002 预注册草案 | 设计已接受；运行受 Phase 2A.1 阶段门控制 |
+| `02_audit/PHASE2A_MODEL_LICENSE_MATRIX.md` | Phase 2A 代码/权重许可矩阵 | 已接受；PR #5 merged |
+| `05_reports/PHASE2A_OWNER_DECISION_SUMMARY.md` | Phase 2A Owner 决策摘要 | 已接受；D-2A-3/4 与 D-2A-1/2 已批准 |
 
 
 ## 10. 当前阶段与开放任务
