@@ -39,6 +39,11 @@ The Owner approved PR #2 merge and Issue #1 closure on 2026-11-15. Phase 2 is no
 - License matrix: `docs/02_audit/PHASE2A_MODEL_LICENSE_MATRIX.md`
 - Owner decision summary: `docs/05_reports/PHASE2A_OWNER_DECISION_SUMMARY.md`
 
+Revised 2026-11-15 after the first independent review of PR #5 (P1-1..P1-5, plus the cached-feature
+leakage finding): unified 384-d CLS readout, mask-before-encode student path, 768-d B2 target,
+A2 as sole primary with Holm-controlled secondary comparisons, validation-only arm selection for the
+data-efficiency study, and corrected V-JEPA/V-JEPA 2 and BYOL license entries. Re-review pending.
+
 Key design constraints recorded: frozen DINOv2 teacher (Apache-2.0), ≤10M trainable parameters,
 synthetic-only data (DS-0002 design, not generated), group split by base scene, training never uses
 labels, Phase 2A.1 requires a separate task order.
