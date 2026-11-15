@@ -1,0 +1,31 @@
+command: .venv\Scripts\python.exe -m pytest -v
+executed_at_utc: 2026-11-15T11:12:09.8180080Z
+cwd: <REPO>
+git_head: 429a2109ee7c62eaa32721422c4cc1b56b8efc10
+git_branch: task/6-phase2a1-ds0002-generation
+git_dirty: false
+environment: python=3.11.9 2.14.1+cu130 2.4.6 13.0.0
+---
+============================= test session starts =============================
+platform win32 -- Python 3.11.9, pytest-9.2.0, pluggy-1.7.0
+rootdir: <REPO>
+configfile: pyproject.toml
+testpaths: tests
+collected 97 items
+
+tests\test_backtrack.py ......................                           [ 22%]
+tests\test_config.py .......                                             [ 29%]
+tests\test_ds0002.py .........                                           [ 39%]
+tests\test_features.py .....                                             [ 44%]
+tests\test_foveation.py ........                                         [ 52%]
+tests\test_imaging.py ......                                             [ 58%]
+tests\test_ingest.py ...........                                         [ 70%]
+tests\test_manifest_hash.py ...                                          [ 73%]
+tests\test_metrics.py ......                                             [ 79%]
+tests\test_pipeline.py ....                                              [ 83%]
+tests\test_retrieval.py ....                                             [ 87%]
+tests\test_store.py .......                                              [ 94%]
+tests\test_teacher_cache.py .....                                        [100%]
+
+============================= 97 passed in 8.57s ==============================
+
