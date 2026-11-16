@@ -244,7 +244,9 @@ def main() -> int:
 
         model = load(MODEL_MANIFEST)
         cache = load(CACHE / "cache.json")
+        global_manifest = load(DATA / "manifests" / "ds0002.json")
         cchecks = {
+            "dataset_id_matches": cache.get("dataset_id") == global_manifest["dataset_id"],
             "model_matches": cache["model"]["weights_sha256"] == model["weights_sha256"],
             "revision_matches": cache["model"]["revision"] == model["revision"],
             "splits": {},
@@ -300,7 +302,8 @@ def main() -> int:
             max_err = max(max_err, float(np.abs(p_cached.astype(np.float32) - p_now.astype(np.float32)).max()))
         cchecks["sample_alignment"] = {"n": len(sample_ids), "max_abs_err": max_err, "ok": max_err < 5e-3}
         cchecks["ok"] = (
-            cchecks["model_matches"] and cchecks["revision_matches"] and cchecks["sample_alignment"]["ok"]
+            cchecks["dataset_id_matches"] and cchecks["model_matches"] and cchecks["revision_matches"]
+            and cchecks["sample_alignment"]["ok"]
             and all(v["view_set_equal"] and v["n_views_equal"] and v["manifest_sha256_match"]
                     and v["n_shards_equal"] and v["rows_equal"]
                     and not v["bad_shards"] and not v["tensor_issues"] for v in cchecks["splits"].values())

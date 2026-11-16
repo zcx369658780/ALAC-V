@@ -183,7 +183,7 @@ def main() -> int:
             json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8"
         )
 
-        # 训练索引：只投影允许字段；pair_key 为不可逆的匿名分组键
+        # 训练索引：只投影允许字段；pair_key 是 sampler-only 的 opaque 分组 token
         index = {
             "dataset_id": cfg["dataset"]["id"],
             "split": split,

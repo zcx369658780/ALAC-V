@@ -1,0 +1,26 @@
+{
+  "F0": {
+    "trainable": 0,
+    "total": 0
+  },
+  "A1": {
+    "trainable": 3549696,
+    "total": 3549696
+  },
+  "A2": {
+    "trainable": 7100160,
+    "total": 7100160
+  },
+  "B2": {
+    "trainable": 5027328,
+    "total": 5027328
+  },
+  "C2": {
+    "trainable": 7100160,
+    "total": 7100160
+  },
+  "R0": {
+    "trainable": 0,
+    "total": 3550464
+  }
+}

@@ -1,5 +1,16 @@
 # CHANGELOG
 
+## 2026-11-16 - Gate 2 PASS; Gate 3 model implementation
+
+- Owner accepted Gate 2 for DS-0002 v3 (PR #8, HEAD `6f8a5ec`) and authorized Gate 3 implementation only.
+- Closed all four Gate 2 follow-ups: cache summary dataset id, pair_key wording, strict label-isolation test,
+  independent mask-based occlusion reference test (no dataset change required).
+- Implemented six arms (F0/A1/A2/B2/C2/R0) under `src/alacv/ssl/`, `scripts/train_ssl.py`,
+  `scripts/eval_ssl.py`, `configs/exp0002.yaml`; added 16 tests and dry-run VRAM evidence.
+- Recorded the B2 predictor ambiguity (384->768 projection makes it 1.475M, total 5.03M) for Owner decision.
+- No optimizer step, no training run, no downloads; EXP-0002 remains NOT RUN.
+
+
 ## 2026-11-15 — Phase 2A design accepted; Phase 2A.1 authorized
 
 - Owner approved D-2A-1 (Phase 2A.1 implementation) and D-2A-2 (DS-0002 generation).

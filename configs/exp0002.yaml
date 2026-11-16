@@ -1,0 +1,61 @@
+# EXP-0002 冻结配置（Gate 3 实现；Gate 4 训练前不得修改）
+experiment:
+  id: EXP-0002
+  phase: 2A.1
+  dataset: ds-0002-synthetic-v3
+
+data:
+  root: data/ds0002
+  splits:
+    train: index/train.json
+    validation: index/validation.json
+    test: index/test.json
+  teacher_cache: data/ds0002/features/teacher
+
+model:
+  d_model: 384
+  adapter_depth: 2
+  adapter_heads: 6
+  adapter_mlp_ratio: 4
+  predictor_depth: 2
+  predictor_heads: 6
+  predictor_mlp_ratio: 4
+  b2_target_dim: 768
+  max_trainable_params: 10000000
+
+mask:
+  patch_grid: 37
+  n_patches: 1369
+  mask_patches: 821
+  blocks: 4
+  seed_rule: "base_seed * 1000 + step"
+
+train:
+  optimizer: AdamW
+  lr_adapter: 0.001
+  lr_predictor: 0.001
+  weight_decay: 0.05
+  batch_size: 32
+  grad_accum: 1
+  epochs: 20
+  steps_per_epoch: 500
+  precision: fp16
+  seeds: [2026, 2027, 2028]
+
+checkpoint:
+  rule: "best validation Recall@1; tie: lower validation prediction loss; then earlier epoch"
+  early_stopping: "validation prediction loss, patience 3"
+  save_every_epochs: 2
+  selection_split: validation
+  test_used_for_selection: false
+
+vicreg:
+  rank_threshold_ratio: 0.60
+  consecutive_epochs: 2
+  lambda: 25
+  label: "B2+VR"
+
+evaluation:
+  readout: "384-d CLS, L2-normalized cosine"
+  retrieval: [Recall@1, Recall@5, mAP@10]
+  bootstrap_scenes: 900

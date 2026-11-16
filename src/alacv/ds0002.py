@@ -1,8 +1,8 @@
 """DS-0002 训练读取层（P1-2 整改）。
 
 - 只加载**投影后的训练索引** `index/{split}.json`：`view_id / path / augment / pair_key`。
-- `pair_key` 是不可逆的匿名分组键（`sha256("ds0002-pair:"+scene_id)[:12]`），用于 B2 同场景配对；
-  它不包含也不可还原 scene_id。
+- `pair_key` 是 **sampler-only 的 opaque 分组 token**，用于 B2 同场景配对；它不是密码学匿名化，
+  也不宣称不可逆——eval 侧 salt 与 labels 可重放映射（见 Gate 1 报告）。
 - 对象内部不保存完整 audit manifest、targets、factors 或任何评估标签。
 - 评估标签只能通过 `load_eval_labels()` 读取，训练代码禁止调用（见 tests）。
 """

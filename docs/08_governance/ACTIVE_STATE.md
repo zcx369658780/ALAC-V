@@ -44,6 +44,16 @@ Owner decisions on 2026-11-15:
 - Evidence: `artifacts/evidence/DS-0002/`; report: `docs/05_reports/TASK-0004-GATE1-REPORT.md`.
 - Gate 2 independent acceptance **PENDING**; no model implementation or optimizer step has been run.
 
+## Phase 2A.1 Gate 3 status (2026-11-16)
+
+- Branch `task/6-phase2a1-gate3-model-implementation`, stacked PR base `task/6-phase2a1-ds0002-generation`.
+- Six arms implemented: F0 / A1 / A2 / B2 / C2 / R0; 384-d CLS readout; A2/C2 7.10M params, B2 5.03M.
+- Mask: 821 patches, 4 non-overlapping quadrant blocks (A2) or random (C2), deterministic per seed.
+- A1/F0 invariant verified on real cache: bit-identical descriptors, Recall@1 and Kendall tau equal.
+- Dry-run VRAM (batch 8): A2/C2 ~1.43 GB; no optimizer step; EXP-0002 NOT RUN.
+- Gate 2 follow-ups (cache dataset id, pair_key wording, isolation test, independent occlusion test) closed.
+- Gate 4 remains **NOT AUTHORIZED** pending Gate 3 acceptance.
+
 ## Current open task
 
 - [ALAC-0003 — Phase 2A.1 DS-0002 generation, model implementation and EXP-0002](https://github.com/zcx369658780/ALAC-V/issues/6)

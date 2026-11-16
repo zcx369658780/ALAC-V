@@ -1,0 +1,16 @@
+{
+  "arm": "A1",
+  "seed": 2026,
+  "batch": 8,
+  "trainable_params": 3549696,
+  "total_params": 3549696,
+  "loss": 2.9302618503570557,
+  "peak_vram_mb": 847.27,
+  "data_s": 19.5923,
+  "forward_s": 0.6667,
+  "backward_s": 0.2145,
+  "optimizer_constructed": false,
+  "optimizer_steps": 0,
+  "training_runs": 0,
+  "device": "cuda"
+}

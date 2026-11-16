@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2026-11-15T12:56:39.640496+00:00",
+  "generated_at_utc": "2026-11-16T00:11:50.967020+00:00",
   "dataset_id": "ds-0002-synthetic-v3",
   "checks": {
     "counts": {
@@ -238,6 +238,7 @@
       "ok": true
     },
     "teacher_cache": {
+      "dataset_id_matches": true,
       "model_matches": true,
       "revision_matches": true,
       "splits": {
@@ -276,21 +277,21 @@
         }
       },
       "sample_alignment": {
-        "n": 33,
+        "n": 9,
         "max_abs_err": 0.0,
         "ok": true
       },
       "ok": true
     },
     "resources": {
-      "disk_free_gb": 958.53,
+      "disk_free_gb": 958.36,
       "ram_total_gb": 31.48,
       "platform": "Windows-10-10.0.26300-SP0",
       "python": "3.11.9",
       "numpy": "2.4.6",
       "dataset_bytes": 938689519,
       "cache_bytes": 23147523680,
-      "elapsed_s": 374.7,
+      "elapsed_s": 278.29,
       "gpu": {
         "name": "NVIDIA GeForce RTX 5070",
         "vram_mb": 12199.4

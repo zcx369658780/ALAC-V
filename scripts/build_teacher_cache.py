@@ -38,6 +38,9 @@ def main() -> int:
     args = ap.parse_args()
 
     manifest = json.loads(MODEL_MANIFEST.read_text(encoding="utf-8"))
+    ds_manifest_path = DATA / "manifests" / "ds0002.json"
+    ds_manifest = json.loads(ds_manifest_path.read_text(encoding="utf-8"))
+    dataset_id = ds_manifest["dataset_id"]
     cfg = load_config(ROOT / "configs" / "default.yaml")
     encoder = DinoEncoder(cfg)
     actual_sha = sha256_file(cfg.path("model.local_dir") / manifest["weights_file"])
@@ -61,7 +64,7 @@ def main() -> int:
 
     CACHE.mkdir(parents=True, exist_ok=True)
     summary = {"cache_version": "ds0002-teacher-v2", "created_at_utc": dt.datetime.now(dt.timezone.utc).isoformat(),
-               "dataset_id": "ds-0002-synthetic-v2", "model": cache_meta, "splits": {}, "command": "scripts/build_teacher_cache.py",
+               "dataset_id": dataset_id, "dataset_manifest_sha256": sha256_file(ds_manifest_path), "model": cache_meta, "splits": {}, "command": "scripts/build_teacher_cache.py",
                "python": platform.python_version(), "numpy": np.__version__,
                "torch": __import__("torch").__version__}
     t_all = time.perf_counter()
