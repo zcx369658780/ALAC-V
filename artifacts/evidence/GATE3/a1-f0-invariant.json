@@ -1,0 +1,9 @@
+{
+  "views": 8,
+  "torch_equal": true,
+  "sha_a1": "0ee21aed829c860875b28e623e03cd5f352e87c098ee8fe497b65acb1c23f4e8",
+  "sha_f0": "0ee21aed829c860875b28e623e03cd5f352e87c098ee8fe497b65acb1c23f4e8",
+  "recall_a1": 1.0,
+  "recall_f0": 1.0,
+  "kendall_tau": 1.0
+}

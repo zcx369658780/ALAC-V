@@ -103,8 +103,9 @@ The public repository intentionally excludes raw private images/videos, local da
 
 - Phase 0/1: independently accepted; PR #2 merged; Issue #1 closed.
 - Phase 2A design: independently accepted; PR #5 merged at `ef39be0`; Issue #3 closed.
-- Phase 2A.1: Owner-authorized under Issue #6. Gate 1 DS-0002 generation and teacher-cache creation are authorized using existing local pinned DINOv2 weights only.
-- Formal model training is gated on independent DS-0002 acceptance (Gate 2) and implementation review (Gate 3).
+- Phase 2A.1: Gate 2 PASS (2026-11-16) for `ds-0002-synthetic-v3`.
+- Gate 3 model implementation submitted on `task/6-phase2a1-gate3-model-implementation` (stacked on PR #8 branch).
+- Gate 4 training / EXP-0002 requires separate Owner authorization after Gate 3 acceptance.
 - Phase 2B/2C and Phase 3 remain blocked.
 
 ## 8. Uploaded Project Source pack
