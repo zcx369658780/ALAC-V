@@ -1,14 +1,16 @@
 """DS-0002 v2 生成器与读取层测试（含标签隔离负向测试）。"""
 
 import builtins
+import io
 import json
+import pathlib
 from pathlib import Path
 
 import numpy as np
 import pytest
 from PIL import Image
 
-from alacv.ds0002 import ALLOWED_ITEM_KEYS, Ds0002Dataset
+from alacv.ds0002 import ALLOWED_ITEM_KEYS, Ds0002Dataset, PairBatchSampler
 from alacv.synth import SPLIT_SEED_BASE, augment, base_seed, render_scene, view_rng
 
 
@@ -104,14 +106,29 @@ def test_loader_rejects_index_with_label_fields(tmp_path):
         Ds0002Dataset(_mini(tmp_path, bad_field=True), tmp_path / "ds")
 
 
-def test_loader_never_opens_eval_labels(tmp_path, monkeypatch):
-    ds = Ds0002Dataset(_mini(tmp_path), tmp_path / "ds")
-    real_open = builtins.open
+def test_loader_never_opens_labels_manifests_or_identity(tmp_path, monkeypatch):
+    """在 Dataset 构造前安装守卫，并保持到取样与 sampler。"""
+    real_path_open = pathlib.Path.open
+    real_io_open = io.open
+    real_builtin_open = builtins.open
+    forbidden = ("labels_", "identity_salt", "manifests/train.json", "manifests/validation.json")
 
-    def guarded(path, *a, **k):
-        if "labels_" in str(path) or "labels" in str(path).lower():
-            raise AssertionError(f"训练路径尝试读取评估标签: {path}")
-        return real_open(path, *a, **k)
+    def guard(real):
+        def wrapper(target, *a, **k):
+            text = str(target).replace("\\", "/")
+            if any(f in text for f in forbidden):
+                raise AssertionError(f"训练路径尝试读取受保护文件: {target}")
+            return real(target, *a, **k)
 
-    monkeypatch.setattr(builtins, "open", guarded)
-    _ = ds[0]
+        return wrapper
+
+    monkeypatch.setattr(pathlib.Path, "open", guard(real_path_open))
+    monkeypatch.setattr(io, "open", guard(real_io_open))
+    monkeypatch.setattr(builtins, "open", guard(real_builtin_open))
+
+    ds = Ds0002Dataset(_mini(tmp_path), tmp_path / "ds")  # 构造也在守卫下
+    item = ds[0]
+    assert set(item) == ALLOWED_ITEM_KEYS
+    assert not hasattr(ds, "manifest")
+    sampler = PairBatchSampler(ds, batch_pairs=1, seed=0)
+    list(sampler)
